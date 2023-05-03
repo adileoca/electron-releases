@@ -1,6 +1,6 @@
 export default function TaskButton({ name, number, status }) {
   return (
-    <button className="w-full rounded-md bg-white text-left shadow-sm focus:outline focus:outline-blue-600 focus:ring-4 focus:ring-blue-400">
+    <button className="w-full rounded-md border border-neutral-300 bg-white text-left focus:outline focus:outline-blue-600 focus:ring-4 focus:ring-blue-400">
       <div className="relative flex items-center justify-between overflow-hidden p-3">
         <div>
           <h1 className="inline font-semibold text-neutral-900 ">{name}</h1>

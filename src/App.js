@@ -7,7 +7,7 @@ export default function App() {
     <div className="relative flex h-screen">
       <Sidebar />
       <main className="flex flex-1 flex-col bg-white">
-        <div className="draggable sticky top-0 z-10 flex h-14 flex-shrink-0 items-center justify-between border-b border-neutral-200 bg-neutral-100 bg-opacity-70 px-5 shadow-sm backdrop-blur">
+        <div className="draggable sticky top-0 z-10 flex h-14 flex-shrink-0 items-center justify-between border-b border-neutral-200 bg-neutral-100 bg-opacity-70 px-5  backdrop-blur">
           <div className="flex items-center">
             <div className="pointer-events-none mr-4 inline-flex select-none items-center text-lg">
               <h1 className=" inline-flex font-semibold">Retușare</h1>

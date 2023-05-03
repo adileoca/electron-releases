@@ -4,10 +4,10 @@ import { CogIcon } from "@heroicons/react/24/outline";
 export default function Sidebar() {
   return (
     <div className="z-20 flex w-72 flex-col">
-      <div className="fixed flex h-screen w-72 flex-grow flex-col overflow-y-auto border-r border-neutral-300 ">
+      <div className="fixed flex h-screen w-72 flex-grow flex-col  overflow-y-auto border-r border-neutral-300 ">
         <div className="draggable pb-7 pt-7" />
         <div className="flex h-full flex-col">
-          <div className="flex-1 space-y-2 px-5">
+          <div className="flex-1 space-y-3 px-5 pt-2">
             <h1 className="text-md font-semibold text-neutral-600">
               Sarcini în desfășurare
             </h1>
@@ -24,7 +24,7 @@ export default function Sidebar() {
           <h1 className="text-md pb-2 font-semibold text-neutral-600">
             Contul meu
           </h1>
-          <div className="flex w-full items-center justify-between overflow-hidden rounded-md bg-white text-neutral-900 shadow duration-500 ">
+          <div className="flex w-full items-center justify-between overflow-hidden rounded-md border border-neutral-300 bg-white text-neutral-900  duration-500 ">
             <button className="flex w-full items-center gap-x-3 px-3 py-2 transition hover:bg-blue-600 hover:text-white">
               <img
                 className="h-8 w-8 rounded-full"
