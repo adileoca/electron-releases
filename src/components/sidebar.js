@@ -1,43 +1,73 @@
-//Dashboard, Sarcini, Activitate, Notite, Setari, Profil
-import TaskButton from "./task-button";
-import { CogIcon } from "@heroicons/react/24/outline";
+import {
+  Cog6ToothIcon,
+  HomeIcon,
+  RectangleStackIcon,
+  FolderIcon,
+  DocumentIcon,
+  ChartPieIcon,
+} from "@heroicons/react/24/solid";
+import { useNavigate, useLocation } from "react-router-dom";
+import clsx from "clsx";
+
+const navigation = [
+  { name: "Dashboard", href: "/", icon: HomeIcon },
+  { name: "Sarcini", href: "/tasks", icon: RectangleStackIcon },
+  { name: "Comenzi", href: "/orders", icon: FolderIcon },
+  { name: "Documente", href: "/documents", icon: DocumentIcon },
+  { name: "Rapoarte", href: "/reports", icon: ChartPieIcon },
+];
+
 export default function Sidebar() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   return (
-    <div className="z-20 flex w-72 flex-col">
-      <div className="fixed flex h-screen w-72 flex-grow flex-col  overflow-y-auto border-r border-neutral-300 ">
-        <div className="draggable pb-7 pt-7" />
-        <div className="flex h-full flex-col">
-          <div className="flex-1 space-y-3 px-5 pt-2">
-            <h1 className="text-md font-semibold text-neutral-600">
-              Sarcini în desfășurare
-            </h1>
-            <TaskButton name="Retușare" number="284535" status="Urgent" />
-            <h1 className="text-md pt-5 font-semibold text-neutral-600">
-              Sarcini sugerate
-            </h1>
-            <TaskButton name="Retușare" number="284536" />
-            <TaskButton name="Retușare" number="284537" />
-            <TaskButton name="Retușare" number="284538" />
-          </div>
-        </div>
-        <div className="px-5 pb-5">
-          <h1 className="text-md pb-2 font-semibold text-neutral-600">
-            Contul meu
-          </h1>
-          <div className="flex w-full items-center justify-between overflow-hidden rounded-md border border-neutral-300 bg-white text-neutral-900  duration-500 ">
-            <button className="flex w-full items-center gap-x-3 px-3 py-2 transition hover:bg-blue-600 hover:text-white">
-              <img
-                className="h-8 w-8 rounded-full"
-                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                alt=""
-              />
-              <span className="text-sm font-semibold">Tom Cook</span>
-            </button>
-            <button className="border-l border-neutral-200 p-3 text-neutral-400 transition hover:border-blue-600 hover:bg-blue-600 hover:text-white">
-              <CogIcon className="h-6 w-6" />
-            </button>
-          </div>
-        </div>
+    <div className="w-60 bg-neutral-50">
+      <div className="fixed flex h-screen w-60 flex-col overflow-y-auto  ">
+        <div className="draggable py-9" />
+        <nav className="flex flex-1 flex-col px-5 pb-5">
+          <ul className="flex flex-1 flex-col gap-y-7">
+            <li>
+              <ul className="-mx-2 space-y-1">
+                {navigation.map((item) => (
+                  <li key={item.name}>
+                    <button
+                      onClick={() => navigate(item.href)}
+                      className={clsx(
+                        location.pathname === item.href
+                          ? "bg-neutral-50 text-blue-600"
+                          : "text-neutral-700 hover:bg-neutral-50 hover:text-blue-600",
+                        "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
+                      )}
+                    >
+                      <item.icon
+                        className={clsx(
+                          location.pathname === item.href
+                            ? "text-blue-600"
+                            : "text-neutral-400 group-hover:text-blue-600",
+                          "h-6 w-6 shrink-0"
+                        )}
+                      />
+                      {item.name}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </li>
+            <li className="mt-auto">
+              <button
+                onClick={() => navigate("/settings")}
+                className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-neutral-700 hover:bg-neutral-50 hover:text-blue-600"
+              >
+                <Cog6ToothIcon
+                  className="h-6 w-6 shrink-0 text-neutral-400 group-hover:text-blue-600"
+                  aria-hidden="true"
+                />
+                Setari
+              </button>
+            </li>
+          </ul>
+        </nav>
       </div>
     </div>
   );
