@@ -16,6 +16,7 @@ export default function TaskView() {
     const fetchTasks = async () => {
       try {
         const token = await auth0.getAccessTokenSilently();
+        console.log("token", token);
         const response = await axios.get(
           `${process.env.REACT_APP_BACKEND_API_URL}/api/tasks/`,
           {
