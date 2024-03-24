@@ -2,6 +2,7 @@ const axios = require("axios");
 const fs = require("fs");
 
 async function downloadImage(url, filename) {
+  console.log("url", url);
   const response = await axios({
     url,
     method: "GET",

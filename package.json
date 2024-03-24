@@ -32,6 +32,7 @@
     "dist": "electron-builder --publish=never"
   },
   "dependencies": {
+    "@apollo/client": "^3.9.8",
     "@auth0/auth0-react": "^2.2.0",
     "@auth0/auth0-spa-js": "^2.1.1",
     "@headlessui/react": "^1.7.17",
@@ -41,10 +42,12 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.5.0",
     "clsx": "^2.0.0",
+    "cross-fetch": "^4.0.0",
     "date-fns": "^2.30.0",
     "electron-is-dev": "^2.0.0",
     "electron-store": "^8.1.0",
     "flag-icons": "^6.11.0",
+    "graphql": "^16.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.15.0",

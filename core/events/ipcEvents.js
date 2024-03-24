@@ -11,8 +11,9 @@ if (!fs.existsSync(tempPath)) {
 }
 
 function setupIpcEvents() {
-  ipcMain.on("download-and-open-in-photoshop", async (event, arg) => {
+  ipcMain.on("download-and-open-in-photoshop", async (_, arg) => {
     const { image, background } = arg;
+    
     const imagePath = path.join(tempPath, "Image.jpg");
     const backgroundPath = path.join(tempPath, "Background.jpg");
 

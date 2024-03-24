@@ -19,7 +19,7 @@ function createWindow() {
 
   window.setWindowButtonVisibility(true);
 
-  window.webContents.on("did-navigate", (event, url) => {
+  window.webContents.on("did-navigate", (_, url) => {
     if (url.includes("auth0.com")) {
       window.webContents.executeJavaScript(`
         document.body.style['-webkit-app-region'] = 'drag';

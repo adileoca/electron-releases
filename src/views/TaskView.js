@@ -8,15 +8,13 @@ import TaskDetails from "../components/taskDetails";
 import "../styles/App.css";
 
 export default function TaskView() {
-  const auth0 = useAuth0();
+  const { getAccessTokenSilently } = useAuth0();
   const [tasks, setTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
-
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const token = await auth0.getAccessTokenSilently();
-        console.log("token", token);
+        const token = await getAccessTokenSilently();
         const response = await axios.get(
           `${process.env.REACT_APP_BACKEND_API_URL}/api/tasks/`,
           {
@@ -32,9 +30,9 @@ export default function TaskView() {
       }
     };
     fetchTasks();
-    const intervalId = setInterval(fetchTasks, 30000);
+    const intervalId = setInterval(fetchTasks, 1000);
     return () => clearInterval(intervalId);
-  }, [auth0]);
+  }, [getAccessTokenSilently]);
 
   const renderedTasks = useMemo(
     () =>

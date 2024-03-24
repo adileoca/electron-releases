@@ -1,4 +1,3 @@
-// 1. Import Dependencies
 const { app, BrowserWindow } = require("electron");
 
 const createWindow = require("./events/windowEvents");
