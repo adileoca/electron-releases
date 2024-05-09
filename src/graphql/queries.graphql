@@ -1,0 +1,114 @@
+query GetProductsDisplay($countryCode: bpchar) {
+  catalog_products {
+    name
+    images(order_by: { left_margin: desc }) {
+      url
+    }
+    prices(
+      order_by: { amount: asc }
+      where: { country: { iso_code: { _eq: $countryCode } } }
+      limit: 1
+    ) {
+      amount
+    }
+  }
+}
+
+query GetOrderItems($orderId: Int) {
+  sales_items(where: { order_id: { _eq: $orderId } }) {
+    currency
+    name
+    product_code
+    stripe_price_id
+    stripe_product_id
+    amount_discount
+    amount_subtotal
+    amount_tax
+    amount_total
+    id
+    order_id
+    quantity
+    options
+  }
+}
+
+query GetOrders {
+  sales_orders {
+    amount_discount
+    amount_refunded
+    amount_shipping
+    amount_total
+    amount_tax
+    amount_subtotal
+    created_at
+    currency
+    email
+    id
+    name
+    phone_number
+    payment_status
+    payment_details
+    status
+    status_updated
+    stripe_checkout_session_id
+    stripe_customer_id
+    billing_address {
+      created_at
+      country
+      city
+      line1
+      line2
+      postal_code
+      state
+      updated_at
+    }
+    items {
+      amount_discount
+      amount_subtotal
+      amount_tax
+      amount_total
+      options
+      id
+      name
+      currency
+      order_id
+      product_code
+      quantity
+      stripe_price_id
+      stripe_product_id
+    }
+    shipping_address {
+      city
+      country
+      created_at
+      line2
+      line1
+      id
+      postal_code
+      state
+      updated_at
+    }
+    user {
+      email
+      name
+    }
+  }
+}
+
+query GetItems($item_id: Int) {
+  sales_items(where: { id: { _eq: $item_id } }) {
+    currency
+    name
+    product_code
+    stripe_price_id
+    stripe_product_id
+    amount_discount
+    amount_subtotal
+    amount_tax
+    amount_total
+    id
+    order_id
+    quantity
+    options
+  }
+}

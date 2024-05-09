@@ -22,8 +22,8 @@ export default function Sidebar() {
   const location = useLocation();
 
   return (
-    <div className="w-60 bg-neutral-50">
-      <div className="fixed flex h-screen w-60 flex-col overflow-y-auto  ">
+    <div className="h-screen w-60 bg-neutral-50">
+      <div className="fixed flex h-screen w-60 flex-col overflow-y-auto">
         <div className="draggable py-9" />
         <nav className="flex flex-1 flex-col px-5 pb-5">
           <ul className="flex flex-1 flex-col gap-y-7">

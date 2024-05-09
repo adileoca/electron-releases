@@ -1,24 +1,21 @@
-import { TruckIcon, DocumentTextIcon } from "@heroicons/react/20/solid";
-
 import { EyeIcon } from "@heroicons/react/24/outline";
-
-import { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useQuery } from "@apollo/client";
+import { useState } from "react";
 
-import { OrdersService } from "../lib/apolloServices";
 import { formatDate } from "../utils/format";
-import Button from "../components/button";
+
 import OrderTimeline from "../components/orderTimeline";
 import OrderDetails from "../components/orderDetails";
 import OrderHeader from "../components/orderHeader";
 import OrderItems from "../components/orderItems";
 
+import { useGetOrdersQuery } from "../types/graphql";
+
 export default function OrdersView() {
   const [selectedOrder, setSelectedOrder] = useState(null);
 
   return (
-    <div className="mt-5 flow-root px-10">
+    <div className="flow-root px-10">
       {selectedOrder ? (
         <OrderDetailPage
           selectedOrder={selectedOrder}
@@ -50,42 +47,37 @@ const OrderDetailPage = ({ selectedOrder, setSelectedOrder }) => {
 };
 
 const OrdersTable = ({ setSelectedOrder }) => {
-  const orders = useQuery(OrdersService.query);
+  const { data, loading } = useGetOrdersQuery();
 
-  if (orders.loading) {
+  if (loading) {
     return <div>Loading Orders...</div>;
   }
+  if (data) {
+    console.log("data", data)
+    const { sales_orders: orders } = data;
 
-  if (orders.data) {
-    const headers = [
-      "Comanda",
-      "Data",
-      "Status",
-      "Total",
-      "Adresa",
-      "AWB",
-      "Factura",
-      "",
-    ];
+    const headers = ["Comanda", "Data", "Status", "Total", "Adresa", ""];
     return (
-      <table className="min-w-full">
-        <thead className="border-b border-neutral-200 pr-3">
-          {headers.map((header) => (
-            <th key={header}>
-              <p className="py-3.5 text-left font-semibold text-neutral-900">
-                {header}
-              </p>
-            </th>
-          ))}
-        </thead>
-        <tbody>
-          {Array(8)
-            .fill(OrdersService.parse(orders.data)[0])
-            .map((order) => (
+      <div className="mt-5 overflow-hidden rounded-lg border border-neutral-200">
+        <table className="min-w-full">
+          <thead className="border-b border-neutral-200">
+            <tr>
+              {headers.map((header, index) => (
+                <th key={index}>
+                  <p className="px-2.5 py-3.5 text-left font-semibold text-neutral-900">
+                    {header}
+                  </p>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {orders.map((order) => (
               <OrderRow order={order} setSelectedOrder={setSelectedOrder} />
             ))}
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
     );
   }
 };
@@ -95,28 +87,28 @@ const OrderRow = ({ order, setSelectedOrder }) => {
     <tr
       key={order.id}
       onClick={() => setSelectedOrder(order)}
-      className="cursor-pointer items-center even:bg-neutral-50 hover:bg-neutral-100"
+      className="hover cursor-pointer items-center even:bg-neutral-50 hover:bg-neutral-100"
     >
-      <td className="py-4 pr-3">
+      <td className="px-2.5 py-4">
         <button className="whitespace-nowrap font-semibold hover:text-blue-700">
           #{order.id} - {order.name}
         </button>
       </td>
-      <td className="pr-3 whitespace-nowrap ">{formatDate(order.created_at)}</td>
-      <td className="pr-3 whitespace-nowrap ">
-        <span className="items-center rounded-md border border-neutral-400 bg-neutral-100 px-3 py-1.5 text-sm capitalize text-neutral-600">
+      <td className="whitespace-nowrap px-2.5 ">
+        {formatDate(order.created_at)}
+      </td>
+      <td className="whitespace-nowrap px-2.5 ">
+        <span className="items-center rounded-full border border-neutral-400 bg-neutral-100 px-3 py-1.5 text-sm capitalize text-neutral-600">
           {order.status}
         </span>
       </td>
-      <td className="pr-3">{order.amount_total}</td>
-      <td className="pr-3">&nbsp;{order.shipping_address.state},&nbsp;{order.shipping_address.country}</td>
-      <td className="pr-3">
-        <Button Icon={TruckIcon} label="AWB" />
+      <td className="px-2.5">{order.amount_total}</td>
+      <td className="px-2.5">
+        &nbsp;{order.shipping_address.state},&nbsp;
+        {order.shipping_address.country}
       </td>
-      <td className="pr-3">
-        <Button Icon={DocumentTextIcon} label="Factura" />
-      </td>
-      <td className="text-end">
+
+      <td className="pr-5 text-end">
         <EyeIcon className="h-5 w-5" />
       </td>
     </tr>

@@ -35,7 +35,7 @@ const OrderHeader = ({ selectedOrder, setSelectedOrder }) => {
         <div>
           <h2 className="text-sm font-medium text-neutral-600">METODA PLATA</h2>
           <span className="font-semibold">
-            {selectedOrder.payment_method_details.type}
+            {/* {selectedOrder.payment_method_details.type} */}
           </span>
         </div>
         <div>

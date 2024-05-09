@@ -32,7 +32,7 @@ export class OrdersService {
           state
           updated_at
         }
-        order_items {
+        items {
           amount_discount
           amount_subtotal
           amount_tax
@@ -66,7 +66,6 @@ export class OrdersService {
     }
   `;
   static parse = (data) => {
-    console.log("dataaa", data);
     return data.sales_orders.map((order) => ({
       id: order.id,
       amount_discount: order.amount_discount,
@@ -87,7 +86,7 @@ export class OrdersService {
       stripe_checkout_session_id: order.stripe_checkout_session_id,
       stripe_customer_id: order.stripe_customer_id,
       billing_address: order.billing_address,
-      order_items: order.order_items.map((item) => ({
+      items: order.items.map((item) => ({
         amount_discount: item.amount_discount,
         amount_subtotal: item.amount_subtotal,
         amount_tax: item.amount_tax,
@@ -106,7 +105,6 @@ export class OrdersService {
       user: {
         email: order.user.email,
         name: order.user.name,
-
         stripe_customer_id: order.user.stripe_customer_id,
       },
     }));

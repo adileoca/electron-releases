@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useEffect, useState } from "react";
+import React,{ useEffect, useState } from "react";
 import Sidebar from "./components/sidebar";
 import Header from "./components/header";
 
@@ -19,16 +19,10 @@ const App = () => {
   useEffect(() => {
     const fetchToken = async () => {
       const tokenClaims = await auth0.getIdTokenClaims();
-      if (tokenClaims) {
-        setToken(tokenClaims.__raw);
-      }
+      if (tokenClaims) setToken(tokenClaims.__raw);
     };
     fetchToken();
   }, [auth0]);
-
-  useEffect(() => {
-    console.log("tok", token);
-  }, [token]);
 
   if (auth0.isLoading) {
     return <div>Loading...</div>;
@@ -39,14 +33,15 @@ const App = () => {
   }
 
   if (auth0.isAuthenticated && !auth0.isLoading) {
+    console.log("token", token)
     const apolloClient = createApolloClient(token);
     return (
       <ApolloProvider client={apolloClient}>
         <Router>
           <div className="relative flex h-full min-h-screen">
             <Sidebar />
-            <div className="z-50 flex flex-1 flex-col shadow-2xl shadow-neutral-200/75">
-              <Header />
+            <div className="z-50 flex flex-1 flex-col shadow-neutral-200/75">
+              {/* <Header /> */}
               <Routes>
                 <Route path="/" element={<div>cxaca</div>} index />
                 <Route path="/tasks" element={<TaskView />} index />

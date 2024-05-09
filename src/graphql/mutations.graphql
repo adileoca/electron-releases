@@ -1,0 +1,142 @@
+
+
+mutation InsertOrderItem(
+  $name: String!
+  $stripe_product_id: String
+  $stripe_price_id: String
+  $order_id: Int!
+  $quantity: Int!
+  $amount_subtotal: Int!
+  $amount_discount: Int!
+  $amount_tax: Int!
+  $amount_total: Int!
+  $currency: bpchar!
+  $options: jsonb
+  $product_code: String
+) {
+  insert_sales_items_one(
+    object: {
+      order_id: $order_id
+      product_code: $product_code
+      name: $name
+      quantity: $quantity
+      stripe_product_id: $stripe_product_id
+      stripe_price_id: $stripe_price_id
+      amount_subtotal: $amount_subtotal
+      amount_discount: $amount_discount
+      amount_tax: $amount_tax
+      amount_total: $amount_total
+      currency: $currency
+      options: $options
+    }
+  ) {
+    id
+  }
+}
+
+mutation CancelOrder($sessionId: String!) {
+  update_sales_orders(
+    where: { stripe_checkout_session_id: { _eq: $sessionId } }
+    _set: { status: CANCELLED }
+  ) {
+    affected_rows
+  }
+}
+
+mutation UpdateShippingAddress(
+  $sessionId: String
+  $line1: String
+  $line2: String
+  $city: String
+  $state: String
+  $postalCode: String
+  $updatedAt: timestamp
+  $country: String
+) {
+  update_common_addresses(
+    where: {
+      orders_shipping: { stripe_checkout_session_id: { _eq: $sessionId } }
+    }
+    _set: {
+      line1: $line1
+      line2: $line2
+      city: $city
+      state: $state
+      postal_code: $postalCode
+      updated_at: $updatedAt
+      country: $country
+    }
+  ) {
+    affected_rows
+  }
+}
+
+mutation InsertMail(
+  $address: String
+  $refresh_token: String
+  $access_token: String
+  $expiry_date: timestamp
+) {
+  insert_common_email(
+    objects: {
+      address: $address
+      refresh_token: $refresh_token
+      access_token: $access_token
+      expiry_date: $expiry_date
+    }
+  ) {
+    affected_rows
+  }
+}
+
+mutation UpdateMailAccessToken(
+  $email: String
+  $access_token: String
+  $expiry_date: timestamp
+) {
+  update_common_email(
+    where: { address: { _eq: $email } }
+    _set: { access_token: $access_token, expiry_date: $expiry_date }
+  ) {
+    affected_rows
+  }
+}
+
+mutation InsertTask(
+  $itemId: Int
+  $orderId: Int
+  $type: sales_task_types_enum
+  $status: String
+) {
+  insert_sales_tasks(
+    objects: {
+      item_id: $itemId
+      order_id: $orderId
+      type: $type
+      status: $status
+    }
+  ) {
+    affected_rows
+    returning {
+      user_id
+      id
+      item_id
+      order_id
+      created_at
+      updated_at
+      status
+      type
+    }
+  }
+}
+
+mutation InsertConversationThread(
+  $conversation_id: String
+  $thread_id: String
+) {
+  insert_support_conversation_threads_one(
+    object: { conversation_id: $conversation_id, thread_id: $thread_id }
+  ) {
+    id
+  }
+}

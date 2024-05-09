@@ -4,7 +4,7 @@ import ProfileDropdown from "./profile-dropdown";
 export default function Header() {
   return (
     <header className="draggable sticky top-0 bg-white bg-opacity-75 px-10 backdrop-blur">
-      <div className=" py-5">
+      <div className="py-5">
         <div className="relative flex items-center justify-between">
           <div>
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
