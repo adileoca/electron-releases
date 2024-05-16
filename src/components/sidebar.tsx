@@ -6,8 +6,11 @@ import {
   DocumentIcon,
   ChartPieIcon,
 } from "@heroicons/react/24/solid";
+
 import { useNavigate, useLocation } from "react-router-dom";
+import ProfileDropdown from "./profile-dropdown";
 import clsx from "clsx";
+import React from "react";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon },
@@ -17,10 +20,9 @@ const navigation = [
   { name: "Rapoarte", href: "/reports", icon: ChartPieIcon },
 ];
 
-export default function Sidebar() {
+const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
   return (
     <div className="h-screen w-60 bg-neutral-50">
       <div className="fixed flex h-screen w-60 flex-col overflow-y-auto">
@@ -37,7 +39,7 @@ export default function Sidebar() {
                         location.pathname === item.href
                           ? "bg-neutral-50 text-blue-600"
                           : "text-neutral-700 hover:bg-neutral-50 hover:text-blue-600",
-                        "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
+                        "group flex gap-x-3 rounded-md p-2 text-sm font-medium leading-6"
                       )}
                     >
                       <item.icon
@@ -55,9 +57,10 @@ export default function Sidebar() {
               </ul>
             </li>
             <li className="mt-auto">
+              <ProfileDropdown/>
               <button
                 onClick={() => navigate("/settings")}
-                className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-neutral-700 hover:bg-neutral-50 hover:text-blue-600"
+                className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-medium leading-6 text-neutral-700 hover:bg-neutral-50 hover:text-blue-600"
               >
                 <Cog6ToothIcon
                   className="h-6 w-6 shrink-0 text-neutral-400 group-hover:text-blue-600"
@@ -71,4 +74,6 @@ export default function Sidebar() {
       </div>
     </div>
   );
-}
+};
+
+export default Sidebar;

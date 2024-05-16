@@ -12,7 +12,7 @@ const TaskOption = ({ task, isSelected }) => {
       <div className={taskClass}>
         <div className="relative flex items-center justify-between overflow-hidden py-2.5">
           <div className="flex">
-            <h1 className="text-sm font-semibold">{task.type}</h1>
+            <h1 className="text-sm font-medium">{task.type}</h1>
             <span className="text-sm font-normal">&nbsp;/ {task.id}</span>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import { EyeIcon } from "@heroicons/react/24/outline";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useState } from "react";
+import React, { useState } from "react";
 
 import { formatDate } from "../utils/format";
 
@@ -9,10 +9,10 @@ import OrderDetails from "../components/orderDetails";
 import OrderHeader from "../components/orderHeader";
 import OrderItems from "../components/orderItems";
 
-import { useGetOrdersQuery } from "../types/graphql";
+import { useGetOrdersQuery, SalesOrders } from "../types/graphql";
 
-export default function OrdersView() {
-  const [selectedOrder, setSelectedOrder] = useState(null);
+const OrdersView: React.FC = () => {
+  const [selectedOrder, setSelectedOrder] = useState<SalesOrders | null>(null);
 
   return (
     <div className="flow-root px-10">
@@ -26,9 +26,12 @@ export default function OrdersView() {
       )}
     </div>
   );
-}
+};
 
-const OrderDetailPage = ({ selectedOrder, setSelectedOrder }) => {
+const OrderDetailPage: React.FC<{
+  selectedOrder: SalesOrders;
+  setSelectedOrder: React.Dispatch<React.SetStateAction<SalesOrders | null>>;
+}> = ({ selectedOrder, setSelectedOrder }) => {
   const auth0 = useAuth0();
   return (
     <div className="space-y-16">
@@ -41,19 +44,21 @@ const OrderDetailPage = ({ selectedOrder, setSelectedOrder }) => {
         shippingAddress={selectedOrder.shipping_address}
       />
       <OrderItems items={selectedOrder.items} />
-      <OrderTimeline userSrc={auth0.user.picture} />
+      <OrderTimeline userSrc={auth0.user!.picture} />
     </div>
   );
 };
 
-const OrdersTable = ({ setSelectedOrder }) => {
+const OrdersTable: React.FC<{
+  setSelectedOrder: React.Dispatch<React.SetStateAction<SalesOrders | null>>;
+}> = ({ setSelectedOrder }) => {
   const { data, loading } = useGetOrdersQuery();
 
   if (loading) {
     return <div>Loading Orders...</div>;
   }
   if (data) {
-    console.log("data", data)
+    console.log("data", data);
     const { sales_orders: orders } = data;
 
     const headers = ["Comanda", "Data", "Status", "Total", "Adresa", ""];
@@ -64,7 +69,7 @@ const OrdersTable = ({ setSelectedOrder }) => {
             <tr>
               {headers.map((header, index) => (
                 <th key={index}>
-                  <p className="px-2.5 py-3.5 text-left font-semibold text-neutral-900">
+                  <p className="px-2.5 py-3.5 text-left font-medium text-neutral-900">
                     {header}
                   </p>
                 </th>
@@ -72,7 +77,7 @@ const OrdersTable = ({ setSelectedOrder }) => {
             </tr>
           </thead>
           <tbody>
-            {orders.map((order) => (
+            {orders.map((order, index) => (
               <OrderRow order={order} setSelectedOrder={setSelectedOrder} />
             ))}
           </tbody>
@@ -80,9 +85,13 @@ const OrdersTable = ({ setSelectedOrder }) => {
       </div>
     );
   }
+  return <div>no orders</div>;
 };
 
-const OrderRow = ({ order, setSelectedOrder }) => {
+const OrderRow: React.FC<{
+  order: SalesOrders;
+  setSelectedOrder: React.Dispatch<React.SetStateAction<SalesOrders | null>>;
+}> = ({ order, setSelectedOrder }) => {
   return (
     <tr
       key={order.id}
@@ -90,7 +99,7 @@ const OrderRow = ({ order, setSelectedOrder }) => {
       className="hover cursor-pointer items-center even:bg-neutral-50 hover:bg-neutral-100"
     >
       <td className="px-2.5 py-4">
-        <button className="whitespace-nowrap font-semibold hover:text-blue-700">
+        <button className="whitespace-nowrap font-medium hover:text-blue-700">
           #{order.id} - {order.name}
         </button>
       </td>
@@ -104,13 +113,14 @@ const OrderRow = ({ order, setSelectedOrder }) => {
       </td>
       <td className="px-2.5">{order.amount_total}</td>
       <td className="px-2.5">
-        &nbsp;{order.shipping_address.state},&nbsp;
-        {order.shipping_address.country}
+        &nbsp;{order.shipping_address?.state},&nbsp;
+        {order.shipping_address?.country}
       </td>
-
       <td className="pr-5 text-end">
         <EyeIcon className="h-5 w-5" />
       </td>
     </tr>
   );
 };
+
+export default OrdersView;

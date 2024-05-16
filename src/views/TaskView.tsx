@@ -48,7 +48,7 @@ const ListSuggestedTasks: React.FC<{
     >
       <RadioGroup.Label
         as="div"
-        className="py-2.5  text-sm font-semibold text-neutral-600"
+        className="py-2.5  text-sm font-medium text-neutral-600"
       >
         SARCINI SUGERATE
       </RadioGroup.Label>
@@ -67,7 +67,7 @@ const ListSuggestedTasks: React.FC<{
                 >
                   <div className="relative flex items-center justify-between overflow-hidden py-2.5 pl-2">
                     <div className="flex">
-                      <h1 className="text-sm font-semibold">{task.type}</h1>
+                      <h1 className="text-sm font-medium">{task.type}</h1>
                       <span className="text-sm font-normal">
                         &nbsp;/ {task.id}
                       </span>

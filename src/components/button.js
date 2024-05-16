@@ -4,7 +4,7 @@ const Button = ({ Icon = null, onClick = null, label }) => (
     onClick={onClick}
   >
     {Icon && <Icon className="h-4 pr-2 text-neutral-600" />}
-    <span className="text-sm font-semibold text-neutral-600">{label}</span>
+    <span className="text-sm font-medium text-neutral-600">{label}</span>
   </button>
 );
 

@@ -24,7 +24,8 @@
   },
   "scripts": {
     "dev": "concurrently -k \"BROWSER=none npm start\" \"npm:electron\"",
-    "electron": "wait-on tcp:3001 --timeout=10000 && electron .",
+    "electron": "wait-on http://127.0.0.1:3001 --timeout=30000 && electron .",
+    "codegen": "graphql-codegen && node ./src/types/generateFlatTypes.js",
     "start": "PORT=3001 craco start",
     "build": "craco build",
     "test": "craco test",

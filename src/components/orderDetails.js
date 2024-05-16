@@ -1,11 +1,15 @@
-import { PencilSquareIcon, TruckIcon, DocumentTextIcon } from "@heroicons/react/20/solid";
+import {
+  PencilSquareIcon,
+  TruckIcon,
+  DocumentTextIcon,
+} from "@heroicons/react/20/solid";
 import { AddressTable } from "./addressTable";
 import Button from "./button";
 
 const OrderDetails = ({ shippingAddress, billingAddress }) => (
   <div>
     <div className="mb-5 flex items-center justify-between border-b border-neutral-200 pb-3">
-      <h2 className="text-xl font-semibold">Detalii</h2>
+      <h2 className="text-xl font-medium">Detalii</h2>
       <div className="flex space-x-3">
         <Button Icon={TruckIcon} label="AWB" />
         <Button Icon={DocumentTextIcon} label="Factura" />

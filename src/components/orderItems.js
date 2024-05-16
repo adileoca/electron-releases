@@ -5,7 +5,7 @@ import Button from "./button";
 const OrderItems = ({ items }) => (
   <div>
     <div className="mb-5 flex items-center justify-between border-b border-neutral-200 pb-3">
-      <h2 className="text-xl font-semibold">Produse</h2>
+      <h2 className="text-xl font-medium">Produse</h2>
       <Button Icon={PencilSquareIcon} label="Editeaza" />
     </div>
     <div>
@@ -17,7 +17,7 @@ const OrderItems = ({ items }) => (
           <div className="relative ml-6 flex flex-1 flex-col justify-between">
             <div className="grid grid-cols-2 justify-between">
               <div className="space-y-1 pr-6">
-                <span className="inline-flex font-semibold text-neutral-900 hover:text-blue-600 hover:underline">
+                <span className="inline-flex font-medium text-neutral-900 hover:text-blue-600 hover:underline">
                   {item.name}
                 </span>
                 <LineItem label="Orientation" value={item.orientation} />
@@ -32,7 +32,7 @@ const OrderItems = ({ items }) => (
               </div>
 
               <div className=" flex flex-col justify-start">
-                <span className="text-right text-xl font-semibold text-neutral-900">
+                <span className="text-right text-xl font-medium text-neutral-900">
                   {`${item.amount_total} ${item.currency}`}
                 </span>
               </div>
@@ -49,7 +49,7 @@ const LineItem = ({ label, value }) => {
     <>
       {value && (
         <div className="flex items-center text-neutral-900">
-          <span className="font-semibold">{label}:&nbsp;</span>
+          <span className="font-medium">{label}:&nbsp;</span>
           <span>{value}</span>
         </div>
       )}

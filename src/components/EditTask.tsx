@@ -1,27 +1,29 @@
 import React, { useEffect } from "react";
 
-import { useGetItemsQuery, SalesTasks, SalesItems } from "@/types/graphql";
+import {
+  useGetItemsByItemIdQuery,
+  SalesTasks,
+  SalesItems,
+} from "@/types/graphql";
 import { getTimestamp } from "@/utils";
 
 const ipcRenderer = window.require("electron").ipcRenderer;
 
 const EditTask: React.FC<{ selectedTask: SalesTasks }> = ({ selectedTask }) => {
-  const { data, loading } = useGetItemsQuery({
+  const { data, loading } = useGetItemsByItemIdQuery({
     variables: { item_id: selectedTask.item_id },
   });
 
   useEffect(() => {
     console.log("data", data);
   }, [data]);
-  
+
   return (
-    <div className="p-8">
+    <div className="px-8">
       {loading ? (
         <div>Loading...</div>
       ) : (
-        data && (
-          <Task item={data.sales_items[0] as SalesItems} task={selectedTask} />
-        )
+        data && <Task item={data.sales_items[0]} task={selectedTask} />
       )}
     </div>
   );
@@ -36,18 +38,18 @@ const Task: React.FC<{ item: SalesItems; task: SalesTasks }> = ({
   return (
     <>
       <div className="flex">
-        <img src={item.options.thumbnail} className="h-60 rounded-xl" alt="" />
+        {/* <img src={item.configuration.thumbnail} className="h-60 rounded-xl" alt="" /> */}
         {/* // todo: replace with item.versions */}
         <div className="ml-8 flex w-full flex-col justify-between">
           <div>
             <h1 className="text-xl font-bold">{item.name}</h1>
-            <h2 className="text-xl font-semibold text-neutral-600">
-              {`${item.options.width} x ${item.options.height} cm`}
+            <h2 className="text-xl font-medium text-neutral-600">
+              {`${item.configuration?.width} x ${item.configuration?.height} cm`}
             </h2>
           </div>
           <div className="pb-8">
-            <h3 className="text-sm font-semibold">Ultima actualizare </h3>
-            <h3 className=" text-sm font-semibold text-neutral-600">
+            <h3 className="text-sm font-medium">Ultima actualizare </h3>
+            <h3 className=" text-sm font-medium text-neutral-600">
               {getTimestamp(task.created_at)}
             </h3>
           </div>
@@ -55,11 +57,11 @@ const Task: React.FC<{ item: SalesItems; task: SalesTasks }> = ({
             <button
               onClick={() =>
                 ipcRenderer.send("download-and-open-in-photoshop", {
-                  image: item.options.image.url,
-                  background: item.options.background.url,
+                  image: item.configuration!.main_url,
+                  background: item.configuration!.background_url,
                 })
               }
-              className="inline-flex rounded-md bg-blue-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+              className="inline-flex rounded-md bg-blue-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             >
               Deschide in Photoshop
             </button>
@@ -67,8 +69,10 @@ const Task: React.FC<{ item: SalesItems; task: SalesTasks }> = ({
         </div>
       </div>
       <div className="pt-10">
-        <h2 className="inline text-lg font-semibold">Cerinte:</h2>
-        <span className="font-base text-lg">&nbsp;{item.options.details}</span>
+        <h2 className="inline text-lg font-medium">Cerinte:</h2>
+        <span className="font-base text-lg">
+          &nbsp;{item.configuration?.details}
+        </span>
       </div>
     </>
   );

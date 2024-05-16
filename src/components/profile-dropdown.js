@@ -21,7 +21,7 @@ export default function ProfileDropdown() {
           alt=""
         />
         <span className="hidden lg:flex lg:items-center">
-          <span className="ml-4 text-sm font-semibold leading-6 text-gray-900">
+          <span className="ml-4 text-sm font-medium leading-6 text-gray-900">
             {auth0.user.name}
           </span>
           <ChevronDownIcon

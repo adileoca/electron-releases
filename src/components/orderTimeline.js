@@ -40,7 +40,7 @@ const OrderTimeline = ({ userSrc }) => {
   return (
     <div>
       <div className="mb-5 flex items-center justify-between border-b border-neutral-200 pb-3">
-        <h2 className="text-xl font-semibold">Istoric</h2>
+        <h2 className="text-xl font-medium">Istoric</h2>
         <Button
           Icon={PencilSquareIcon}
           onClick={() => setEdit(!edit)}
@@ -131,7 +131,7 @@ const OrderTimeline = ({ userSrc }) => {
               />
             </div>
             <div className="absolute inset-x-0 bottom-0 flex justify-between py-2 pl-3 pr-2">
-              <button className="rounded-md bg-white px-2.5 py-1.5  font-semibold text-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 hover:bg-neutral-50">
+              <button className="rounded-md bg-white px-2.5 py-1.5  font-medium text-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 hover:bg-neutral-50">
                 Comment
               </button>
             </div>

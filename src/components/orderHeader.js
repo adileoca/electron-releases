@@ -15,7 +15,7 @@ const OrderHeader = ({ selectedOrder, setSelectedOrder }) => {
           </button>
         </div>
         <div className="flex items-center justify-between pt-2">
-          <h1 className="text-2xl font-semibold">{selectedOrder.id}</h1>
+          <h1 className="text-2xl font-medium">{selectedOrder.id}</h1>
           <div className="flex justify-end">
             <Button
               onClick={() => setSelectedOrder(null)}
@@ -28,23 +28,23 @@ const OrderHeader = ({ selectedOrder, setSelectedOrder }) => {
       <div className="flex justify-between pt-2.5">
         <div>
           <h2 className="text-sm font-medium text-neutral-600">CREATED AT</h2>
-          <span className="font-semibold">
+          <span className="font-medium">
             {formatDate(selectedOrder.created_at)}
           </span>
         </div>
         <div>
           <h2 className="text-sm font-medium text-neutral-600">METODA PLATA</h2>
-          <span className="font-semibold">
+          <span className="font-medium">
             {/* {selectedOrder.payment_method_details.type} */}
           </span>
         </div>
         <div>
           <h2 className="text-sm font-medium text-neutral-600">STATUS</h2>
-          <span className="font-semibold">{selectedOrder.status}</span>
+          <span className="font-medium">{selectedOrder.status}</span>
         </div>
         <div>
           <h2 className="text-sm font-medium text-neutral-600">LAST UPDATE</h2>
-          <span className="font-semibold">
+          <span className="font-medium">
             {formatDate(selectedOrder.status_updated)}
           </span>
         </div>
