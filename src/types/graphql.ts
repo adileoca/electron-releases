@@ -8845,17 +8845,39 @@ export type SalesItemConfigurations = {
   background_styles_transform?: Maybe<Scalars['String']['output']>;
   background_url?: Maybe<Scalars['String']['output']>;
   details?: Maybe<Scalars['String']['output']>;
-  height?: Maybe<Scalars['Int']['output']>;
   id?: Scalars['Int']['output'];
-  main_styles_filter?: Maybe<Scalars['String']['output']>;
+  item?: Array<SalesItems>;
+    main_styles_filter?: Maybe<Scalars['String']['output']>;
   main_styles_transform?: Maybe<Scalars['String']['output']>;
   main_url?: Maybe<Scalars['String']['output']>;
   orientation?: Maybe<Scalars['String']['output']>;
   preview?: Maybe<Scalars['String']['output']>;
   remove_background?: Maybe<Scalars['String']['output']>;
   restore?: Maybe<Scalars['String']['output']>;
-  unit?: Maybe<Scalars['String']['output']>;
-  width?: Maybe<Scalars['Int']['output']>;
+  /** An object relationship */
+  size?: Maybe<CatalogSizes>;
+  size_id?: Maybe<Scalars['Int']['output']>;
+  thumbnail_url?: Maybe<Scalars['String']['output']>;
+};
+
+
+/** columns and relationships of "sales.item_configurations" */
+export type SalesItemConfigurationsItemArgs = {
+  distinct_on?: InputMaybe<Array<SalesItemsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<SalesItemsOrderBy>>;
+  where?: InputMaybe<SalesItemsBoolExp>;
+};
+
+
+/** columns and relationships of "sales.item_configurations" */
+export type SalesItemConfigurationsItemAggregateArgs = {
+  distinct_on?: InputMaybe<Array<SalesItemsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<SalesItemsOrderBy>>;
+  where?: InputMaybe<SalesItemsBoolExp>;
 };
 
 /** aggregated selection of "sales.item_configurations" */
@@ -8891,9 +8913,8 @@ export type SalesItemConfigurationsAggregateFieldsCountArgs = {
 /** aggregate avg on columns */
 export type SalesItemConfigurationsAvgFields = {
   __typename?: 'sales_item_configurations_avg_fields';
-  height?: Maybe<Scalars['Float']['output']>;
   id?: Maybe<Scalars['Float']['output']>;
-  width?: Maybe<Scalars['Float']['output']>;
+  size_id?: Maybe<Scalars['Float']['output']>;
 };
 
 /** Boolean expression to filter rows from the table "sales.item_configurations". All fields are combined with a logical 'AND'. */
@@ -8905,8 +8926,9 @@ export type SalesItemConfigurationsBoolExp = {
   background_styles_transform?: InputMaybe<StringComparisonExp>;
   background_url?: InputMaybe<StringComparisonExp>;
   details?: InputMaybe<StringComparisonExp>;
-  height?: InputMaybe<IntComparisonExp>;
   id?: InputMaybe<IntComparisonExp>;
+  item?: InputMaybe<SalesItemsBoolExp>;
+  item_aggregate?: InputMaybe<SalesItemsAggregateBoolExp>;
   main_styles_filter?: InputMaybe<StringComparisonExp>;
   main_styles_transform?: InputMaybe<StringComparisonExp>;
   main_url?: InputMaybe<StringComparisonExp>;
@@ -8914,8 +8936,9 @@ export type SalesItemConfigurationsBoolExp = {
   preview?: InputMaybe<StringComparisonExp>;
   remove_background?: InputMaybe<StringComparisonExp>;
   restore?: InputMaybe<StringComparisonExp>;
-  unit?: InputMaybe<StringComparisonExp>;
-  width?: InputMaybe<IntComparisonExp>;
+  size?: InputMaybe<CatalogSizesBoolExp>;
+  size_id?: InputMaybe<IntComparisonExp>;
+  thumbnail_url?: InputMaybe<StringComparisonExp>;
 };
 
 /** unique or primary key constraints on table "sales.item_configurations" */
@@ -8926,9 +8949,8 @@ export enum SalesItemConfigurationsConstraint {
 
 /** input type for incrementing numeric columns in table "sales.item_configurations" */
 export type SalesItemConfigurationsIncInput = {
-  height?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
-  width?: InputMaybe<Scalars['Int']['input']>;
+  size_id?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** input type for inserting data into table "sales.item_configurations" */
@@ -8937,8 +8959,8 @@ export type SalesItemConfigurationsInsertInput = {
   background_styles_transform?: InputMaybe<Scalars['String']['input']>;
   background_url?: InputMaybe<Scalars['String']['input']>;
   details?: InputMaybe<Scalars['String']['input']>;
-  height?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
+  item?: InputMaybe<SalesItemsArrRelInsertInput>;
   main_styles_filter?: InputMaybe<Scalars['String']['input']>;
   main_styles_transform?: InputMaybe<Scalars['String']['input']>;
   main_url?: InputMaybe<Scalars['String']['input']>;
@@ -8946,8 +8968,9 @@ export type SalesItemConfigurationsInsertInput = {
   preview?: InputMaybe<Scalars['String']['input']>;
   remove_background?: InputMaybe<Scalars['String']['input']>;
   restore?: InputMaybe<Scalars['String']['input']>;
-  unit?: InputMaybe<Scalars['String']['input']>;
-  width?: InputMaybe<Scalars['Int']['input']>;
+  size?: InputMaybe<CatalogSizesObjRelInsertInput>;
+  size_id?: InputMaybe<Scalars['Int']['input']>;
+  thumbnail_url?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** aggregate max on columns */
@@ -8957,7 +8980,6 @@ export type SalesItemConfigurationsMaxFields = {
   background_styles_transform?: Maybe<Scalars['String']['output']>;
   background_url?: Maybe<Scalars['String']['output']>;
   details?: Maybe<Scalars['String']['output']>;
-  height?: Maybe<Scalars['Int']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
   main_styles_filter?: Maybe<Scalars['String']['output']>;
   main_styles_transform?: Maybe<Scalars['String']['output']>;
@@ -8966,8 +8988,8 @@ export type SalesItemConfigurationsMaxFields = {
   preview?: Maybe<Scalars['String']['output']>;
   remove_background?: Maybe<Scalars['String']['output']>;
   restore?: Maybe<Scalars['String']['output']>;
-  unit?: Maybe<Scalars['String']['output']>;
-  width?: Maybe<Scalars['Int']['output']>;
+  size_id?: Maybe<Scalars['Int']['output']>;
+  thumbnail_url?: Maybe<Scalars['String']['output']>;
 };
 
 /** aggregate min on columns */
@@ -8977,7 +8999,6 @@ export type SalesItemConfigurationsMinFields = {
   background_styles_transform?: Maybe<Scalars['String']['output']>;
   background_url?: Maybe<Scalars['String']['output']>;
   details?: Maybe<Scalars['String']['output']>;
-  height?: Maybe<Scalars['Int']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
   main_styles_filter?: Maybe<Scalars['String']['output']>;
   main_styles_transform?: Maybe<Scalars['String']['output']>;
@@ -8986,8 +9007,8 @@ export type SalesItemConfigurationsMinFields = {
   preview?: Maybe<Scalars['String']['output']>;
   remove_background?: Maybe<Scalars['String']['output']>;
   restore?: Maybe<Scalars['String']['output']>;
-  unit?: Maybe<Scalars['String']['output']>;
-  width?: Maybe<Scalars['Int']['output']>;
+  size_id?: Maybe<Scalars['Int']['output']>;
+  thumbnail_url?: Maybe<Scalars['String']['output']>;
 };
 
 /** response of any mutation on the table "sales.item_configurations" */
@@ -9019,8 +9040,8 @@ export type SalesItemConfigurationsOrderBy = {
   background_styles_transform?: InputMaybe<OrderBy>;
   background_url?: InputMaybe<OrderBy>;
   details?: InputMaybe<OrderBy>;
-  height?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
+  item_aggregate?: InputMaybe<SalesItemsAggregateOrderBy>;
   main_styles_filter?: InputMaybe<OrderBy>;
   main_styles_transform?: InputMaybe<OrderBy>;
   main_url?: InputMaybe<OrderBy>;
@@ -9028,8 +9049,9 @@ export type SalesItemConfigurationsOrderBy = {
   preview?: InputMaybe<OrderBy>;
   remove_background?: InputMaybe<OrderBy>;
   restore?: InputMaybe<OrderBy>;
-  unit?: InputMaybe<OrderBy>;
-  width?: InputMaybe<OrderBy>;
+  size?: InputMaybe<CatalogSizesOrderBy>;
+  size_id?: InputMaybe<OrderBy>;
+  thumbnail_url?: InputMaybe<OrderBy>;
 };
 
 /** primary key columns input for table: sales.item_configurations */
@@ -9048,8 +9070,6 @@ export enum SalesItemConfigurationsSelectColumn {
   /** column name */
   Details = 'details',
   /** column name */
-  Height = 'height',
-  /** column name */
   Id = 'id',
   /** column name */
   MainStylesFilter = 'main_styles_filter',
@@ -9066,9 +9086,9 @@ export enum SalesItemConfigurationsSelectColumn {
   /** column name */
   Restore = 'restore',
   /** column name */
-  Unit = 'unit',
+  SizeId = 'size_id',
   /** column name */
-  Width = 'width'
+  ThumbnailUrl = 'thumbnail_url'
 }
 
 /** input type for updating data in table "sales.item_configurations" */
@@ -9077,7 +9097,6 @@ export type SalesItemConfigurationsSetInput = {
   background_styles_transform?: InputMaybe<Scalars['String']['input']>;
   background_url?: InputMaybe<Scalars['String']['input']>;
   details?: InputMaybe<Scalars['String']['input']>;
-  height?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   main_styles_filter?: InputMaybe<Scalars['String']['input']>;
   main_styles_transform?: InputMaybe<Scalars['String']['input']>;
@@ -9086,32 +9105,29 @@ export type SalesItemConfigurationsSetInput = {
   preview?: InputMaybe<Scalars['String']['input']>;
   remove_background?: InputMaybe<Scalars['String']['input']>;
   restore?: InputMaybe<Scalars['String']['input']>;
-  unit?: InputMaybe<Scalars['String']['input']>;
-  width?: InputMaybe<Scalars['Int']['input']>;
+  size_id?: InputMaybe<Scalars['Int']['input']>;
+  thumbnail_url?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** aggregate stddev on columns */
 export type SalesItemConfigurationsStddevFields = {
   __typename?: 'sales_item_configurations_stddev_fields';
-  height?: Maybe<Scalars['Float']['output']>;
   id?: Maybe<Scalars['Float']['output']>;
-  width?: Maybe<Scalars['Float']['output']>;
+  size_id?: Maybe<Scalars['Float']['output']>;
 };
 
 /** aggregate stddev_pop on columns */
 export type SalesItemConfigurationsStddevPopFields = {
   __typename?: 'sales_item_configurations_stddev_pop_fields';
-  height?: Maybe<Scalars['Float']['output']>;
   id?: Maybe<Scalars['Float']['output']>;
-  width?: Maybe<Scalars['Float']['output']>;
+  size_id?: Maybe<Scalars['Float']['output']>;
 };
 
 /** aggregate stddev_samp on columns */
 export type SalesItemConfigurationsStddevSampFields = {
   __typename?: 'sales_item_configurations_stddev_samp_fields';
-  height?: Maybe<Scalars['Float']['output']>;
   id?: Maybe<Scalars['Float']['output']>;
-  width?: Maybe<Scalars['Float']['output']>;
+  size_id?: Maybe<Scalars['Float']['output']>;
 };
 
 /** Streaming cursor of the table "sales_item_configurations" */
@@ -9128,7 +9144,6 @@ export type SalesItemConfigurationsStreamCursorValueInput = {
   background_styles_transform?: InputMaybe<Scalars['String']['input']>;
   background_url?: InputMaybe<Scalars['String']['input']>;
   details?: InputMaybe<Scalars['String']['input']>;
-  height?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   main_styles_filter?: InputMaybe<Scalars['String']['input']>;
   main_styles_transform?: InputMaybe<Scalars['String']['input']>;
@@ -9137,16 +9152,15 @@ export type SalesItemConfigurationsStreamCursorValueInput = {
   preview?: InputMaybe<Scalars['String']['input']>;
   remove_background?: InputMaybe<Scalars['String']['input']>;
   restore?: InputMaybe<Scalars['String']['input']>;
-  unit?: InputMaybe<Scalars['String']['input']>;
-  width?: InputMaybe<Scalars['Int']['input']>;
+  size_id?: InputMaybe<Scalars['Int']['input']>;
+  thumbnail_url?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** aggregate sum on columns */
 export type SalesItemConfigurationsSumFields = {
   __typename?: 'sales_item_configurations_sum_fields';
-  height?: Maybe<Scalars['Int']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
-  width?: Maybe<Scalars['Int']['output']>;
+  size_id?: Maybe<Scalars['Int']['output']>;
 };
 
 /** update columns of table "sales.item_configurations" */
@@ -9159,8 +9173,6 @@ export enum SalesItemConfigurationsUpdateColumn {
   BackgroundUrl = 'background_url',
   /** column name */
   Details = 'details',
-  /** column name */
-  Height = 'height',
   /** column name */
   Id = 'id',
   /** column name */
@@ -9178,9 +9190,9 @@ export enum SalesItemConfigurationsUpdateColumn {
   /** column name */
   Restore = 'restore',
   /** column name */
-  Unit = 'unit',
+  SizeId = 'size_id',
   /** column name */
-  Width = 'width'
+  ThumbnailUrl = 'thumbnail_url'
 }
 
 export type SalesItemConfigurationsUpdates = {
@@ -9195,25 +9207,22 @@ export type SalesItemConfigurationsUpdates = {
 /** aggregate var_pop on columns */
 export type SalesItemConfigurationsVarPopFields = {
   __typename?: 'sales_item_configurations_var_pop_fields';
-  height?: Maybe<Scalars['Float']['output']>;
   id?: Maybe<Scalars['Float']['output']>;
-  width?: Maybe<Scalars['Float']['output']>;
+  size_id?: Maybe<Scalars['Float']['output']>;
 };
 
 /** aggregate var_samp on columns */
 export type SalesItemConfigurationsVarSampFields = {
   __typename?: 'sales_item_configurations_var_samp_fields';
-  height?: Maybe<Scalars['Float']['output']>;
   id?: Maybe<Scalars['Float']['output']>;
-  width?: Maybe<Scalars['Float']['output']>;
+  size_id?: Maybe<Scalars['Float']['output']>;
 };
 
 /** aggregate variance on columns */
 export type SalesItemConfigurationsVarianceFields = {
   __typename?: 'sales_item_configurations_variance_fields';
-  height?: Maybe<Scalars['Float']['output']>;
   id?: Maybe<Scalars['Float']['output']>;
-  width?: Maybe<Scalars['Float']['output']>;
+  size_id?: Maybe<Scalars['Float']['output']>;
 };
 
 /** columns and relationships of "sales.items" */
@@ -13081,7 +13090,7 @@ export type GetItemsByItemIdQueryVariables = Exact<{
 }>;
 
 
-export type GetItemsByItemIdQuery = { __typename?: 'query_root', sales_items: Array<{ __typename?: 'sales_items', currency?: any | null, name: string, product_code: string, stripe_price_id?: string | null, stripe_product_id?: string | null, amount_discount?: number | null, amount_subtotal?: number | null, amount_tax?: number | null, amount_total?: number | null, id: number, order_id?: number | null, quantity?: number | null, configuration?: { __typename?: 'sales_item_configurations', background_styles_filter?: string | null, background_styles_transform?: string | null, background_url?: string | null, details?: string | null, height?: number | null, main_styles_filter?: string | null, main_styles_transform?: string | null, main_url?: string | null, preview?: string | null, remove_background?: string | null, orientation?: string | null, restore?: string | null, unit?: string | null, width?: number | null } | null }> };
+export type GetItemsByItemIdQuery = { __typename?: 'query_root', sales_items: Array<{ __typename?: 'sales_items', currency?: any | null, name: string, product_code: string, stripe_price_id?: string | null, stripe_product_id?: string | null, amount_discount?: number | null, amount_subtotal?: number | null, amount_tax?: number | null, amount_total?: number | null, id: number, order_id?: number | null, quantity?: number | null, configuration?: { __typename?: 'sales_item_configurations', thumbnail_url?: string | null, background_styles_filter?: string | null, background_styles_transform?: string | null, background_url?: string | null, details?: string | null, main_styles_filter?: string | null, main_styles_transform?: string | null, main_url?: string | null, preview?: string | null, remove_background?: string | null, orientation?: string | null, restore?: string | null, size?: { __typename?: 'catalog_sizes', width_cm: any, height_cm: any, width_in: any, height_in: any } | null } | null }> };
 
 export type GetTasksSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
@@ -13201,11 +13210,11 @@ export const GetItemsByItemIdDocument = gql`
     order_id
     quantity
     configuration {
+      thumbnail_url
       background_styles_filter
       background_styles_transform
       background_url
       details
-      height
       main_styles_filter
       main_styles_transform
       main_url
@@ -13213,8 +13222,12 @@ export const GetItemsByItemIdDocument = gql`
       remove_background
       orientation
       restore
-      unit
-      width
+      size {
+        width_cm
+        height_cm
+        width_in
+        height_in
+      }
     }
   }
 }

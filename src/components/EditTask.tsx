@@ -7,7 +7,7 @@ import {
 } from "@/types/graphql";
 import { getTimestamp } from "@/utils";
 
-const ipcRenderer = window.require("electron").ipcRenderer;
+const { ipcRenderer } = window.require("electron");
 
 const EditTask: React.FC<{ selectedTask: SalesTasks }> = ({ selectedTask }) => {
   const { data, loading } = useGetItemsByItemIdQuery({
@@ -38,19 +38,23 @@ const Task: React.FC<{ item: SalesItems; task: SalesTasks }> = ({
   return (
     <>
       <div className="flex">
-        {/* <img src={item.configuration.thumbnail} className="h-60 rounded-xl" alt="" /> */}
+        <img
+          src={item.configuration!.thumbnail_url!}
+          className="h-60 rounded-xl"
+          alt=""
+        />
         {/* // todo: replace with item.versions */}
         <div className="ml-8 flex w-full flex-col justify-between">
           <div>
             <h1 className="text-xl font-bold">{item.name}</h1>
             <h2 className="text-xl font-medium text-neutral-600">
-              {`${item.configuration?.width} x ${item.configuration?.height} cm`}
+              {/* {getTimestamp(task.created_at)} */}
+              {`${item.configuration?.size?.width_cm} x ${item.configuration?.size?.height_cm} cm`}
             </h2>
           </div>
           <div className="pb-8">
-            <h3 className="text-sm font-medium">Ultima actualizare </h3>
             <h3 className=" text-sm font-medium text-neutral-600">
-              {getTimestamp(task.created_at)}
+              Requirements: {item.configuration?.details}
             </h3>
           </div>
           <div>

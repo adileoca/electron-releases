@@ -61,6 +61,7 @@ query GetOrders {
     }
   }
 }
+
 query GetItemsByItemId($item_id: Int) {
   sales_items(where: {id: {_eq: $item_id}}) {
     currency
@@ -76,11 +77,11 @@ query GetItemsByItemId($item_id: Int) {
     order_id
     quantity
     configuration {
+      thumbnail_url
       background_styles_filter
       background_styles_transform
       background_url
       details
-      height
       main_styles_filter
       main_styles_transform
       main_url
@@ -88,8 +89,12 @@ query GetItemsByItemId($item_id: Int) {
       remove_background
       orientation
       restore
-      unit
-      width
+      size {
+        width_cm
+        height_cm
+        width_in
+        height_in
+      }
     }
   }
 }

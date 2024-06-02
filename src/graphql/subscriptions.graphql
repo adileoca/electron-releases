@@ -1,14 +1,12 @@
 subscription GetTasks {
   sales_tasks {
     user_id
-		id
-		item_id
-		order_id
-		created_at
-		updated_at
-		type
-		status
+    id
+    item_id
+    order_id
+    created_at
+    updated_at
+    type
+    status
   }
 }
-
-

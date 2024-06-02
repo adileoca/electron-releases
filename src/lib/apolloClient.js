@@ -18,7 +18,7 @@ export const createApolloClient = (token) => {
   });
 
   const wsLink = new WebSocketLink({
-    uri: process.env.REACT_APP_HASURA_WS_ENDPOINT,
+    uri: process.env.REACT_APP_HASURA_WS_ENDPOINT, // todo: change to wss before prouction
     options: {
       reconnect: true,
       lazy: true,

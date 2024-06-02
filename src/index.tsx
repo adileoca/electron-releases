@@ -12,11 +12,11 @@ if (rootElement) {
   root.render(
     <React.StrictMode>
       <Auth0Provider
-        domain="dev-qlush8at7ytza0tr.eu.auth0.com"
-        clientId="VARjIegzs032HFVd1c4wFd9ZXyDypRl4"
+        domain={process.env.REACT_APP_AUTH0_DOMAIN!}
+        clientId={process.env.REACT_APP_AUTH0_CLIENT_ID!}
         authorizationParams={{
           redirect_uri: window.location.origin,
-          audience: "https://dev-qlush8at7ytza0tr.eu.auth0.com/api/v2/",
+          audience: process.env.REACT_APP_AUTH0_AUDIENCE,
         }}
       >
         <App />

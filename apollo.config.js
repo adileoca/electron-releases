@@ -9,13 +9,6 @@ module.exports = {
       },
       skipSSLValidation: true,
     },
-    includes: [
-      "src/**/*.vue",
-      "src/**/*.js",
-      "src/**/*.ts",
-      "src/**/*.jsx",
-      "src/**/*.tsx",
-      "src/**/*.graphql",
-    ],
+    includes: ["src/**/*.graphql"],
   },
 };

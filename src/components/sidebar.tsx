@@ -58,7 +58,7 @@ const Sidebar: React.FC = () => {
             </li>
             <li className="mt-auto">
               <ProfileDropdown/>
-              <button
+              {/* <button
                 onClick={() => navigate("/settings")}
                 className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-medium leading-6 text-neutral-700 hover:bg-neutral-50 hover:text-blue-600"
               >
@@ -67,7 +67,7 @@ const Sidebar: React.FC = () => {
                   aria-hidden="true"
                 />
                 Setari
-              </button>
+              </button> */}
             </li>
           </ul>
         </nav>

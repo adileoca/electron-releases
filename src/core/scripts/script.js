@@ -1,3 +1,5 @@
+
+// get the psd for the current product
 var fileRef = new File(
   "/Users/leocaadi-stefan/Desktop/site/interface/core/scripts/file2.psd"
 );
@@ -5,6 +7,7 @@ var fileRef = new File(
 var docRef = app.open(fileRef);
 
 placeFileIntoDocument(arguments[0]);
+// place background (second argument)
 placeFileIntoDocument(arguments[1]);
 
 var labelLayer = docRef.artLayers.getByName("Label");
