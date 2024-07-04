@@ -6,6 +6,17 @@
     "noEmit": true,
     "strict": true,
     "baseUrl": "src",
+    "module": "commonjs",
+    "target": "esnext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "jsx": "react-jsx", // Adjust if using React
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "skipLibCheck": true,
+    "incremental": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "strictNullChecks": true,
     "paths": {
       "@/*": ["*"],
       "@/types/*": ["types/*"],
@@ -18,17 +29,7 @@
       "@/locale/*": ["locale/*"],
       "@/constants/*": ["constants/*"]
     },
-    "module": "commonjs",
-    "target": "esnext",
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "jsx": "react-jsx", // Adjust if using React
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "skipLibCheck": true,
-    "incremental": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "strictNullChecks": true
+
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "**/node_modules/*"]

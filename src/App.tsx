@@ -14,42 +14,44 @@ import "./styles/App.css";
 const { ipcRenderer } = window.require("electron");
 
 const App: React.FC = () => {
-  const auth0 = useAuth0();
+  const { isLoading, isAuthenticated, loginWithRedirect, getIdTokenClaims } =
+    useAuth0();
   const [apolloClient, setApolloClient] = useState<any>(null);
 
   const fetchToken = useCallback(async () => {
-    const tokenClaims = await auth0.getIdTokenClaims();
+    if (!isAuthenticated) return;
+    const tokenClaims = await getIdTokenClaims();
     if (tokenClaims) {
       const token = tokenClaims.__raw;
       ipcRenderer.send("set-token", token);
       return token;
     }
     return null;
-  }, [auth0]);
+  }, [getIdTokenClaims, isAuthenticated]);
 
-  useEffect(() => {
-    const initializeClient = async () => {
-      const token = await fetchToken();
-      if (token) {
-        setApolloClient(createApolloClient(token));
-      }
-    };
-    initializeClient();
-    const tokenRefreshInterval = setInterval(() => {
-      fetchToken();
-    }, 3600000); // Refresh token every hour
-    return () => clearInterval(tokenRefreshInterval);
+  const initializeApolloClient = useCallback(async () => {
+    const token = await fetchToken();
+    if (token) setApolloClient(createApolloClient(token));
   }, [fetchToken]);
 
-  if (auth0.isLoading) {
+  useEffect(() => {
+    initializeApolloClient();
+    const tokenRefreshInterval = setInterval(() => {
+      initializeApolloClient(); // Re-initialize Apollo Client with new token
+    }, 1800000); // Refresh token every hour
+    return () => clearInterval(tokenRefreshInterval); // Clear interval on unmount
+  }, [initializeApolloClient]);
+
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (!auth0.isAuthenticated && !auth0.isLoading) {
-    auth0.loginWithRedirect();
+  if (!isAuthenticated && !isLoading) {
+    loginWithRedirect();
+    return null;
   }
 
-  if (auth0.isAuthenticated && apolloClient) {
+  if (isAuthenticated && apolloClient) {
     return (
       <ApolloProvider client={apolloClient}>
         <Router>
