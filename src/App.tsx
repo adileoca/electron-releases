@@ -1,76 +1,72 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { useAuth0 } from "@auth0/auth0-react";
-import React, { useEffect, useState, useCallback } from "react";
+
+import React, { useEffect, useState } from "react";
 import Sidebar from "./components/sidebar";
 
 import TaskView from "./views/TaskView";
 import OrdersView from "./views/OrdersView";
-import { createApolloClient } from "./lib/apolloClient";
-import { ApolloProvider } from "@apollo/client";
+import EmailsView from "./views/EmailsView";
+import EmailDetailedView from "./views/EmailDetailedView";
+import Login from "./views/Login";
+import { Session } from "@supabase/supabase-js";
+import Spinner from "@/static/spinner.svg";
+import { useSupabase } from "./lib/supabase/context";
 
 import "/node_modules/flag-icons/css/flag-icons.min.css";
 import "./styles/App.css";
 
-const { ipcRenderer } = window.require("electron");
-
 const App: React.FC = () => {
-  const { isLoading, isAuthenticated, loginWithRedirect, getIdTokenClaims } =
-    useAuth0();
-  const [apolloClient, setApolloClient] = useState<any>(null);
+  const [session, setSession] = useState<Session | null | undefined>(undefined);
 
-  const fetchToken = useCallback(async () => {
-    if (!isAuthenticated) return;
-    const tokenClaims = await getIdTokenClaims();
-    if (tokenClaims) {
-      const token = tokenClaims.__raw;
-      ipcRenderer.send("set-token", token);
-      return token;
-    }
-    return null;
-  }, [getIdTokenClaims, isAuthenticated]);
-
-  const initializeApolloClient = useCallback(async () => {
-    const token = await fetchToken();
-    if (token) setApolloClient(createApolloClient(token));
-  }, [fetchToken]);
+  const supabase = useSupabase();
 
   useEffect(() => {
-    initializeApolloClient();
-    const tokenRefreshInterval = setInterval(() => {
-      initializeApolloClient(); // Re-initialize Apollo Client with new token
-    }, 1800000); // Refresh token every hour
-    return () => clearInterval(tokenRefreshInterval); // Clear interval on unmount
-  }, [initializeApolloClient]);
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log("event", _event);
+      setSession(session);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!isAuthenticated && !isLoading) {
-    loginWithRedirect();
-    return null;
-  }
-
-  if (isAuthenticated && apolloClient) {
+  if (session === undefined) {
     return (
-      <ApolloProvider client={apolloClient}>
-        <Router>
-          <div className="relative flex h-full min-h-screen">
-            <Sidebar />
-            <div className="z-50 flex flex-1 flex-col shadow-neutral-200/75">
-              <Routes>
-                <Route path="/" element={<div>Home</div>} index />
-                <Route path="/tasks" element={<TaskView />} index />
-                <Route path="/orders" element={<OrdersView />} index />
-              </Routes>
-            </div>
-          </div>
-        </Router>
-      </ApolloProvider>
+      <div className="flex h-screen w-full items-center justify-center bg-neutral-900/90">
+        {" "}
+        <img
+          className="block h-8 w-auto rounded-full ring-blue-500 ring-offset-2 transition hover:ring-2 lg:h-12"
+          src={Spinner}
+          alt=""
+          loading="eager"
+        />
+      </div>
     );
   }
 
-  return <div>Loading...</div>;
+  if (session === null) {
+    return <Login />;
+  }
+
+  return (
+    <Router>
+      <div className="relative">
+        <Sidebar />
+        <div className="z-50">
+          <Routes>
+            <Route path="/" element={<div>Home</div>} index />
+            {/* <Route path="/tasks" element={<TaskView />} index /> */}
+            <Route path="/emails" element={<EmailsView />} index />
+            <Route path="/orders" element={<OrdersView />} index />
+            <Route path="/emails/:emailId" element={<EmailDetailedView />} /> //
+          </Routes>
+        </div>
+      </div>
+    </Router>
+  );
 };
 
 export default App;

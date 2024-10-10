@@ -10,10 +10,12 @@ function createWindow() {
     minHeight: 740,
     frame: false,
     titleBarStyle: "hidden",
-    trafficLightPosition: { x: 20, y: 20 },
+    vibrancy: "sidebar",
+    trafficLightPosition: { x: 20, y: 16 },
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
+      // nodeIntegration: true,
+      contextIsolation: true,
+      preload: path.join(__dirname, "preload.js")
     },
   });
 

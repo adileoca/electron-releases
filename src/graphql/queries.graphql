@@ -63,7 +63,7 @@ query GetOrders {
 }
 
 query GetItemsByItemId($item_id: Int) {
-  sales_items(where: {id: {_eq: $item_id}}) {
+  sales_items(where: { id: { _eq: $item_id } }) {
     currency
     name
     product_code
@@ -81,11 +81,12 @@ query GetItemsByItemId($item_id: Int) {
       background_styles_filter
       background_styles_transform
       background_url
-      details
+      wants_edit
+      edit_details
       main_styles_filter
       main_styles_transform
       main_url
-      preview
+      wants_preview
       remove_background
       orientation
       restore

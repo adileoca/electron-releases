@@ -2,6 +2,7 @@ const { ipcMain } = require("electron");
 const path = require("path");
 const fs = require("fs");
 
+
 function setupIpcEvents() {
   ipcMain.on("download-and-open-in-photoshop", async (_, arg) => {
     const tempPath = path.join(__dirname, "../temp");

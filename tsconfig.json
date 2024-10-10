@@ -15,19 +15,21 @@
     "skipLibCheck": true,
     "incremental": true,
     "resolveJsonModule": true,
-    "isolatedModules": true,
+    "isolatedModules": false,
     "strictNullChecks": true,
     "paths": {
       "@/*": ["*"],
       "@/types/*": ["types/*"],
+
       "@/lib/*": ["lib/*"],
+      "@/static/*": ["static/*"],
       "@/components/*": ["components/*"],
       "@/utils/*": ["utils/*"],
       "@/styles/*": ["styles/*"],
       "@/context/*": ["context/*"],
       "@/hooks/*": ["hooks/*"],
       "@/locale/*": ["locale/*"],
-      "@/constants/*": ["constants/*"]
+      "@/constants/*": ["src/constants/*"]
     },
 
   },
