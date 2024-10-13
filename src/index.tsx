@@ -1,9 +1,12 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
-import "./styles/index.css";
-import App from "./App";
-// import reportWebVitals from "./reportWebVitals";
+import React from "react";
+
 import { SupabaseProvider } from "./lib/supabase/context";
+import App from "./App";
+
+import "./styles/index.css";
+// import reportWebVitals from "./reportWebVitals";
+
 const rootElement = document.getElementById("root");
 
 if (rootElement) {

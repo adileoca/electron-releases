@@ -1,3 +1,3 @@
 import { configuratorOptions } from "./configuratorOptions";
-
-export { configuratorOptions };
+import { ordersTableColumns } from "./ordersTableColumns";
+export { configuratorOptions, ordersTableColumns };

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Supabase } from "@/lib/supabase/database";
 import { useSupabase } from "@/lib/supabase/context";
 import Input from "@/components/ui/Input";
+
 const Login = ({ searchParams }: { searchParams?: any }) => {
   const supabase = useSupabase();
   const [email, setEmail] = useState("");
