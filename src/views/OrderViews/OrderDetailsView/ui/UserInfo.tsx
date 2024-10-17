@@ -3,9 +3,9 @@ import InfoCard from "./InfoCard";
 
 const UserInfo = ({ order }) => {
   return (
-    <InfoCard title="Customer Information" buttonLabel="View details">
+    <InfoCard title="Customer Information" button={{ label: "View details" }}>
       <MiniTable
-        title="Contact details"
+        title="Contact"
         data={{
           name: order.name,
           email: order.email,
@@ -15,8 +15,9 @@ const UserInfo = ({ order }) => {
       <MiniTable
         title="Interactions"
         data={{
-          Guest: order.name,
-          Revenue: order.shipping_address?.state!,
+          "Logged In": order.name,
+          Problematic: order.shipping_address?.state!,
+          Revenues: order.shipping_address?.state!,
           "No. of orders": order.shipping_address?.line_1!,
         }}
       />

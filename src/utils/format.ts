@@ -1,26 +1,48 @@
-import formatDistanceToNow from "date-fns/formatDistanceToNow";
-import { differenceInHours, format, getDate, getHours, getMinutes, getMonth, getSeconds, setMinutes } from "date-fns";
-
 export const formatDate = (
   date: string,
   options?: {
     hour?: Intl.DateTimeFormatOptions["hour"];
     minute?: Intl.DateTimeFormatOptions["minute"];
     second?: Intl.DateTimeFormatOptions["second"];
+    relative?: boolean; // Add the relative option here
   }
 ) => {
-  const datetimeLocale = `${"en"}-${"Us"}`;
+  const datetimeLocale = `${"en"}-${"US"}`;
+  const inputDate = new Date(date);
+  const now = new Date();
 
-  const formatter = new Intl.DateTimeFormat(datetimeLocale, {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: options?.hour,
-    minute: options?.minute,
-    second: options?.second,
-  });
+  if (options?.relative) {
+    const differenceInMs = now.getTime() - inputDate.getTime();
+    const differenceInDays = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
+    const differenceInHours = Math.floor(differenceInMs / (1000 * 60 * 60));
+    const differenceInMinutes = Math.floor(differenceInMs / (1000 * 60));
+    const differenceInSeconds = Math.floor(differenceInMs / 1000);
 
-  return formatter.format(new Date(date));
+    const rtf = new Intl.RelativeTimeFormat(datetimeLocale, {
+      numeric: "auto",
+    });
+
+    if (differenceInDays !== 0) {
+      return rtf.format(-differenceInDays, "day");
+    } else if (differenceInHours !== 0) {
+      return rtf.format(-differenceInHours, "hour");
+    } else if (differenceInMinutes !== 0) {
+      return rtf.format(-differenceInMinutes, "minute");
+    } else {
+      return rtf.format(-differenceInSeconds, "second");
+    }
+  } else {
+    const formatter = new Intl.DateTimeFormat(datetimeLocale, {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: options?.hour,
+      minute: options?.minute,
+      second: options?.second,
+    });
+
+    return formatter.format(inputDate);
+  }
 };
 
 export const capitalizeFirstLetter = (string: string) => {
@@ -52,6 +74,23 @@ export const formatSize = (size, reverse = false) => {
     ? `${formattedHeight} x ${formattedWidth}${unitSuffix}`
     : `${formattedWidth} x ${formattedHeight}${unitSuffix}`;
 };
+
+
+export class CurrencyFormatter {
+  private currency: string;
+
+  constructor(currency: string) {
+    this.currency = currency;
+  }
+
+  public format(amount: number): string {
+    return new Intl.NumberFormat('de-DE', {
+      style: 'currency',
+      currency: this.currency,
+    }).format(amount / 100);
+  }
+}
+
 
 // export const getTimestamp = (string) => {
 //   const dateObj = new Date(string);

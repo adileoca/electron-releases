@@ -1,9 +1,11 @@
 import { parseConfigurationDetails } from "@/utils/parse";
 import { OrderItemType } from "@/lib/supabase/database";
+import { CurrencyFormatter } from "@/utils/format";
 
 const OrderItem: React.FC<{ item: OrderItemType }> = ({ item }) => {
+  const formatter = new CurrencyFormatter(item.totals?.currency!);
   return (
-    <li className="flex flex-col md:flex-row">
+    <li className="flex flex-col py-3 md:flex-row">
       <div className="relative aspect-square h-full w-full overflow-hidden rounded-lg bg-neutral-200 md:h-40 md:w-40">
         <img
           src={item.configuration!.thumbnail_url!}
@@ -11,10 +13,10 @@ const OrderItem: React.FC<{ item: OrderItemType }> = ({ item }) => {
           alt=""
         />
       </div>
-      <div className="relative mt-2 flex flex-1 flex-col justify-between md:ml-6 md:mt-0">
-        <div className="order-2 md:order-1 md:pr-6">
+      <div className="relative mt-2 flex flex-1 justify-between md:ml-5 md:mt-0">
+        <div className="md:pr-6">
           <div className="flex items-center justify-between">
-            <span className="flex text-lg font-medium text-neutral-900 transition hover:text-blue-600 md:pb-2 dark:text-neutral-300">
+            <span className="flex text-lg font-medium text-neutral-900 transition md:pb-2 dark:text-neutral-300">
               {item.product?.name}
             </span>
           </div>
@@ -24,6 +26,11 @@ const OrderItem: React.FC<{ item: OrderItemType }> = ({ item }) => {
                 <RowDetails label={detail.label} value={detail.value} />
               </div>
             ))}
+        </div>
+        <div>
+          <span className="text-white/80">
+            {item.quantity} x {formatter.format(item.totals?.amount_total!)}
+          </span>
         </div>
       </div>
     </li>

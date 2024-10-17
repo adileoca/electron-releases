@@ -29,7 +29,6 @@ const ViewHeaderButton: React.FC<Props> = ({
       Icon={Icon}
       IconSize={IconSize}
       tooltipContent={tooltipContent}
-      label={label}
       show={show}
     />
   );
@@ -41,39 +40,38 @@ const ViewHeaderButton: React.FC<Props> = ({
     labelLocation === "before" ? [IconComp, LabelComp] : [LabelComp, IconComp];
 
   return (
-    <button
-      onClick={onClick}
-      className={clsx(
-        label ? "rounded-lg px-2.5 py-0.5" : "rounded-full p-2",
-        "flex items-center space-x-2 transition hover:bg-neutral-900/10 dark:hover:bg-white/10"
-      )}
-      onMouseEnter={() => setShow(true)}
-      onMouseLeave={() => setShow(false)}
-    >
-      {/* Render the components based on the order defined */}
-      {Components.map((Component, index) => (
-        <Fragment key={index}>{Component}</Fragment>
-      ))}
-    </button>
+    <div className="flex items-center">
+      <button
+        onClick={onClick}
+        className={clsx(
+          label ? "rounded-lg px-2.5 py-0.5" : "rounded-md p-1.5",
+          "flex items-center space-x-2 transition hover:bg-neutral-900/10 dark:hover:bg-white/10"
+        )}
+        onMouseEnter={() => setShow(true)}
+        onMouseLeave={() => setShow(false)}
+      >
+        {/* Render the components based on the order defined */}
+        {Components.map((Component, index) => (
+          <Fragment key={index}>{Component}</Fragment>
+        ))}
+      </button>
+    </div>
   );
 };
 
 const LabelComponent = ({ label }) => (
   <>
     {label && (
-      <span className="font-medium text-neutral-600 text-opacity-80 dark:text-neutral-200 dark:text-opacity-80">
+      <span className="font-medium text-black/60 dark:text-white/60">
         {label}
       </span>
     )}
   </>
 );
 
-const IconComponent = ({ Icon, IconSize, tooltipContent, label, show }) => (
+const IconComponent = ({ Icon, IconSize, tooltipContent, show }) => (
   <div className="relative">
-    <Icon
-      size={IconSize || 16}
-      className=" text-neutral-600  text-opacity-80 dark:text-neutral-200 dark:text-opacity-80"
-    />
+    <Icon size={IconSize || 16} className=" text-black/60 dark:text-white/60" />
     {tooltipContent && <Tooltip content={tooltipContent} show={show} />}
   </div>
 );

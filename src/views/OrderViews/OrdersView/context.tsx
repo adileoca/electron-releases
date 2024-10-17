@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { replace, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import { createTableContext } from "@/context/Table";
@@ -9,6 +9,7 @@ import { useDatabase } from "@/lib/supabase/context";
 import { useFetchData } from "@/hooks/useFetchData";
 import { RowProps } from "@/context/Table/types";
 import { formatDate } from "@/utils/format";
+import { id } from "date-fns/locale";
 
 export type ColumnId = keyof typeof ordersTableColumns;
 
@@ -39,10 +40,16 @@ export function useFetchRows(
           Component: (
             <button
               onClick={() => {
-                navigate(`/orders/details?order_id=${order.id}`);
+                const params = new URLSearchParams({
+                  order_id: order.id!,
+                  order_no: order.display_name!,
+                  order_status: order.status?.name!,
+                  last_updated: order.last_updated!.replace(/%2B/g, '+'),
+                });
+                navigate(`/orders/details?${params.toString()}`);
               }}
             >
-              {order.display_name!}
+              #{order.display_name!}
             </button>
           ),
         });
@@ -54,9 +61,7 @@ export function useFetchRows(
         rowMap.set("status", {
           id: "status",
           value: order.status!.name!,
-          Component: (
-            <Chip className="rounded" text={order.status!.name!} />
-          ),
+          Component: <Chip className="rounded" text={order.status!.name!} />,
         });
         rowMap.set("amount", {
           id: "amount",

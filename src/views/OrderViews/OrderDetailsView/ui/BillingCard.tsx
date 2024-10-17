@@ -1,10 +1,17 @@
+import { Label } from "recharts";
 import InfoCard from "./InfoCard";
 import MiniTable from "./MiniTable";
 import { capitalizeFirstLetter } from "@/utils/format";
-
-const BillingCard = ({ order }) => {
+import { OrderDetailedType } from "@/lib/supabase/database";
+const BillingCard: React.FC<{ order: OrderDetailedType }> = ({ order }) => {
   return (
-    <InfoCard title="Billing Information" buttonLabel="View invoice">
+    <InfoCard
+      title="Billing Information"
+      button={{
+        label: "View invoice",
+        onClick: () => window.electron.openLink(order.payment?.invoice_url),
+      }}
+    >
       <MiniTable
         title="Address"
         data={{

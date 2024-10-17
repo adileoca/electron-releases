@@ -1,7 +1,8 @@
 import { useDatabase } from "@/lib/supabase/context";
 import { useFetchData } from "@/hooks/useFetchData";
-import { useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 
+import MiniTable from "./ui/MiniTable";
 import ActivityFeed from "./ui/ActivityFeed";
 import ShippingCard from "./ui/ShippingCard";
 import BillingCard from "./ui/BillingCard";
@@ -10,8 +11,13 @@ import OrderItem from "./ui/OrderItem";
 import UserInfo from "./ui/UserInfo";
 import Section from "./ui/Section";
 import LoadingBody from "../OrdersView/ui/LoadingBody";
+import { OrderHeaderArgs } from "@/types/misc";
+import { OrderDetailedType } from "@/lib/supabase/database";
 
-const OrderDetails = ({ orderId }) => {
+const OrderDetails: React.FC<{
+  orderId: string;
+  setHeaderDetails: Dispatch<SetStateAction<OrderHeaderArgs>>;
+}> = ({ orderId, setHeaderDetails }) => {
   const db = useDatabase();
   const { data: order, error } = useFetchData(() =>
     db.get.order.detailed.byId(orderId)
@@ -19,7 +25,14 @@ const OrderDetails = ({ orderId }) => {
 
   useEffect(() => {
     console.log("order", order);
-    console.log("orderId", orderId);
+    setHeaderDetails({
+      orderNo: order?.display_name!,
+      lastUpdated: order?.last_updated!,
+      status: {
+        name: order?.status!.name!,
+        timestamp: order?.status!.timestamp!,
+      },
+    });
   }, [order]);
 
   if (error) {
@@ -35,33 +48,7 @@ const OrderDetails = ({ orderId }) => {
         {order === undefined || order === null ? (
           <LoadingBody />
         ) : (
-          <div className="p-4 pb-8">
-            <Section title="General">
-              <div className="grid grid-cols-3 gap-4">
-                <UserInfo order={order} />
-                <ShippingCard order={order} />
-                <BillingCard order={order} />
-              </div>
-            </Section>
-            <Section title="Activity Feed">
-              <CardWrapper>
-                <ActivityFeed />
-              </CardWrapper>
-            </Section>
-            <Section title="Order Items">
-              <CardWrapper>
-                <div className="space-y-3 p-3">
-                  {Array(3)
-                    .fill(order.items[0])
-                    .map((item, idx) => (
-                      <OrderItem item={item} key={idx} />
-                    ))}
-                </div>
-              </CardWrapper>
-            </Section>
-            {/* <span>items (add item, remove item), totals</span>
-            <span>history, user interactions (associated ips), timeline</span> */}
-          </div>
+          <DetailsBody order={order} />
         )}
       </div>
     </div>
@@ -69,3 +56,62 @@ const OrderDetails = ({ orderId }) => {
 };
 
 export default OrderDetails;
+
+const DetailsBody: React.FC<{ order: OrderDetailedType }> = ({ order }) => {
+  const formatter = new CurrencyFormatter(order.totals?.currency!);
+  return (
+    <div className="p-4 pb-8">
+      <Section title="General">
+        <div className="grid grid-cols-3 gap-4">
+          <UserInfo order={order} />
+          <ShippingCard order={order} />
+          <BillingCard order={order} />
+        </div>
+      </Section>
+      <Section title="Activity Feed">
+        <CardWrapper>
+          <ActivityFeed activities={order.activities} />
+        </CardWrapper>
+      </Section>
+      <Section title="Order Items">
+        <CardWrapper>
+          <div className="divide-y divide-neutral-700 px-3 ">
+            {Array(3)
+              .fill(order.items[0])
+              .map((item, idx) => (
+                <OrderItem item={item} key={idx} />
+              ))}
+            <div className="pb-1 pl-44">
+              <div className="pl-1">
+                <MiniTable
+                  title=""
+                  data={{
+                    subtotal: formatter.format(order.totals?.amount_subtotal!),
+                    shipping: formatter.format(order.totals?.amount_shipping!),
+                    tax: formatter.format(order.totals?.amount_tax!),
+                    total: formatter.format(order.totals?.amount_total!),
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </CardWrapper>
+      </Section>
+    </div>
+  );
+};
+
+class CurrencyFormatter {
+  private currency: string;
+
+  constructor(currency: string) {
+    this.currency = currency;
+  }
+
+  public format(amount: number): string {
+    return new Intl.NumberFormat("de-DE", {
+      style: "currency",
+      currency: this.currency,
+    }).format(amount / 100);
+  }
+}

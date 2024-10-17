@@ -1,29 +1,16 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, shell } = require("electron");
 const path = require("path");
 const { simpleParser } = require("mailparser");
 const createWindow = require("./events/windowEvents");
 const { setupIpcEvents } = require("./events/ipcEvents");
-const registerFileProtocol = require("./utils/fileProtocol");
-const expressServer = require("./expressServer");
 const { setToken } = require("./tokenManager");
+const expressServer = require("./expressServer");
 
 app.whenReady().then(() => {
-  registerFileProtocol(); // todo: check if needed
   createWindow();
   setupIpcEvents();
+
   expressServer.listen();
-
-  ipcMain.handle("parse-email", async (_, { data }) => {
-
-    try {
-      const mail = await simpleParser(data); // Use an async/await pattern
-      console.log("mail", mail);
-      return mail; // Resolve with parsed mail
-    } catch (err) {
-      console.error("Error parsing the email:", err);
-      throw err; // Throw errors to send to the renderer
-    }
-  });
 });
 
 app.on("window-all-closed", () => {

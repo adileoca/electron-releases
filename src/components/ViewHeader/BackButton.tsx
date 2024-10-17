@@ -8,9 +8,9 @@ const ViewHeaderBackButton = ({ onClick }) => (
     <ChevronLeft
       size={16}
       strokeWidth={1.8}
-      className="-ml-1.5 -mr-1 text-neutral-600 text-opacity-80 dark:text-neutral-200 dark:text-opacity-80"
+      className="-ml-1.5 -mr-1 text-neutral-600 text-opacity-80 dark:text-white/70"
     />
-    <span className="font-medium text-neutral-600/80 dark:text-neutral-200/80">
+    <span className="font-medium text-neutral-600/80 dark:text-white/70">
       Back
     </span>
   </button>

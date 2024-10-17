@@ -3,7 +3,7 @@ import InfoCard from "./InfoCard";
 
 const ShippingCard = ({ order }) => {
   return (
-    <InfoCard title="Shipping Information" buttonLabel="View tracking">
+    <InfoCard title="Shipping Information" button={{ label: "View tracking" }}>
       <MiniTable
         title="Address"
         data={{
@@ -19,7 +19,7 @@ const ShippingCard = ({ order }) => {
         title="Carrier"
         data={{
           Name: "UPS",
-          "Label No.": "1341312saffqdqwee1e",
+          "Label No.": "-",
         }}
       />
     </InfoCard>

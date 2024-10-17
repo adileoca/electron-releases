@@ -13,21 +13,12 @@ function createWindow() {
     vibrancy: "sidebar",
     trafficLightPosition: { x: 20, y: 16 },
     webPreferences: {
-      // nodeIntegration: true,
       contextIsolation: true,
-      preload: path.join(__dirname, "preload.js")
+      preload: path.join(__dirname, "preload.js"),
     },
   });
 
   window.setWindowButtonVisibility(true);
-
-  window.webContents.on("did-navigate", (_, url) => {
-    if (url.includes("auth0.com")) {
-      window.webContents.executeJavaScript(`
-        document.body.style['-webkit-app-region'] = 'drag';
-      `);
-    }
-  });
 
   window.loadURL(
     isDev
