@@ -9,8 +9,8 @@ function createWindow() {
     minWidth: 1200,
     minHeight: 740,
     frame: false,
-    titleBarStyle: "hidden",
     vibrancy: "sidebar",
+    titleBarStyle: "hidden",
     trafficLightPosition: { x: 20, y: 16 },
     webPreferences: {
       contextIsolation: true,
@@ -23,7 +23,7 @@ function createWindow() {
   window.loadURL(
     isDev
       ? "http://localhost:3001"
-      : `file://${path.join(__dirname, "../build/index.html")}`
+      : `file://${path.join(__dirname, "../../../build/index.html")}`
   );
 
   if (isDev) {

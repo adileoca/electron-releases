@@ -6,6 +6,15 @@ import { Supabase } from "./database";
 
 const SupabaseContext = createContext<Supabase | null>(null);
 
+export const SupabaseProvider = ({ children }: { children: ReactNode }) => {
+  const supabase = createClient();
+  return (
+    <SupabaseContext.Provider value={supabase}>
+      {children}
+    </SupabaseContext.Provider>
+  );
+};
+
 export const useDatabase = () => {
   const supabase = useContext(SupabaseContext);
   if (!supabase) {
@@ -20,14 +29,4 @@ export const useSupabase = () => {
     throw new Error("useSupabase must be used within a SupabaseProvider");
   }
   return supabase;
-};
-
-const supabase = createClient();
-
-export const SupabaseProvider = ({ children }: { children: ReactNode }) => {
-  return (
-    <SupabaseContext.Provider value={supabase}>
-      {children}
-    </SupabaseContext.Provider>
-  );
 };

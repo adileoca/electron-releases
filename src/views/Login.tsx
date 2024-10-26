@@ -20,8 +20,8 @@ const Login = ({ searchParams }: { searchParams?: any }) => {
     if (error) console.log("loginError: ", error);
   };
   return (
-    <div className="flex h-screen w-full bg-neutral-100 antialiased dark:bg-neutral-900/90">
-      <div className="m-auto my-auto place-content-center rounded-3xl bg-white p-8 dark:bg-neutral-800">
+    <div className="draggable bg-neutral-900 bg-cover flex h-screen w-full antialiased">
+      <div className="m-auto my-auto place-content-center rounded-3xl bg-white/75 p-8 dark:bg-neutral-800/75 backdrop-blur-3xl">
         <div className="flex w-96 flex-col gap-8">
           <a href="/">
             <img
@@ -32,9 +32,9 @@ const Login = ({ searchParams }: { searchParams?: any }) => {
             />
           </a>
           <div>
-            <h1 className="text-3xl font-medium dark:text-white">Sign in</h1>
+            <h1 className="text-3xl font-medium dark:text-white">Welcome</h1>
             <p className="text-lg dark:text-white">
-              Don't have an account?{" "}
+              Forgot your password?{" "}
               <a
                 className="text-foreground font-medium text-neutral-900 underline transition hover:text-blue-900 dark:text-white"
                 href="/sign-up"

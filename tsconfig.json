@@ -17,10 +17,10 @@
     "resolveJsonModule": true,
     "isolatedModules": false,
     "strictNullChecks": true,
+    "outDir": "./dist",
     "paths": {
       "@/*": ["*"],
       "@/types/*": ["types/*"],
-
       "@/lib/*": ["lib/*"],
       "@/static/*": ["static/*"],
       "@/components/*": ["components/*"],
@@ -30,8 +30,7 @@
       "@/hooks/*": ["hooks/*"],
       "@/locale/*": ["locale/*"],
       "@/constants/*": ["src/constants/*"]
-    },
-
+    }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "**/node_modules/*"]

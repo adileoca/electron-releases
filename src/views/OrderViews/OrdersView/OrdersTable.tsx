@@ -1,10 +1,10 @@
 import { useState } from "react";
 
-import TableHeader from "./TableHeader";
-import LoadingBody from "./LoadingBody";
-import TableBody from "./TableBody";
+import TableHeader from "./ui/TableHeader";
+import LoadingBody from "./ui/LoadingBody";
+import TableBody from "./ui/TableBody";
 
-import { useFetchRows, useTable } from "../context";
+import { useFetchRows, useTable } from "./context";
 
 const OrdersTable = () => {
   const { cols: tableCols, setRows: setTableRows } = useTable();
@@ -17,7 +17,7 @@ const OrdersTable = () => {
 
   return (
     <div
-      style={{ width: "calc(100% - 234px)" }}
+      style={{ width: "calc(100% - 186px)" }}
       className="fixed -right-1.5 top-12 h-screen overflow-hidden"
     >
       <div className="relative h-full overflow-auto">

@@ -1,15 +1,58 @@
-import { replace, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-import { createTableContext } from "@/context/Table";
-import { ordersTableColumns } from "@/constants";
-import Chip from "@/components/ui/Chip";
+import OrderStatusBadge from "@/components/ui/OrderStatusBadge";
 
 import { useDatabase } from "@/lib/supabase/context";
+import { createTableContext } from "@/context/Table";
 import { useFetchData } from "@/hooks/useFetchData";
+
 import { RowProps } from "@/context/Table/types";
 import { formatDate } from "@/utils/format";
-import { id } from "date-fns/locale";
+
+export const ordersTableColumns = {
+  order_no: {
+    id: "order_no",
+    label: "Order No.",
+    isSticky: true,
+    position: 1,
+    minConstraints: [135, 48] as [number, number],
+    initialWidth: 135,
+    width: 135,
+  },
+  date_placed: {
+    id: "date_placed",
+    label: "Date Placed",
+    position: 2,
+    minConstraints: [200, 48] as [number, number],
+    initialWidth: 200,
+    width: 200,
+  },
+  status: {
+    id: "status",
+    label: "Status",
+    position: 3,
+    minConstraints: [150, 48] as [number, number],
+    initialWidth: 150,
+    width: 150,
+  },
+  amount: {
+    id: "amount",
+    label: "Amount",
+    position: 4,
+    minConstraints: [100, 48] as [number, number],
+    initialWidth: 100,
+    width: 100,
+  },
+  address: {
+    id: "address",
+    label: "Address",
+    position: 5,
+    minConstraints: [400, 48] as [number, number],
+    initialWidth: 400,
+    width: 400,
+  },
+} as const;
 
 export type ColumnId = keyof typeof ordersTableColumns;
 
@@ -27,6 +70,8 @@ export function useFetchRows(
     db.get.order.summary.all()
   );
 
+ 
+
   useEffect(() => {
     if (!orders) return;
     console.log("orders", orders);
@@ -39,12 +84,13 @@ export function useFetchRows(
           text: order.display_name!,
           Component: (
             <button
+              className="hover:underline"
               onClick={() => {
                 const params = new URLSearchParams({
                   order_id: order.id!,
                   order_no: order.display_name!,
                   order_status: order.status?.name!,
-                  last_updated: order.last_updated!.replace(/%2B/g, '+'),
+                  last_updated: order.last_updated!.replace(/%2B/g, "+"),
                 });
                 navigate(`/orders/details?${params.toString()}`);
               }}
@@ -61,7 +107,7 @@ export function useFetchRows(
         rowMap.set("status", {
           id: "status",
           value: order.status!.name!,
-          Component: <Chip className="rounded" text={order.status!.name!} />,
+          Component: <OrderStatusBadge text={order.status!.name!} />,
         });
         rowMap.set("amount", {
           id: "amount",

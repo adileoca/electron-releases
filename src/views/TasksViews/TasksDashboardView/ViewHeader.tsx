@@ -1,6 +1,5 @@
 import { Settings, Search, Filter } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
-import anime from "animejs/lib/anime.es.js";
 import ViewHeaderPagination from "@/components/ViewHeader/Pagination";
 import ViewHeaderWrapper from "@/components/ViewHeader/Wrapper";
 import ViewHeaderButton from "@/components/ViewHeader/Button";
@@ -8,6 +7,7 @@ import ViewHeaderTitle from "@/components/ViewHeader/Title";
 import useAnimateViewBar from "@/hooks/useAnimateViewBar";
 
 import { XIcon } from "lucide-react";
+
 const ViewHeader = () => {
   const [searchView, setSearchView] = useState(false);
   const defaultRef = useRef<HTMLDivElement | null>(null);
@@ -20,7 +20,7 @@ const ViewHeader = () => {
   });
 
   return (
-    <div style={{ width: "calc(100% - 240px)" }} className="fixed right-0">
+    <div style={{ width: "calc(100% - 192px)" }} className="fixed right-0">
       <ViewHeaderWrapper>
         <div
           ref={defaultRef}
@@ -29,20 +29,20 @@ const ViewHeader = () => {
         >
           <div className="pl-0.5">
             <div className="flex items-center ">
-              <ViewHeaderTitle title="Orders" />
+              <ViewHeaderTitle title="Tasks" />
               <div className="ml-3 flex space-x-2">
-                <ViewHeaderButton
+                {/* <ViewHeaderButton
                   label="Search"
                   Icon={Search}
                   onClick={() => setSearchView(true)}
-                />
-                <ViewHeaderButton label="Filters" Icon={Filter} />
+                /> */}
+                {/* <ViewHeaderButton label="Filters" Icon={Filter} /> */}
                 {/* <ViewHeaderButton label="Settings" Icon={Settings} /> */}
               </div>
             </div>
           </div>
           <div className="mr-3 text-base text-white text-opacity-80">
-            <ViewHeaderPagination />
+            {/* <ViewHeaderPagination /> */}
           </div>
         </div>
 
@@ -58,7 +58,7 @@ const ViewHeader = () => {
             placeholder="Search..."
             className="w-full border-none bg-transparent font-medium text-white/60 placeholder:text-white/40 focus:ring-transparent"
           />
-          <div className="flex mr-1.5">
+          <div className="mr-1.5 flex">
             {/* <ViewHeaderButton
               label=" Filters"
               Icon={Filter}

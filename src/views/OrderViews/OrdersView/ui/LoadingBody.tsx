@@ -2,7 +2,7 @@ import Spinner from "@/static/spinner.svg";
 
 const LoadingBody = () => (
   <div
-    style={{ width: "calc(100% - 240px)" }}
+    style={{ width: "calc(100% - 192px)" }}
     className="fixed h-full bg-neutral-900/90"
   >
     <div className="flex h-full items-center justify-center">

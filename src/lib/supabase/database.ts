@@ -1,7 +1,7 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database as DbTypes } from "./database.types";
 import { QueryData } from "@supabase/supabase-js";
-import { ErrorCode } from "@/utils/error";
+
 
 type QueryType<T extends (...args: any) => any> = QueryData<ReturnType<T>>;
 export type DbEnums = DbTypes["public"]["Enums"];
@@ -9,7 +9,7 @@ export type DbTables = DbTypes["public"]["Tables"];
 export type Supabase = SupabaseClient<DbTypes>;
 
 class Database {
-  private supabase: Supabase;
+   supabase: Supabase;
 
   constructor(supabase: SupabaseClient<DbTypes>) {
     this.supabase = supabase;
@@ -22,7 +22,7 @@ class Database {
 }
 
 class QueryManager {
-  private supabase: SupabaseClient<DbTypes>;
+   supabase: SupabaseClient<DbTypes>;
 
   constructor(supabase: SupabaseClient<DbTypes>) {
     this.supabase = supabase;
@@ -288,7 +288,7 @@ export type OrdersSummaryType = QueryType<
 >;
 
 class InsertManager {
-  private supabase: SupabaseClient<DbTypes>;
+   supabase: SupabaseClient<DbTypes>;
 
   constructor(supabase: SupabaseClient<DbTypes>) {
     this.supabase = supabase;
@@ -558,6 +558,17 @@ class InsertManager {
 }
 
 export default Database;
+
+class ErrorCode extends Error {
+  code: string;
+
+  constructor(params: { message: string; code: string }) {
+    super(params.message);
+    this.name = 'ErrorCode:';
+    this.code = params.code;
+  }
+}
+
 
 // import { SupabaseClient } from '@supabase/supabase-js';
 // import { Database as DbTypes } from './database.types';

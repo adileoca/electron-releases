@@ -10,10 +10,12 @@ import CardWrapper from "./ui/CardWrapper";
 import OrderItem from "./ui/OrderItem";
 import UserInfo from "./ui/UserInfo";
 import Section from "./ui/Section";
-import LoadingBody from "../OrdersView/ui/LoadingBody";
+
 import { OrderHeaderArgs } from "@/types/misc";
 import { OrderDetailedType } from "@/lib/supabase/database";
-
+import LoadingBody from "@/components/ui/LoadingBody";
+import { split } from "@apollo/client";
+import { electron } from "process";
 const OrderDetails: React.FC<{
   orderId: string;
   setHeaderDetails: Dispatch<SetStateAction<OrderHeaderArgs>>;
@@ -35,13 +37,30 @@ const OrderDetails: React.FC<{
     });
   }, [order]);
 
+  useEffect(() => {
+    if (!order) return;
+
+    const url =
+      "https://django-static-872.s3.eu-south-1.amazonaws.com/private/file2.psd";
+
+    if (url) {
+      const parsedUrl = new URL(url);
+      console.log("url", url);
+      const pathname = parsedUrl.pathname; // Get the path part of the URL
+      const segments = pathname.split("/"); // Split the path into segments
+      const filename = segments.pop(); // Get the last segment as the filename
+      console.log("filename", filename);
+      window.electron.invoke("cache-file-from-url", { url, filename });
+    }
+  }, [order]);
+
   if (error) {
     return <div>{JSON.stringify(error)}</div>;
   }
 
   return (
     <div
-      style={{ width: "calc(100% - 240px)" }}
+      style={{ width: "calc(100% - 192px)" }}
       className="fixed right-0 top-12 h-screen overflow-hidden"
     >
       <div className="relative h-full w-full overflow-y-auto bg-white dark:bg-neutral-900/90">

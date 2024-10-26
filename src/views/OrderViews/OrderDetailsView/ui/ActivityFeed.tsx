@@ -30,7 +30,7 @@ const FeedTimeline: React.FC<{
           <li key={activityItemIdx} className="relative flex gap-x-4">
             <div
               className={clsx(
-                activityItemIdx === 0 ? "top-5 h-7" : "",
+                activityItemIdx === 0 ? "top-4 h-8" : "",
                 activityItemIdx === activities.length - 1 ? "" : "-bottom-6",
                 "absolute left-0 top-0 flex w-6 justify-center"
               )}

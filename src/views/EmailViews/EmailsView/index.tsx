@@ -5,7 +5,7 @@ import EmailsTable from "./ui/EmailsTable";
 const EmailsView: React.FC = () => {
   return (
     <div
-      style={{ width: "calc(100% - 240px)" }}
+      style={{ width: "calc(100% - 192px)" }}
       className="fixed right-0 h-screen overflow-hidden shadow shadow-neutral-300 dark:shadow-none"
     >
       <ViewHeader />

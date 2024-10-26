@@ -6,6 +6,7 @@ import ViewHeaderDivider from "@/components/ViewHeader/Divider";
 import { capitalizeFirstLetter, formatDate } from "@/utils/format";
 import ViewHeaderInfo from "@/components/ViewHeader/Info";
 import { useEffect } from "react";
+import OrderStatusBadge from "@/components/ui/OrderStatusBadge";
 
 type ViewHeaderProps = {
   orderNo: string;
@@ -25,7 +26,7 @@ const ViewHeader: React.FC<ViewHeaderProps> = ({
     console.log("lastUpdated", lastUpdated);
   }, [lastUpdated]);
   return (
-    <div style={{ width: "calc(100% - 240px)" }} className="fixed right-0">
+    <div style={{ width: "calc(100% - 192px)" }} className="fixed right-0">
       <ViewHeaderWrapper>
         <div className="pl-2">
           <div className="flex items-center">
@@ -33,7 +34,7 @@ const ViewHeader: React.FC<ViewHeaderProps> = ({
             <ViewHeaderDivider />
             <ViewHeaderTitle title="Order" info={`#${orderNo}`} />
             <div className="ml-2 flex items-center">
-              <StatusBadge text={statusName} />
+              <OrderStatusBadge text={statusName} />
             </div>
             <div className="ml-3 flex space-x-2">
               {/* <ViewHeaderButton label="Search" Icon={Search} />
@@ -52,9 +53,3 @@ const ViewHeader: React.FC<ViewHeaderProps> = ({
   );
 };
 export default ViewHeader;
-
-const StatusBadge: React.FC<{ text: string }> = ({ text }) => (
-  <span className="inline-flex items-center gap-x-1.5 rounded-full bg-amber-600 px-2.5 py-0.5 text-sm font-medium text-amber-100">
-    {capitalizeFirstLetter(text)}
-  </span>
-);
