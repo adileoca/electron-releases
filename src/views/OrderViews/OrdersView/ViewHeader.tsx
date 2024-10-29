@@ -27,7 +27,7 @@ const ViewHeader = () => {
           style={defaultRefStyles}
           className=" flex h-full w-full items-center justify-between"
         >
-          <div className="pl-0.5">
+          <div >
             <div className="flex items-center ">
               <ViewHeaderTitle title="Orders" />
               <div className="ml-3 flex space-x-2">
@@ -41,7 +41,7 @@ const ViewHeader = () => {
               </div>
             </div>
           </div>
-          <div className="mr-3 text-base text-white text-opacity-80">
+          <div className="mr-2 text-base text-white text-opacity-80">
             <ViewHeaderPagination />
           </div>
         </div>

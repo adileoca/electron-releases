@@ -1,4 +1,3 @@
-import bodyParser from "body-parser";
 import express from "express";
 import path from "path";
 import cors from "cors";
@@ -6,8 +5,9 @@ import fs from "fs";
 
 import WebSocket, { WebSocketServer } from "ws";
 import { app as electronApp } from "electron";
-import { BrowserWindow } from "electron";
 import { createServer } from "http";
+import multer from "multer";
+import { v4 as uuidv4 } from "uuid";
 
 import * as Supabase from "@supabase/supabase-js";
 const { createClient, SupabaseClient, Session } = Supabase;
@@ -22,28 +22,46 @@ const port = 4500;
 const sharedSecret = "your-secure-shared-secret"; // Shared secret
 
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 
-// Middleware to check the custom header
-// app.use((req, res, next) => {
-//   const secret = req.headers["x-shared-secret"];
-//   if (secret && secret === sharedSecret) {
-//     next();
-//   } else {
-//     res.status(403).json({ message: "Forbidden" });
-//   }
-// });
+// Define the media directory
+const mediaDir = path.join(electronApp.getPath("userData"), "storage");
+// Ensure the storage directory exists
+fs.mkdirSync(mediaDir, { recursive: true });
 
-// Endpoint to get the encrypted token
+// Set up multer storage configuration
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, mediaDir);
+  },
+  filename: (req, file, cb) => {
+    // Generate a unique filename using UUID
+    const generatedFilename = `${uuidv4()}${path.extname(file.originalname)}`;
+    cb(null, generatedFilename);
+  },
+});
 
-app.get("/db", async (req, res) => {
-  const db = new Database(supabase);
-  const { data, error } = await db.get.order.summary.all();
-  if (data) {
-    res.json({ data });
-  } else {
-    res.json({ message: "error" });
+const upload = multer({ storage: storage });
+
+// Define the /upload route
+app.post("/upload", upload.single("file"), (req, res) => {
+  console.log("upload received")
+  // Check if a file was uploaded
+  if (!req.file) {
+    return res.status(400).json({ message: "No file uploaded" });
   }
+
+  // File uploaded successfully
+  // Return the generated filename to the client
+  res.status(200).json({
+    message: "File uploaded successfully",
+    filename: req.file.filename, // The generated filename
+    // Optionally, include other file information
+    // originalname: req.file.originalname,
+    // mimetype: req.file.mimetype,
+    // size: req.file.size,
+    // path: req.file.path,
+  });
 });
 
 app.get("/media", (req, res) => {
@@ -52,19 +70,6 @@ app.get("/media", (req, res) => {
   if (!filename) {
     return res.status(400).json({ message: "Filename is required" });
   }
-
-  // Use Electron app to get the user data path
-  const mediaDir = path.join(electronApp.getPath("userData"), "storage");
-
-  fs.readdir(mediaDir, (err, files) => {
-    if (err) {
-      console.error("Error reading directory:", err);
-      return res
-        .status(500)
-        .json({ message: "Error reading storage directory" });
-    }
-    console.log("Files in storage directory:", files);
-  });
 
   // Resolve the full path of the file
   const filePath = path.join(mediaDir, filename);
@@ -100,17 +105,6 @@ app.get("/media", (req, res) => {
     // Pipe the read stream to the response
     readStream.pipe(res);
   });
-});
-
-app.get("/api/token", (_, res) => {
-  console.log("Received request for /api/token");
-  const token = "";
-  if (token) {
-    // const encryptedToken = encryptToken(token);
-    res.json({ token });
-  } else {
-    res.status(404).json({ message: "Token not found" });
-  }
 });
 
 // Create an HTTP server and pass the Express app to it
@@ -174,13 +168,6 @@ wss.on("connection", (ws, req) => {
   ws.on("message", async (message) => {
     console.log(`Received message: ${message}`);
     // Handle incoming messages if needed
-    const mainWindow = BrowserWindow.getAllWindows()[0];
-    if (mainWindow) {
-      const fileStream = await mainWindow.webContents.send(
-        "read-and-stream-file",
-        { filename, content }
-      );
-    }
   });
 });
 
@@ -191,6 +178,7 @@ server.listen(port, () => {
 
 // Export the app and the setSession function
 export { app, setSession };
+
 function createSupabaseClient(session) {
   // Initialize the Supabase client for the first time
   const SUPABASE_URL =
@@ -208,3 +196,13 @@ function createSupabaseClient(session) {
     },
   });
 }
+
+// Middleware to check the custom header
+// app.use((req, res, next) => {
+//   const secret = req.headers["x-shared-secret"];
+//   if (secret && secret === sharedSecret) {
+//     next();
+//   } else {
+//     res.status(403).json({ message: "Forbidden" });
+//   }
+// });

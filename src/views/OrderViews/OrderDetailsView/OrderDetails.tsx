@@ -14,8 +14,7 @@ import Section from "./ui/Section";
 import { OrderHeaderArgs } from "@/types/misc";
 import { OrderDetailedType } from "@/lib/supabase/database";
 import LoadingBody from "@/components/ui/LoadingBody";
-import { split } from "@apollo/client";
-import { electron } from "process";
+
 const OrderDetails: React.FC<{
   orderId: string;
   setHeaderDetails: Dispatch<SetStateAction<OrderHeaderArgs>>;
@@ -60,10 +59,13 @@ const OrderDetails: React.FC<{
 
   return (
     <div
-      style={{ width: "calc(100% - 192px)" }}
-      className="fixed right-0 top-12 h-screen overflow-hidden"
+      style={{
+        width: "calc(100% - 200px)",
+        boxShadow: "0 0 0 0.6px black",
+      }}
+      className="ring-offset fixed bottom-2 right-2 top-12 overflow-hidden rounded-lg border  border-neutral-500/50 ring-1 ring-black"
     >
-      <div className="relative h-full w-full overflow-y-auto bg-white dark:bg-neutral-900/90">
+      <div className="relative h-full w-full overflow-y-auto bg-white dark:bg-neutral-900/85 ">
         {order === undefined || order === null ? (
           <LoadingBody />
         ) : (
@@ -79,7 +81,7 @@ export default OrderDetails;
 const DetailsBody: React.FC<{ order: OrderDetailedType }> = ({ order }) => {
   const formatter = new CurrencyFormatter(order.totals?.currency!);
   return (
-    <div className="p-4 pb-8">
+    <div className="p-4 pb-0 -mb-4">
       <Section title="General">
         <div className="grid grid-cols-3 gap-4">
           <UserInfo order={order} />

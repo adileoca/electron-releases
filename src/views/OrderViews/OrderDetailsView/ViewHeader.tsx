@@ -28,7 +28,7 @@ const ViewHeader: React.FC<ViewHeaderProps> = ({
   return (
     <div style={{ width: "calc(100% - 192px)" }} className="fixed right-0">
       <ViewHeaderWrapper>
-        <div className="pl-2">
+        <div className="ml-0.5">
           <div className="flex items-center">
             <ViewHeaderBackButton onClick={() => navigate("/orders/")} />
             <ViewHeaderDivider />
@@ -43,7 +43,7 @@ const ViewHeader: React.FC<ViewHeaderProps> = ({
             </div>
           </div>
         </div>
-        <div className="mr-3 text-base text-white text-opacity-80">
+        <div className="mr-2 text-base text-white text-opacity-80">
           <ViewHeaderInfo
             info={`Last updated ${formatDate(lastUpdated, { relative: true })}`}
           />

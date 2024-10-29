@@ -25,9 +25,9 @@ const Sidebar: React.FC = () => {
   const location = useLocation();
   return (
     <div className="absolute left-0 top-0">
-      <div className="fixed flex h-screen w-48 flex-col overflow-y-auto border-r border-neutral-300 dark:border-black">
+      <div className="fixed flex h-screen w-48 flex-col overflow-y-auto ">
         <div className="draggable py-6" />
-        <nav className="flex flex-1 flex-col px-5 pb-5 pt-2">
+        <nav className="flex flex-1 flex-col px-5 pb-5 pt-1.5">
           <ul className="-mx-2 space-y-1">
             {navigation.map((item) => (
               <li key={item.name}>

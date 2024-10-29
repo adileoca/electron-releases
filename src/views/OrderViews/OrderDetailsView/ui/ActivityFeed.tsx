@@ -138,13 +138,13 @@ const AddCommentArea = () => {
         className="h-6 w-6 flex-none rounded-full bg-neutral-50"
       />
       <form action="#" className="relative flex-auto">
-        <div className="overflow-hidden rounded-lg bg-neutral-700 pb-12 shadow-sm ring-1 ring-neutral-600 focus-within:ring-2 focus-within:ring-blue-600">
+        <div className="overflow-hidden rounded-lg border border-neutral-600 bg-neutral-700 pb-12 shadow-sm  focus-within:border-blue-600">
           <textarea
             id="comment"
             name="comment"
             rows={2}
             placeholder="Add your comment..."
-            className="block w-full resize-none border-0 bg-transparent py-1.5 text-neutral-900 placeholder:text-neutral-400 focus:ring-0  sm:leading-6"
+            className="block w-full resize-none border-0 bg-transparent py-1.5 text-neutral-900 placeholder:text-neutral-400 focus:ring-0 sm:leading-6"
             defaultValue={""}
           />
         </div>

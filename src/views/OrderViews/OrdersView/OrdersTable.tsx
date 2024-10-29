@@ -17,11 +17,11 @@ const OrdersTable = () => {
 
   return (
     <div
-      style={{ width: "calc(100% - 186px)" }}
-      className="fixed -right-1.5 top-12 h-screen overflow-hidden"
+      style={{ width: "calc(100% - 200px)", boxShadow: "0 0 0 0.6px black", borderWidth: "1px" }}
+      className="ring-offset fixed bottom-2 right-2 top-12 overflow-hidden rounded-lg  border-neutral-500/50 ring-1 ring-black "
     >
-      <div className="relative h-full overflow-auto">
-        {loading && <LoadingBody />}
+      <div className="relative h-full overflow-auto ">
+        {/* {loading && <LoadingBody />} */}
         <table>
           <TableHeader widths={widths} />
           <TableBody widths={widths} />
