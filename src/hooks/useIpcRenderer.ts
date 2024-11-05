@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const useIpcRenderer = () => {
+const useIpcListeners = () => {
   useEffect(() => {
     const { send, removeListener, on } = window.electron;
 
@@ -19,4 +19,4 @@ const useIpcRenderer = () => {
   }, []);
 };
 
-export default useIpcRenderer;
+export default useIpcListeners;

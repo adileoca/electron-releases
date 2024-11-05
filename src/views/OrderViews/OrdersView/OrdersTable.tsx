@@ -17,8 +17,12 @@ const OrdersTable = () => {
 
   return (
     <div
-      style={{ width: "calc(100% - 200px)", boxShadow: "0 0 0 0.6px black", borderWidth: "1px" }}
-      className="ring-offset fixed bottom-2 right-2 top-12 overflow-hidden rounded-lg  border-neutral-500/50 ring-1 ring-black "
+      style={{
+        width: "calc(100% - 200px)",
+        boxShadow: "0 0 0 0.6px black",
+        borderWidth: "1px",
+      }}
+      className="ring-offset fixed bottom-2 right-2 top-12 overflow-hidden rounded-lg border-neutral-500/50"
     >
       <div className="relative h-full overflow-auto ">
         {/* {loading && <LoadingBody />} */}

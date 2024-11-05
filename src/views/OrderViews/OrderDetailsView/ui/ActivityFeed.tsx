@@ -24,26 +24,24 @@ const FeedTimeline: React.FC<{
 }> = ({ activities }) => {
   return (
     <ul role="list" className="space-y-6">
-      {Array(3)
-        .fill(activities[0])
-        .map((activityItem, activityItemIdx) => (
-          <li key={activityItemIdx} className="relative flex gap-x-4">
-            <div
-              className={clsx(
-                activityItemIdx === 0 ? "top-4 h-8" : "",
-                activityItemIdx === activities.length - 1 ? "" : "-bottom-6",
-                "absolute left-0 top-0 flex w-6 justify-center"
-              )}
-            >
-              <div className="w-1 bg-neutral-700 shadow" />
-            </div>
-            {activityItem.comment ? (
-              <CommentContent activityItem={activityItem} />
-            ) : (
-              <MiscelaneousContent activityItem={activityItem} />
+      {activities.map((activityItem, activityItemIdx) => (
+        <li key={activityItemIdx} className="relative flex gap-x-4">
+          <div
+            className={clsx(
+              activityItemIdx === 0 ? "top-4 h-10" : "",
+              activityItemIdx === activities.length - 1 ? "" : "-bottom-6",
+              "absolute left-0 top-0 flex w-6 justify-center"
             )}
-          </li>
-        ))}
+          >
+            <div className="w-1 bg-neutral-700 shadow" />
+          </div>
+          {activityItem.comment ? (
+            <CommentContent activityItem={activityItem} />
+          ) : (
+            <MiscelaneousContent activityItem={activityItem} />
+          )}
+        </li>
+      ))}
     </ul>
   );
 };
@@ -68,7 +66,7 @@ const CommentContent: React.FC<{
           </div>
           <time
             dateTime={activityItem.created_at}
-            className="flex-none py-0.5  leading-5 text-neutral-300"
+            className="flex-none py-0.5 leading-5 text-neutral-300"
           >
             {formatDate(activityItem.created_at, { relative: true })}
           </time>
@@ -92,10 +90,12 @@ const MiscelaneousContent: React.FC<{
         )}
       </div>
       <p className="flex-auto py-0.5 leading-5 text-neutral-300">
-        <a href="/" className="font-medium text-neutral-300 hover:underline">
-          {activityItem.user!.name!}
-        </a>{" "}
-        {/* {activityItem.type} the invoice. */}
+        {activityItem.user && (
+          <a href="/" className="font-medium text-neutral-300 hover:underline">
+            {`${activityItem.user!.name!} `}
+          </a>
+        )}
+
         {activityItem.title}
       </p>
       <time
@@ -162,7 +162,7 @@ const AddCommentArea = () => {
           </div>
           <button
             type="submit"
-            className="rounded-md bg-white px-4 py-1.5 text-sm font-medium text-neutral-900 shadow-sm  hover:bg-neutral-50"
+            className="rounded-md bg-white px-4 py-1.5 text-sm  text-neutral-900 shadow-sm  hover:bg-neutral-50"
           >
             Comment
           </button>

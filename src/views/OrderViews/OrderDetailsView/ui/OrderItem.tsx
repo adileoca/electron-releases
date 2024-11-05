@@ -1,8 +1,10 @@
 import { parseConfigurationDetails } from "@/utils/parse";
-import { OrderItemType } from "@/lib/supabase/database";
 import { CurrencyFormatter } from "@/utils/format";
+import { OrderDetailedType } from "@/lib/supabase/database";
 
-const OrderItem: React.FC<{ item: OrderItemType }> = ({ item }) => {
+const OrderItem: React.FC<{ item: OrderDetailedType["items"][0] }> = ({
+  item,
+}) => {
   const formatter = new CurrencyFormatter(item.totals?.currency!);
   return (
     <li className="flex flex-col py-3 md:flex-row">
@@ -13,25 +15,45 @@ const OrderItem: React.FC<{ item: OrderItemType }> = ({ item }) => {
           alt=""
         />
       </div>
-      <div className="relative mt-2 flex flex-1 justify-between md:ml-5 md:mt-0">
-        <div className="md:pr-6">
-          <div className="flex items-center justify-between">
-            <span className="flex text-lg font-medium text-neutral-900 transition md:pb-2 dark:text-neutral-300">
-              {item.product?.name}
+      <div className="ml-5 flex flex-1 flex-col">
+        <div className="relative flex flex-1 justify-between">
+          <div className="md:pr-6">
+            <div className="flex items-center justify-between">
+              <span className="flex pb-1.5 text-lg font-medium text-neutral-900 transition dark:text-neutral-300">
+                {item.product?.name}
+              </span>
+            </div>
+            {item.configuration &&
+              parseConfigurationDetails(item.configuration).map(
+                (detail, idx) => (
+                  <div key={idx}>
+                    <RowDetails label={detail.label} value={detail.value} />
+                  </div>
+                )
+              )}
+          </div>
+          <div>
+            <span className="text-white/80">
+              {item.quantity} x {formatter.format(item.totals?.amount_total!)}
             </span>
           </div>
-          {item.configuration &&
-            parseConfigurationDetails(item.configuration).map((detail, idx) => (
-              <div key={idx}>
-                <RowDetails label={detail.label} value={detail.value} />
-              </div>
-            ))}
         </div>
-        <div>
-          <span className="text-white/80">
-            {item.quantity} x {formatter.format(item.totals?.amount_total!)}
-          </span>
+        <div className="pt-2">
+          <button className="rounded bg-white/75 px-3 py-0.5  text-black/90">
+            View assets
+          </button>
         </div>
+        {/* {item.assets && (
+
+            <MiniTable
+              title="Assets"
+              data={{
+                id: String(item.assets[0].id),
+                ids: String(item.assets[0].id),
+              }}
+            />
+
+        )} */}
       </div>
     </li>
   );

@@ -36,23 +36,6 @@ const OrderDetails: React.FC<{
     });
   }, [order]);
 
-  useEffect(() => {
-    if (!order) return;
-
-    const url =
-      "https://django-static-872.s3.eu-south-1.amazonaws.com/private/file2.psd";
-
-    if (url) {
-      const parsedUrl = new URL(url);
-      console.log("url", url);
-      const pathname = parsedUrl.pathname; // Get the path part of the URL
-      const segments = pathname.split("/"); // Split the path into segments
-      const filename = segments.pop(); // Get the last segment as the filename
-      console.log("filename", filename);
-      window.electron.invoke("cache-file-from-url", { url, filename });
-    }
-  }, [order]);
-
   if (error) {
     return <div>{JSON.stringify(error)}</div>;
   }
@@ -81,7 +64,7 @@ export default OrderDetails;
 const DetailsBody: React.FC<{ order: OrderDetailedType }> = ({ order }) => {
   const formatter = new CurrencyFormatter(order.totals?.currency!);
   return (
-    <div className="p-4 pb-0 -mb-4">
+    <div className="-mb-4 p-4 pb-0">
       <Section title="General">
         <div className="grid grid-cols-3 gap-4">
           <UserInfo order={order} />
@@ -96,11 +79,13 @@ const DetailsBody: React.FC<{ order: OrderDetailedType }> = ({ order }) => {
       </Section>
       <Section title="Order Items">
         <CardWrapper>
-          <div className="divide-y divide-neutral-700 px-3 ">
+          <div className="divide-y divide-neutral-700 ">
             {Array(3)
               .fill(order.items[0])
               .map((item, idx) => (
+                <div className="px-3">
                 <OrderItem item={item} key={idx} />
+                </div>
               ))}
             <div className="pb-1 pl-44">
               <div className="pl-1">

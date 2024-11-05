@@ -2,20 +2,65 @@ const { ipcMain, shell, BrowserWindow, app } = require("electron");
 
 const { simpleParser } = require("mailparser");
 
+const mime = require("mime-types");
 const https = require("https");
 const path = require("path");
 const fs = require("fs");
 
+const cacheDir = path.join(app.getPath("userData"), "storage");
+if (!fs.existsSync(cacheDir)) {
+  fs.mkdirSync(cacheDir, { recursive: true });
+}
+
 function setupIpcEvents() {
-  ipcMain.handle("get-cached-filenames", async () => {
+  ipcMain.handle("read-file", async (_, filename) => {
     try {
-      const cacheDir = path.join(app.getPath("userData"), "storage");
-      console.log("cacheDir", cacheDir);
-      if (!fs.existsSync(cacheDir)) {
-        fs.mkdirSync(cacheDir);
-        return [];
+      if (!filename) {
+        throw new Error("Filename is required.");
       }
 
+      // Prevent directory traversal attacks
+      if (filename.includes("..") || path.isAbsolute(filename)) {
+        throw new Error("Invalid filename.");
+      }
+
+      // Resolve the absolute path within the allowed directory
+      const filePath = path.join(cacheDir, filename);
+
+      // Check if the file exists
+      if (!fs.existsSync(filePath)) {
+        throw new Error(`File not found: ${filename}`);
+      }
+
+      // Read the file content as a Buffer
+      const content = await fs.promises.readFile(filePath);
+      
+      return content.toString("base64");
+    } catch (error) {
+      console.error("Error reading file:", error);
+      // Send a generic error message to the renderer
+      throw new Error("Failed to read the file.");
+    }
+  });
+
+  ipcMain.handle("delete-cache-file", async (_, { filename }) => {
+    try {
+      const filePath = path.join(cacheDir, filename);
+      // Check if the file exists
+      if (fs.existsSync(filePath)) {
+        // Delete the file
+        await fs.promises.unlink(filePath);
+        console.log(`File ${filename} deleted from cache.`);
+      } else {
+        console.warn(`File ${filename} does not exist in the cache.`);
+      }
+    } catch (err) {
+      console.error("Error deleting file:", err);
+    }
+  });
+
+  ipcMain.handle("get-cached-filenames", async (_) => {
+    try {
       return fs.readdirSync(cacheDir);
     } catch (err) {
       console.error("Error fetching cached files:", err);
@@ -25,7 +70,6 @@ function setupIpcEvents() {
 
   ipcMain.handle("read-and-stream-file", async (_, filename) => {
     try {
-      const cacheDir = path.join(app.getPath("userData"), "storage");
       const filePath = path.join(cacheDir, filename);
 
       if (!fs.existsSync(filePath)) {
@@ -41,38 +85,17 @@ function setupIpcEvents() {
     }
   });
 
-  ipcMain.handle("cache-file", async (event, { filename, content }) => {
+  ipcMain.handle("cache-file", async (_, { filename, content }) => {
     try {
-      const cacheDir = path.join(app.getPath("userData"), "storage");
-      console.log("cacheDir", cacheDir);
-      if (!fs.existsSync(cacheDir)) {
-        fs.mkdirSync(cacheDir, { recursive: true });
-      }
-
       const filePath = path.join(cacheDir, filename);
       await fs.promises.writeFile(filePath, content);
-
-      // Optional: Respond back with success acknowledgment
-      event.reply("cache-file-success", {
-        message: `File ${filename} cached successfully.`,
-      });
     } catch (err) {
       console.error("Error caching file:", err);
-      // Optional: Respond back with error
-      event.reply("cache-file-error", {
-        message: `Failed to cache file ${filename}.`,
-      });
     }
   });
 
   ipcMain.handle("cache-file-from-url", async (event, { url, filename }) => {
     return new Promise((resolve, reject) => {
-      const cacheDir = path.join(app.getPath("userData"), "storage");
-      console.log("cacheDir", cacheDir);
-      if (!fs.existsSync(cacheDir)) {
-        fs.mkdirSync(cacheDir, { recursive: true });
-      }
-
       https
         .get(url, (response) => {
           if (response.statusCode === 200) {
@@ -150,15 +173,6 @@ function setupIpcEvents() {
 }
 
 module.exports = { setupIpcEvents };
-
-const getCachedFiles = () => {
-  const cacheDir = path.join(app.getPath("userData"), "cache");
-  if (!fs.existsSync(cacheDir)) {
-    fs.mkdirSync(cacheDir);
-    return [];
-  }
-  return fs.readdirSync(cacheDir);
-};
 
 function mimeToExtension(mimeType) {
   const mimeTypes = {

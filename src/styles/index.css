@@ -21,11 +21,11 @@ body {
 }
 .react-resizable-handle {
   position: absolute;
-  width: 12px;
+  width: 4px;
   height: 53px;
   background-repeat: no-repeat;
 
-  margin-right: -5px;
+  margin-right: -0px;
   background-origin: content-box;
   box-sizing: border-box;
   /* background-color: black; */

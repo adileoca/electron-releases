@@ -10,10 +10,7 @@ const getSearchParams = (): {
   headerArgs: OrderHeaderArgs;
 } => {
   const params = new URLSearchParams(useLocation().search);
-  console.log(
-    "last_updated",
-    params.get("last_updated")!.replace(/\+/g, "%2B")
-  );
+
   return {
     orderId: params.get("order_id")!,
     headerArgs: {

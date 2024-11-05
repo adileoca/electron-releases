@@ -6,15 +6,8 @@ import fs from "fs";
 import WebSocket, { WebSocketServer } from "ws";
 import { app as electronApp } from "electron";
 import { createServer } from "http";
-import multer from "multer";
 import { v4 as uuidv4 } from "uuid";
-
-import * as Supabase from "@supabase/supabase-js";
-const { createClient, SupabaseClient, Session } = Supabase;
-
-// compile, remove commonjs exports, add export default Database.
-// todo: have a script do this on startup
-import Database from "../lib/supabase/database.mjs";
+import multer from "multer";
 
 const app = express();
 
@@ -25,14 +18,14 @@ app.use(cors());
 app.use(express.json());
 
 // Define the media directory
-const mediaDir = path.join(electronApp.getPath("userData"), "storage");
+const storageDir = path.join(electronApp.getPath("userData"), "storage");
 // Ensure the storage directory exists
-fs.mkdirSync(mediaDir, { recursive: true });
+fs.mkdirSync(storageDir, { recursive: true });
 
 // Set up multer storage configuration
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, mediaDir);
+    cb(null, storageDir);
   },
   filename: (req, file, cb) => {
     // Generate a unique filename using UUID
@@ -43,46 +36,39 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// Define the /upload route
 app.post("/upload", upload.single("file"), (req, res) => {
-  console.log("upload received")
   // Check if a file was uploaded
   if (!req.file) {
     return res.status(400).json({ message: "No file uploaded" });
   }
 
-  // File uploaded successfully
-  // Return the generated filename to the client
   res.status(200).json({
     message: "File uploaded successfully",
-    filename: req.file.filename, // The generated filename
-    // Optionally, include other file information
-    // originalname: req.file.originalname,
-    // mimetype: req.file.mimetype,
-    // size: req.file.size,
-    // path: req.file.path,
+    filename: req.file.filename,
   });
 });
 
-app.get("/media", (req, res) => {
-  // const { filename } = req.query
-  const filename = "408f79d5-345a-4b83-8930-7f90f41ac3f5";
+app.post("/media", (req, res) => {
+  const { filename } = req.body;
+
   if (!filename) {
+    console.log("1");
     return res.status(400).json({ message: "Filename is required" });
   }
 
   // Resolve the full path of the file
-  const filePath = path.join(mediaDir, filename);
-
+  const filePath = path.join(storageDir, filename);
   // Security check to prevent directory traversal attacks
   const resolvedPath = path.resolve(filePath);
-  if (!resolvedPath.startsWith(path.resolve(mediaDir))) {
+  if (!resolvedPath.startsWith(path.resolve(storageDir))) {
+    console.log("2");
     return res.status(403).json({ message: "Access denied" });
   }
 
   // Check if the file exists and is a file
   fs.stat(filePath, (err, stats) => {
     if (err || !stats.isFile()) {
+      console.log("3", err);
       return res.status(404).json({ message: "File not found" });
     }
 
@@ -118,7 +104,6 @@ const clients = [];
 
 // Variable to hold the session data
 let sessionData = null;
-let supabase = null;
 
 // Function to update the session data and broadcast to clients
 function setSession(session) {
@@ -135,8 +120,6 @@ function setSession(session) {
       ws.send(message);
     }
   });
-
-  createSupabaseClient(session);
 }
 
 // Handle WebSocket connections
@@ -178,24 +161,6 @@ server.listen(port, () => {
 
 // Export the app and the setSession function
 export { app, setSession };
-
-function createSupabaseClient(session) {
-  // Initialize the Supabase client for the first time
-  const SUPABASE_URL =
-    process.env.REACT_APP_SUPABASE_URL ||
-    "https://vrdaoudvtphptybaljqq.supabase.co";
-  const SUPABASE_ANON_KEY =
-    process.env.REACT_APP_SUPABASE_ANON_KEY ||
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZyZGFvdWR2dHBocHR5YmFsanFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjUyNjcxNTEsImV4cCI6MjA0MDg0MzE1MX0.8lxO8TS_CRbWZKafWfKWwRKTOJ15RyaXjmmUIUl0ZJ0";
-
-  supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    global: {
-      headers: {
-        Authorization: `Bearer ${session.access_token}`,
-      },
-    },
-  });
-}
 
 // Middleware to check the custom header
 // app.use((req, res, next) => {
