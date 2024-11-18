@@ -45,6 +45,7 @@ export const formatDate = (
   }
 };
 
+
 export const capitalizeFirstLetter = (string: string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
@@ -75,7 +76,6 @@ export const formatSize = (size, reverse = false) => {
     : `${formattedWidth} x ${formattedHeight}${unitSuffix}`;
 };
 
-
 export class CurrencyFormatter {
   private currency: string;
 
@@ -84,13 +84,12 @@ export class CurrencyFormatter {
   }
 
   public format(amount: number): string {
-    return new Intl.NumberFormat('de-DE', {
-      style: 'currency',
+    return new Intl.NumberFormat("de-DE", {
+      style: "currency",
       currency: this.currency,
     }).format(amount / 100);
   }
 }
-
 
 // export const getTimestamp = (string) => {
 //   const dateObj = new Date(string);
@@ -107,4 +106,3 @@ export class CurrencyFormatter {
 //   ).padStart(2, "0")} EEST`;
 //   return humanReadable;
 // };
-

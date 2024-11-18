@@ -3,8 +3,6 @@ export type Json =
   | number
   | boolean
   | null
-
-
   | { [key: string]: Json | undefined }
   | Json[]
 
@@ -397,6 +395,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "item_media_assets_created_by_fkey1"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "item_media_assets_item_id_fkey"
             columns: ["item_id"]
             isOneToOne: false
@@ -425,7 +430,9 @@ export type Database = {
           comment: string | null
           created_at: string
           id: number
+          item_id: string | null
           order_id: string | null
+          task_id: string | null
           title: string | null
           type: Database["public"]["Enums"]["order_activity_types"] | null
           user_id: string | null
@@ -435,7 +442,9 @@ export type Database = {
           comment?: string | null
           created_at?: string
           id?: number
+          item_id?: string | null
           order_id?: string | null
+          task_id?: string | null
           title?: string | null
           type?: Database["public"]["Enums"]["order_activity_types"] | null
           user_id?: string | null
@@ -445,17 +454,33 @@ export type Database = {
           comment?: string | null
           created_at?: string
           id?: number
+          item_id?: string | null
           order_id?: string | null
+          task_id?: string | null
           title?: string | null
           type?: Database["public"]["Enums"]["order_activity_types"] | null
           user_id?: string | null
         }
         Relationships: [
           {
+            foreignKeyName: "order_activities_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "order_items"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "order_activities_order_id_fkey"
             columns: ["order_id"]
             isOneToOne: false
             referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_activities_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
             referencedColumns: ["id"]
           },
           {
