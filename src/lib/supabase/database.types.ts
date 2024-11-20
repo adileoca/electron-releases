@@ -46,6 +46,7 @@ export type Database = {
         Row: {
           amount: number | null
           cart_id: string | null
+          configuration_id: string | null
           created_at: string
           deleted_at: string | null
           description: string | null
@@ -56,6 +57,7 @@ export type Database = {
         Insert: {
           amount?: number | null
           cart_id?: string | null
+          configuration_id?: string | null
           created_at?: string
           deleted_at?: string | null
           description?: string | null
@@ -66,6 +68,7 @@ export type Database = {
         Update: {
           amount?: number | null
           cart_id?: string | null
+          configuration_id?: string | null
           created_at?: string
           deleted_at?: string | null
           description?: string | null
@@ -79,6 +82,13 @@ export type Database = {
             columns: ["cart_id"]
             isOneToOne: false
             referencedRelation: "carts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cart_items_configuration_id_fkey"
+            columns: ["configuration_id"]
+            isOneToOne: false
+            referencedRelation: "item_configurations"
             referencedColumns: ["id"]
           },
           {
@@ -284,15 +294,14 @@ export type Database = {
       item_configurations: {
         Row: {
           bg_filter: string | null
+          bg_media_id: string | null
           bg_transform: string | null
-          bg_url: string | null
-          cart_item_id: string | null
           created_at: string
           edit_details: string | null
           id: string
           main_filter: string | null
+          main_media_id: string | null
           main_transform: string | null
-          main_url: string | null
           orientation: string | null
           remove_bg: string | null
           restore: string | null
@@ -304,15 +313,14 @@ export type Database = {
         }
         Insert: {
           bg_filter?: string | null
+          bg_media_id?: string | null
           bg_transform?: string | null
-          bg_url?: string | null
-          cart_item_id?: string | null
           created_at?: string
           edit_details?: string | null
           id?: string
           main_filter?: string | null
+          main_media_id?: string | null
           main_transform?: string | null
-          main_url?: string | null
           orientation?: string | null
           remove_bg?: string | null
           restore?: string | null
@@ -324,15 +332,14 @@ export type Database = {
         }
         Update: {
           bg_filter?: string | null
+          bg_media_id?: string | null
           bg_transform?: string | null
-          bg_url?: string | null
-          cart_item_id?: string | null
           created_at?: string
           edit_details?: string | null
           id?: string
           main_filter?: string | null
+          main_media_id?: string | null
           main_transform?: string | null
-          main_url?: string | null
           orientation?: string | null
           remove_bg?: string | null
           restore?: string | null
@@ -344,10 +351,17 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "item_configurations_cart_item_id_fkey"
-            columns: ["cart_item_id"]
+            foreignKeyName: "item_configurations_bg_media_id_fkey"
+            columns: ["bg_media_id"]
             isOneToOne: false
-            referencedRelation: "cart_items"
+            referencedRelation: "media"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "item_configurations_main_media_id_fkey"
+            columns: ["main_media_id"]
+            isOneToOne: false
+            referencedRelation: "media"
             referencedColumns: ["id"]
           },
           {
@@ -412,14 +426,61 @@ export type Database = {
             foreignKeyName: "item_media_assets_psd_id_fkey"
             columns: ["psd_id"]
             isOneToOne: false
-            referencedRelation: "private_media"
+            referencedRelation: "media"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "item_media_assets_thumbnail_id_fkey"
             columns: ["thumbnail_id"]
             isOneToOne: false
-            referencedRelation: "private_media"
+            referencedRelation: "media"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      media: {
+        Row: {
+          bucket_name: string
+          created_at: string
+          group_id: string | null
+          id: string
+          path: string
+          scheduled: boolean | null
+          uploaded_at: string | null
+          uploading: boolean | null
+          url: string | null
+          user_id: string | null
+        }
+        Insert: {
+          bucket_name: string
+          created_at?: string
+          group_id?: string | null
+          id?: string
+          path: string
+          scheduled?: boolean | null
+          uploaded_at?: string | null
+          uploading?: boolean | null
+          url?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          bucket_name?: string
+          created_at?: string
+          group_id?: string | null
+          id?: string
+          path?: string
+          scheduled?: boolean | null
+          uploaded_at?: string | null
+          uploading?: boolean | null
+          url?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "media_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "scheduled_uploads_group"
             referencedColumns: ["id"]
           },
         ]
@@ -759,27 +820,6 @@ export type Database = {
           },
         ]
       }
-      private_media: {
-        Row: {
-          bucket_name: string
-          created_at: string
-          id: string
-          path: string
-        }
-        Insert: {
-          bucket_name: string
-          created_at?: string
-          id?: string
-          path: string
-        }
-        Update: {
-          bucket_name?: string
-          created_at?: string
-          id?: string
-          path?: string
-        }
-        Relationships: []
-      }
       product_backgrounds: {
         Row: {
           id: number
@@ -929,7 +969,7 @@ export type Database = {
             foreignKeyName: "product_sizes_template_id_fkey"
             columns: ["template_id"]
             isOneToOne: false
-            referencedRelation: "private_media"
+            referencedRelation: "media"
             referencedColumns: ["id"]
           },
         ]
@@ -1112,33 +1152,45 @@ export type Database = {
       }
       tasks: {
         Row: {
+          assigned_at: string | null
           created_at: string
           description: string | null
           id: string
           item_id: string | null
+          locked_for: string | null
+          locked_until: string | null
           order_id: string | null
+          priority: number | null
           status: Database["public"]["Enums"]["task_statuses"] | null
           type: Database["public"]["Enums"]["task_types"] | null
           updated_at: string | null
           user_id: string | null
         }
         Insert: {
+          assigned_at?: string | null
           created_at?: string
           description?: string | null
           id?: string
           item_id?: string | null
+          locked_for?: string | null
+          locked_until?: string | null
           order_id?: string | null
+          priority?: number | null
           status?: Database["public"]["Enums"]["task_statuses"] | null
           type?: Database["public"]["Enums"]["task_types"] | null
           updated_at?: string | null
           user_id?: string | null
         }
         Update: {
+          assigned_at?: string | null
           created_at?: string
           description?: string | null
           id?: string
           item_id?: string | null
+          locked_for?: string | null
+          locked_until?: string | null
           order_id?: string | null
+          priority?: number | null
           status?: Database["public"]["Enums"]["task_statuses"] | null
           type?: Database["public"]["Enums"]["task_types"] | null
           updated_at?: string | null
@@ -1167,6 +1219,8 @@ export type Database = {
           email: string | null
           gender: string | null
           id: string
+          key: string | null
+          last_active: string | null
           name: string | null
           phone: string | null
           picture: string | null
@@ -1176,6 +1230,8 @@ export type Database = {
           email?: string | null
           gender?: string | null
           id: string
+          key?: string | null
+          last_active?: string | null
           name?: string | null
           phone?: string | null
           picture?: string | null
@@ -1185,11 +1241,57 @@ export type Database = {
           email?: string | null
           gender?: string | null
           id?: string
+          key?: string | null
+          last_active?: string | null
           name?: string | null
           phone?: string | null
           picture?: string | null
         }
         Relationships: []
+      }
+      user_task_interactions: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          metadata: Json | null
+          task_id: string | null
+          type:
+            | Database["public"]["Enums"]["user_task_interaction_types"]
+            | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          task_id?: string | null
+          type?:
+            | Database["public"]["Enums"]["user_task_interaction_types"]
+            | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          task_id?: string | null
+          type?:
+            | Database["public"]["Enums"]["user_task_interaction_types"]
+            | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_task_interactions_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
@@ -1217,6 +1319,7 @@ export type Database = {
         | "partial_refund"
       task_statuses: "pending" | "in_progress" | "uploading" | "complete"
       task_types: "edit"
+      user_task_interaction_types: "accepted" | "refused" | "shown"
     }
     CompositeTypes: {
       [_ in never]: never

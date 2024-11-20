@@ -3,7 +3,7 @@ import { formatSize } from "@/utils/format";
 import { CartItemsType } from "@/lib/supabase/database";
 
 export const parseConfigurationDetails = (
-  configuration: CartItemsType[0]["configuration"][0],
+  configuration: CartItemsType[0]["configuration"],
   config: { asObject: boolean }
 ) => {
   const list = [

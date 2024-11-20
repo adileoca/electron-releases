@@ -15,7 +15,7 @@ export const usePrivateMedia = (
       const assetUrls = new Map<string, string>();
 
       const promises = data.map(async (media) => {
-        const blob = await db.get.privateMedia({
+        const blob = await db.get.media.file({
           bucketName: media.bucket_name!,
           path: media.path!,
         });

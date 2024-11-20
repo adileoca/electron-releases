@@ -2,6 +2,8 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { Database as DbTypes } from './database.types';
 import { QueryData } from '@supabase/supabase-js';
 
+import { SUPABASE_URL } from './constants';
+
 type QueryType<T extends (...args: any) => any> = QueryData<ReturnType<T>>;
 export type DbEnums = DbTypes['public']['Enums'];
 export type DbTables = DbTypes['public']['Tables'];
@@ -29,24 +31,6 @@ class QueryManager {
     this.supabase = supabase;
   }
 
-  privateMedia = async (args: { bucketName: string; path: string }) => {
-    const { data, error } = await this.supabase.storage
-      .from(args.bucketName)
-      .download(args.path!);
-
-    if (data) {
-      return data;
-    }
-
-    if (error) {
-      console.log(
-        `error downloading  from ${args.bucketName}, path ${args.path}. `,
-        error
-      );
-      return null;
-    }
-  };
-
   emailLabels = {
     byName: async (name: string) => {
       return this.supabase
@@ -70,19 +54,62 @@ class QueryManager {
     },
   };
 
-  scheduledUploads = {
-    byTaskId: async (taskId: string) => {
-      return this.supabase
-        .from('scheduled_uploads')
-        .select('*')
-        .eq('task_id', taskId);
+  media = {
+    data: async (select?: {
+      where?: { taskId?: string; isScheduled?: boolean };
+    }) => {
+      let query = this.supabase
+        .from('media')
+        .select('*, group:scheduled_uploads_group(*)');
+
+      if (!select?.where) {
+        return await query;
+      }
+
+      if (select.where.taskId) {
+        query = query.eq(
+          'scheduled_uploads_group.task_id',
+          select.where.taskId
+        );
+      }
+
+      if (select.where.isScheduled) {
+        query = query.eq('scheduled', select.where.isScheduled);
+      }
+
+      return await query;
     },
-    pending: async () => {
-      return this.supabase
-        .from('scheduled_uploads')
-        .select('*')
-        .is('uploaded_at', null);
+    file: async (args: { bucketName: string; path: string }) => {
+      const { data, error } = await this.supabase.storage
+        .from(args.bucketName)
+        .download(args.path!);
+
+      if (data) {
+        return data;
+      }
+
+      if (error) {
+        console.log(
+          `error downloading  from ${args.bucketName}, path ${args.path}. `,
+          error
+        );
+        return null;
+      }
     },
+  };
+
+  configuration = async (select?: { where?: { id?: string } }) => {
+    let query = this.supabase.from('item_configurations').select('*');
+
+    if (!select?.where) {
+      return await query;
+    }
+
+    if (select.where.id) {
+      query = query.eq('task_id', select.where.id);
+    }
+
+    return await query;
   };
 
   //??
@@ -93,10 +120,18 @@ class QueryManager {
         .select(
           `*,
           status: order_statuses(*),
-          items: order_items(*,
-            assets: item_media_assets(*,
-              psd: private_media!item_media_assets_psd_id_fkey(*),
-              thumbnail: private_media!item_media_assets_thumbnail_id_fkey(*)
+          items: order_items(
+            *,
+            configuration: item_configurations(
+              *,
+              main_media: media!item_configurations_main_media_id_fkey(*),
+              bg_media: media!item_configurations_bg_media_id_fkey(*),
+              thumbnail: media!item_configurations_thumbnail_id_fkey(*)
+            ),
+            assets: item_media_assets(
+              *,
+              psd: media!item_media_assets_psd_id_fkey(*),
+              thumbnail: media!item_media_assets_thumbnail_id_fkey(*)
             )
           )`
         )
@@ -107,9 +142,7 @@ class QueryManager {
 
   sizeTemplates = {
     all: async () => {
-      return this.supabase
-        .from('product_sizes')
-        .select('template: private_media(*)');
+      return this.supabase.from('product_sizes').select('template: media(*)');
     },
   };
 
@@ -157,46 +190,86 @@ class QueryManager {
     return await query;
   };
 
+  userTaskInteractions = async (options?: {
+    where?: { user_id?: string; task_id?: string };
+  }) => {
+    let query = this.supabase.from('user_task_interactions').select('*');
+
+    if (options?.where) {
+      for (const [key, value] of Object.entries(options.where)) {
+        if (value !== undefined && value !== null) {
+          query = query.eq(key, value);
+        }
+      }
+    }
+
+    return await query;
+  };
+
   tasks = {
     detailed: async (options?: {
-      id?: string;
-      status?: DbEnums['task_statuses'];
-      user_id?: string;
+      where?: {
+        id?: string;
+        status?: DbEnums['task_statuses'];
+        user_id?: string;
+        interactions?: {
+          user_id?: string;
+          type?: DbEnums['user_task_interaction_types'];
+        };
+      };
     }) => {
       let query = this.supabase.from('tasks').select(
         `*,
+          interactions: user_task_interactions(*),
           item: order_items(*,
             product: products(*),
             assets: item_media_assets(*,
-              psd: private_media!item_media_assets_psd_id_fkey(*),
-              thumbnail: private_media!item_media_assets_thumbnail_id_fkey(*),
+              psd: media!item_media_assets_psd_id_fkey(*),
+              thumbnail: media!item_media_assets_thumbnail_id_fkey(*),
               user: user_profiles(*)
             ),
             configuration: item_configurations(*, size: product_sizes(*,
-              template: private_media(*)
+              template: media(*)
           )))
           `
       );
 
-      if (options?.id) {
-        query = query.eq('id', options.id);
+      if (options?.where?.id) {
+        query = query.eq('id', options.where.id);
       }
 
-      if (options?.status) {
-        query = query.eq('status', options.status);
+      if (options?.where?.status) {
+        query = query.eq('status', options.where.status);
       }
 
-      if (options?.user_id) {
-        query = query.eq('user_id', options.user_id);
+      if (options?.where?.user_id) {
+        query = query.eq('user_id', options.where.user_id);
+      }
+
+      if (options?.where?.interactions) {
+        if (options.where.interactions.user_id) {
+          query = query.eq(
+            'interactions.user_id',
+            options.where.interactions.user_id
+          );
+        }
+        if (options.where.interactions.type) {
+          query = query.eq(
+            'interactions.type',
+            options.where.interactions.type
+          );
+        }
       }
 
       return await query;
     },
 
     summary: async (options?: {
-      id?: string;
-      status?: DbEnums['task_statuses'];
-      user_id?: string;
+      where?: {
+        id?: string;
+        status?: DbEnums['task_statuses'];
+        user_id?: string;
+      };
     }) => {
       let query = this.supabase.from('tasks').select(
         `*,
@@ -204,21 +277,21 @@ class QueryManager {
             product: products(*),
             configuration: item_configurations(*, size: product_sizes(
               *,
-              template: private_media(*)
+              template: media(*)
             ))
           )`
       );
 
-      if (options?.id) {
-        query = query.eq('id', options.id);
+      if (options?.where?.id) {
+        query = query.eq('id', options.where.id);
       }
 
-      if (options?.status) {
-        query = query.eq('status', options.status);
+      if (options?.where?.status) {
+        query = query.eq('status', options.where.status);
       }
 
-      if (options?.user_id) {
-        query = query.eq('user_id', options.user_id);
+      if (options?.where?.user_id) {
+        query = query.eq('user_id', options.where.user_id);
       }
 
       return await query;
@@ -320,6 +393,20 @@ class QueryManager {
     },
   };
 
+  userProfile = async (options?: { where?: { id?: string; key?: string } }) => {
+    let query = this.supabase.from('user_profiles').select('*');
+
+    if (options?.where) {
+      for (const [key, value] of Object.entries(options.where)) {
+        if (value !== undefined && value !== null) {
+          query = query.eq(key, value);
+        }
+      }
+    }
+
+    return await query;
+  };
+
   cart = {
     items: {
       byCartId: async (cartId: string, count: boolean = false) => {
@@ -328,20 +415,20 @@ class QueryManager {
           .select(
             `*, product:products(name, slug:product_slugs(name)),
               configuration:item_configurations(*,
+                  main_media:media!item_configurations_main_media_id_fkey(url),
+                  bg_media:media!item_configurations_bg_media_id_fkey(url),
                 size:product_sizes(
                 width_cm, height_cm, width_in, height_in
               )
             )`,
-            {
-              count: count ? 'exact' : undefined,
-              head: false,
-            }
+            { count: count ? 'exact' : undefined, head: false }
           )
           .limit(1, { referencedTable: 'configuration.product_sizes' })
           .limit(1, { referencedTable: 'item_configurations' })
           .eq('cart_id', cartId); // Use the foreign key cart_id from cart_items
       },
     },
+
     item: {
       byId: async (id: string) => {
         return await this.supabase
@@ -393,16 +480,19 @@ class QueryManager {
               status: order_statuses(*),
               activities: order_activities(*, user: user_profiles(*)),
               items: order_items(*,
-                totals: order_item_totals(*),
-                product: products(*),
-                assets: item_media_assets(*,
-                  psd: private_media!item_media_assets_psd_id_fkey(*),
-                  thumbnail: private_media!item_media_assets_thumbnail_id_fkey(*),
-                  user: user_profiles(*)
-                ),
-                configuration: item_configurations(*,
-                  size: product_sizes(*)
-                )
+              totals: order_item_totals(*),
+              product: products(*),
+              assets: item_media_assets(*,
+                psd: media!item_media_assets_psd_id_fkey(*),
+                thumbnail: media!item_media_assets_thumbnail_id_fkey(*),
+                user: user_profiles(*)
+              ),
+              configuration: item_configurations(*,
+                size: product_sizes(*),
+                main_media: media!item_configurations_main_media_id_fkey(*),
+                bg_media: media!item_configurations_bg_media_id_fkey(*),
+                thumbnail: media!item_configurations_thumbnail_id_fkey(*)
+              )
               )`
           )
           .eq('id', orderId)
@@ -424,8 +514,8 @@ class QueryManager {
                 totals: order_item_totals(*),
                 product: products(*),
                 assets: item_media_assets(*,
-                  psd: private_media!item_media_assets_psd_id_fkey(*),
-                  thumbnail: private_media!item_media_assets_thumbnail_id_fkey(*),
+                  psd: media!item_media_assets_psd_id_fkey(*),
+                  thumbnail: media!item_media_assets_thumbnail_id_fkey(*),
                   user: user_profiles(*)
                 ),
                 configuration: item_configurations(*,
@@ -433,7 +523,7 @@ class QueryManager {
                 )
               )`
           )
-          .eq("stripe_checkout_id", checkoutId)
+          .eq('stripe_checkout_id', checkoutId)
           .limit(1, { referencedTable: 'order_items.order_item_totals' })
           .single();
       },
@@ -505,10 +595,8 @@ class InsertManager {
   async orderActivities(insert: DbTables['order_activities']['Insert']) {
     const { data, error } = await this.supabase
       .from('order_activities')
-
       .insert(insert)
       .select('id')
-
       .single();
 
     if (error || !data) {
@@ -519,31 +607,76 @@ class InsertManager {
     return data.id;
   }
 
-  async privateMedia(
+  async media(
     content: Blob,
-    insert: DbTables['private_media']['Insert']
+    insert: DbTables['media']['Insert'],
+    options?: { returnType?: 'url' | 'id'; schedule?: boolean }
   ) {
-    const { data: uploadData, error: uploadError } = await this.supabase.storage
-      .from(insert.bucket_name)
-      .upload(insert.path!, content);
+    if (options?.schedule) {
+      if (options.returnType === 'url') {
+        throw new Error("Cannot return 'url' when 'schedule' is true");
+      }
 
-    if (uploadError || !uploadData) {
-      console.error('Error inserting private media:', uploadError);
-      throw new Error(uploadError.message || 'Unknown error occurred');
+      const { data: insertData, error: insertError } = await this.supabase
+        .from('media')
+        .insert(insert)
+        .select('id')
+        .single();
+
+      if (insertError || !insertData) {
+        console.error('Error inserting media into db:', insertError);
+        throw new Error(insertError.message || 'Unknown error occurred');
+      }
+
+      return insertData.id;
+    } else {
+      const [uploadResult, insertResult] = await Promise.all([
+        this.supabase.storage
+          .from(insert.bucket_name)
+          .upload(insert.path!, content),
+        this.supabase.from('media').insert(insert).select('id').single(),
+      ]);
+
+      const { data: uploadData, error: uploadError } = uploadResult;
+      const { data: insertData, error: insertError } = insertResult;
+
+      if (uploadError || !uploadData) {
+        console.error('Error uploading media to bucket:', uploadError);
+        throw new Error(uploadError.message || 'Unknown error occurred');
+      }
+
+      if (insertError || !insertData) {
+        console.error('Error inserting media into db:', insertError);
+        throw new Error(insertError.message || 'Unknown error occurred');
+      }
+
+      if (options?.returnType === 'url') {
+        return `${SUPABASE_URL}/storage/v1/object/${insert.bucket_name}/${insert.path}`;
+      }
+
+      if (options?.returnType === 'id') {
+        return insertData.id;
+      }
+
+      return insertData.id;
     }
+  }
 
-    const { data: insertData, error: insertError } = await this.supabase
-      .from('private_media')
+  async userTaskInteractions(
+    insert: DbTables['user_task_interactions']['Insert']
+  ) {
+    const { data, error } = await this.supabase
+      .from('user_task_interactions')
       .insert(insert)
       .select('id')
       .single();
 
-    if (insertError || !insertData) {
-      console.error('Error inserting private media:', insertError);
-      throw new Error(insertError.message || 'Unknown error occurred');
+    if (error || !data) {
+      console.error('Error inserting user task interactions:', error);
+      throw new Error(error.message || 'Unknown error occurred');
     }
 
-    return insertData.id;
+    return data.id;
   }
 
   // todo: refactor to work with plural or singular (accept an array an return with single if only one element

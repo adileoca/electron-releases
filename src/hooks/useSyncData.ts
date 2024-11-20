@@ -119,10 +119,10 @@ export const useSyncData = () => {
   };
 
   const queueUploadPromises = async () => {
-    const scheduledUploads = await fetchScheduledUploads(db);
+    const scheduledUploads = await fetchScheduledMedia(db);
 
     scheduledUploads
-      .filter(({ in_progress }) => !in_progress) // skip those already in progress
+      .filter(({ uploading }) => !uploading) // skip those already in progress
       .forEach((upload) => {
         const promise = async () => {
           try {
@@ -132,7 +132,7 @@ export const useSyncData = () => {
             });
 
             console.log("inserting into storage: ", upload);
-            await db.insert.privateMedia(content, {
+            await db.insert.media(content, {
               id: upload.id,
               bucket_name: upload.bucket_name!,
               path: upload.path!,
@@ -194,8 +194,10 @@ export const useSyncData = () => {
   return initSyncDone;
 };
 
-const fetchScheduledUploads = async (db: Database) => {
-  const { data, error } = await db.get.scheduledUploads.pending();
+const fetchScheduledMedia = async (db: Database) => {
+  const { data, error } = await db.get.media.data({
+    where: { isScheduled: true },
+  });
   // console.log("scheduledUploads", data);
 
   if (error) {
@@ -219,21 +221,21 @@ const fetchScheduledUploadGroups = async (db: Database) => {
 };
 
 const fetchNecessaryMedia = async (db: Database) => {
-  const scheduledUploads = await fetchScheduledUploads(db);
-  const templates = await fetchTemplates(db);
-  const orders = await fetchOrderItems(db);
+  const [scheduledMedia, templates, orders] = await Promise.all([
+    fetchScheduledMedia(db),
+    fetchTemplates(db),
+    fetchOrderItems(db),
+  ]);
 
-  let allMedia: DbTables["private_media"]["Row"][] = scheduledUploads.map(
-    (upload) => ({
-      bucket_name: upload.bucket_name!,
-      created_at: upload.created_at!,
-      id: upload.id!,
-      path: upload.path!,
-    })
-  );
+  let allMedia: DbTables["media"]["Row"][] = scheduledMedia;
 
   for (const order of orders) {
     for (const item of order.items) {
+      if (item.configuration) {
+        const { bg_media, main_media } = item.configuration;
+        if (bg_media) allMedia.push(bg_media);
+        if (main_media) allMedia.push(main_media);
+      }
       for (const asset of item.assets) {
         allMedia.push(asset.thumbnail!);
         allMedia.push(asset.psd!);
@@ -266,7 +268,7 @@ const fetchPrivateMedia = async (
   db: Database,
   media: { bucket_name: string; path: string }
 ) => {
-  const result = await db.get.privateMedia({
+  const result = await db.get.media.file({
     bucketName: media.bucket_name!,
     path: media.path!,
   });
