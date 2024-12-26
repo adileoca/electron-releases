@@ -29,6 +29,8 @@ function createWindow() {
   if (isDev) {
     window.webContents.openDevTools({ mode: "detach" });
   }
+
+  return window
 }
 
 module.exports = createWindow;

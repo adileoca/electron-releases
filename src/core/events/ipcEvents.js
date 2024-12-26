@@ -12,7 +12,12 @@ if (!fs.existsSync(cacheDir)) {
   fs.mkdirSync(cacheDir, { recursive: true });
 }
 
-function setupIpcEvents() {
+/**
+ * Sets up IPC event handlers.
+ *
+ * @param {BrowserWindow} window - The Electron BrowserWindow instance.
+ */
+function setupIpcEvents(window) {
   ipcMain.handle("read-file", async (_, filename) => {
     try {
       if (!filename) {
@@ -24,6 +29,7 @@ function setupIpcEvents() {
         throw new Error("Invalid filename.");
       }
 
+      console.log("cacheDir", cacheDir);
       // Resolve the absolute path within the allowed directory
       const filePath = path.join(cacheDir, filename);
 
@@ -34,7 +40,7 @@ function setupIpcEvents() {
 
       // Read the file content as a Buffer
       const content = await fs.promises.readFile(filePath);
-      
+
       return content.toString("base64");
     } catch (error) {
       console.error("Error reading file:", error);
@@ -61,6 +67,7 @@ function setupIpcEvents() {
 
   ipcMain.handle("get-cached-filenames", async (_) => {
     try {
+      console.log("cacheDir", cacheDir);
       return fs.readdirSync(cacheDir);
     } catch (err) {
       console.error("Error fetching cached files:", err);

@@ -1,4 +1,4 @@
-const { contextBridge, ipcRenderer, ipcMain } = require("electron");
+const { contextBridge, ipcRenderer } = require("electron");
 
 const validChannels = ["data-request", "data-response"]; // List of allowed channels
 
@@ -9,6 +9,8 @@ contextBridge.exposeInMainWorld("electron", {
   send: (channel, data) => {
     ipcRenderer.send(channel, data);
   },
+
+  
   on: (channel, func) => {
     if (validChannels.includes(channel)) {
       // Deliberately strip event as it includes `sender`

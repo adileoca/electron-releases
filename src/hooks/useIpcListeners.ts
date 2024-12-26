@@ -2,8 +2,6 @@ import { useEffect } from "react";
 
 const useIpcListeners = () => {
   useEffect(() => {
-    const { send, removeListener, on } = window.electron;
-
     const handleDataRequest = async (args) => {
       // Logic to handle the IPC message from the main process
       // For example, fetching data and sending it back
@@ -11,10 +9,10 @@ const useIpcListeners = () => {
       // send('data-response', data);
     };
 
-    on("data-request", handleDataRequest);
+    window.electron.on("data-request", async () => {});
 
     return () => {
-      removeListener("data-request", handleDataRequest);
+      window.electron.removeListener("data-request", handleDataRequest);
     };
   }, []);
 };

@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 
 import { OrderDetailedType, DbTables } from "@/lib/supabase/database";
-import { usePrivateMedia } from "@/lib/supabase/usePrivateMedia";
+import { useMedia } from "@/lib/supabase/useMedia";
 import { useDatabase } from "@/lib/supabase/context";
 
 import { parseConfigurationDetails } from "@/utils/parse";
@@ -52,7 +52,7 @@ const OrderItemBody: React.FC<{
       .filter((v): v is NonNullable<typeof v> => v !== null);
   }, [item]);
 
-  const assetUrls = usePrivateMedia(db, assetsData);
+  const assetUrls = useMedia(db, assetsData);
 
   return (
     <TabPanels>

@@ -11,10 +11,12 @@ import { useNavigate, useLocation } from "react-router-dom";
 import clsx from "clsx";
 import React from "react";
 
+// todo: look at user data to decide what should be available based on role
 const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon },
   { name: "Tasks", href: "/tasks", icon: RectangleStackIcon },
-  { name: "Orders", href: "/orders", icon: FolderIcon },
+  { name: "Comenzi", href: "/orders", icon: FolderIcon },
+  { name: "Printuri", href: "/orders", icon: FolderIcon },
   { name: "Emails", href: "/emails", icon: EnvelopeIcon },
   { name: "Documente", href: "/documents", icon: DocumentIcon },
   { name: "Rapoarte", href: "/reports", icon: ChartPieIcon },

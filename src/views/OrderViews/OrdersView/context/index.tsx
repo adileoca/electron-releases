@@ -4,20 +4,22 @@ import { useEffect, useState } from "react";
 import OrderStatusBadge from "@/components/ui/OrderStatusBadge";
 
 import { useDatabase } from "@/lib/supabase/context";
-import { createTableContext } from "@/context/Table";
 import { useFetchData } from "@/hooks/useFetchData";
-
-import { RowProps } from "@/context/Table/types";
 import { formatDate } from "@/utils/format";
+
+import { createTableContext } from "@/context/Table";
+import { RowProps } from "@/context/Table/types";
 
 export const ordersTableColumns = {
   order_no: {
+    // immutable
     id: "order_no",
     label: "Order No.",
-    isSticky: true,
-    position: 1,
     minConstraints: [135, 48] as [number, number],
     initialWidth: 135,
+    // mutable
+    isSticky: true,
+    position: 1,
     width: 135,
   },
   date_placed: {
@@ -70,14 +72,13 @@ export function useFetchRows(
     db.get.order.summary.all()
   );
 
- 
-
   useEffect(() => {
     if (!orders) return;
     console.log("orders", orders);
 
-    const mappedRows = (Array(24).fill(orders[0]) as typeof orders).map(
-      (order) => {
+    const mappedRows = Array(24)
+      .fill(orders[0])
+      .map((order) => {
         const rowMap = new Map<ColumnId, RowProps<ColumnId>>();
         rowMap.set("order_no", {
           id: "order_no",
@@ -124,8 +125,7 @@ export function useFetchRows(
                 ${order.shipping_address?.country}`,
         });
         return rowMap;
-      }
-    );
+      });
 
     setRows(mappedRows);
     setLoading(false);

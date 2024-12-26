@@ -27,10 +27,14 @@ const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, storageDir);
   },
+
   filename: (req, file, cb) => {
-    // Generate a unique filename using UUID
-    const generatedFilename = `${uuidv4()}${path.extname(file.originalname)}`;
-    cb(null, generatedFilename);
+    console.log("req", req.body);
+
+    const originalFilename =
+      req.body.filename || `${uuidv4()}${path.extname(file.originalname)}`;
+
+    cb(null, originalFilename);
   },
 });
 
@@ -41,10 +45,18 @@ app.post("/upload", upload.single("file"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: "No file uploaded" });
   }
-
   res.status(200).json({
     message: "File uploaded successfully",
     filename: req.file.filename,
+  });
+});
+
+app.get("/cached-filenames", (req, res) => {
+  fs.readdir(storageDir, (err, files) => {
+    if (err) {
+      return res.status(500).json({ message: "Error reading directory" });
+    }
+    res.status(200).json({ files });
   });
 });
 
@@ -138,7 +150,7 @@ wss.on("connection", (ws, req) => {
     console.log("WebSocket connection closed");
   });
 
-  // Send the current session data to the new client
+  // todo: instead of sending the session data, send the JWT, then use that to authenticate with the api in the plugin
   if (sessionData) {
     const message = JSON.stringify({
       type: "session",
@@ -162,12 +174,3 @@ server.listen(port, () => {
 // Export the app and the setSession function
 export { app, setSession };
 
-// Middleware to check the custom header
-// app.use((req, res, next) => {
-//   const secret = req.headers["x-shared-secret"];
-//   if (secret && secret === sharedSecret) {
-//     next();
-//   } else {
-//     res.status(403).json({ message: "Forbidden" });
-//   }
-// });

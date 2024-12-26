@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useDatabase } from "@/lib/supabase/context";
 import { useFetchData } from "@/hooks/useFetchData";
 
@@ -50,7 +50,7 @@ const OrderDetails: React.FC<{
       }}
       className="ring-offset fixed bottom-2 right-2 top-12 overflow-hidden rounded-lg border border-neutral-500/50"
     >
-      <div className="relative h-full w-full overflow-y-auto bg-white dark:bg-neutral-900/85 ">
+      <div className="relative h-full w-full overflow-y-auto bg-white dark:bg-neutral-900/100 ">
         {order === undefined || order === null ? (
           <LoadingBody />
         ) : (
@@ -103,13 +103,11 @@ const DetailsBody: React.FC<{ order: OrderDetailedType }> = ({ order }) => {
       </section>
       <Section title="Items">
         <div className="space-y-3">
-          {Array(3)
-            .fill(order.items[0])
-            .map((item, idx) => (
-              <CardWrapper key={idx}>
-                <OrderItem activities={order.activities} item={item} />
-              </CardWrapper>
-            ))}
+          {order.items.map((item, idx) => (
+            <CardWrapper key={idx}>
+              <OrderItem activities={order.activities} item={item} />
+            </CardWrapper>
+          ))}
 
           <CardWrapper>
             <div className="bg-white/5 p-3">

@@ -291,6 +291,80 @@ export type Database = {
         }
         Relationships: []
       }
+      item_assets: {
+        Row: {
+          approved: boolean
+          comment: string | null
+          created_at: string
+          created_by: string
+          id: string
+          item_id: string
+          printed: boolean
+          psd_id: string
+          seen: boolean
+          sent: boolean
+          thumbnail_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          approved?: boolean
+          comment?: string | null
+          created_at?: string
+          created_by: string
+          id?: string
+          item_id: string
+          printed?: boolean
+          psd_id: string
+          seen?: boolean
+          sent?: boolean
+          thumbnail_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          approved?: boolean
+          comment?: string | null
+          created_at?: string
+          created_by?: string
+          id?: string
+          item_id?: string
+          printed?: boolean
+          psd_id?: string
+          seen?: boolean
+          sent?: boolean
+          thumbnail_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "item_assets_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "item_assets_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "order_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "item_assets_psd_id_fkey"
+            columns: ["psd_id"]
+            isOneToOne: false
+            referencedRelation: "media"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "item_assets_thumbnail_id_fkey"
+            columns: ["thumbnail_id"]
+            isOneToOne: false
+            referencedRelation: "media"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       item_configurations: {
         Row: {
           bg_filter: string | null
@@ -373,80 +447,17 @@ export type Database = {
           },
         ]
       }
-      item_media_assets: {
-        Row: {
-          approved: boolean
-          created_at: string
-          created_by: string
-          id: number
-          item_id: string
-          psd_id: string
-          seen: boolean
-          sent: boolean
-          thumbnail_id: string
-        }
-        Insert: {
-          approved?: boolean
-          created_at?: string
-          created_by: string
-          id?: number
-          item_id: string
-          psd_id: string
-          seen?: boolean
-          sent?: boolean
-          thumbnail_id: string
-        }
-        Update: {
-          approved?: boolean
-          created_at?: string
-          created_by?: string
-          id?: number
-          item_id?: string
-          psd_id?: string
-          seen?: boolean
-          sent?: boolean
-          thumbnail_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "item_media_assets_created_by_fkey1"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "item_media_assets_item_id_fkey"
-            columns: ["item_id"]
-            isOneToOne: false
-            referencedRelation: "order_items"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "item_media_assets_psd_id_fkey"
-            columns: ["psd_id"]
-            isOneToOne: false
-            referencedRelation: "media"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "item_media_assets_thumbnail_id_fkey"
-            columns: ["thumbnail_id"]
-            isOneToOne: false
-            referencedRelation: "media"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       media: {
         Row: {
           bucket_name: string
           created_at: string
+          error: Json | null
           group_id: string | null
           id: string
           path: string
           scheduled: boolean | null
-          uploaded_at: string | null
+          upload_end: string | null
+          upload_start: string | null
           uploading: boolean | null
           url: string | null
           user_id: string | null
@@ -454,11 +465,13 @@ export type Database = {
         Insert: {
           bucket_name: string
           created_at?: string
+          error?: Json | null
           group_id?: string | null
           id?: string
           path: string
           scheduled?: boolean | null
-          uploaded_at?: string | null
+          upload_end?: string | null
+          upload_start?: string | null
           uploading?: boolean | null
           url?: string | null
           user_id?: string | null
@@ -466,11 +479,13 @@ export type Database = {
         Update: {
           bucket_name?: string
           created_at?: string
+          error?: Json | null
           group_id?: string | null
           id?: string
           path?: string
           scheduled?: boolean | null
-          uploaded_at?: string | null
+          upload_end?: string | null
+          upload_start?: string | null
           uploading?: boolean | null
           url?: string | null
           user_id?: string | null
@@ -485,16 +500,39 @@ export type Database = {
           },
         ]
       }
+      media_metadata: {
+        Row: {
+          expires_at: string
+          id: string
+        }
+        Insert: {
+          expires_at: string
+          id: string
+        }
+        Update: {
+          expires_at?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "media_metadata_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "media"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       order_activities: {
         Row: {
           attachment_url: string | null
           comment: string | null
           created_at: string
+          description: string | null
           id: number
           item_id: string | null
           order_id: string | null
           task_id: string | null
-          title: string | null
           type: Database["public"]["Enums"]["order_activity_types"] | null
           user_id: string | null
         }
@@ -502,11 +540,11 @@ export type Database = {
           attachment_url?: string | null
           comment?: string | null
           created_at?: string
+          description?: string | null
           id?: number
           item_id?: string | null
           order_id?: string | null
           task_id?: string | null
-          title?: string | null
           type?: Database["public"]["Enums"]["order_activity_types"] | null
           user_id?: string | null
         }
@@ -514,11 +552,11 @@ export type Database = {
           attachment_url?: string | null
           comment?: string | null
           created_at?: string
+          description?: string | null
           id?: number
           item_id?: string | null
           order_id?: string | null
           task_id?: string | null
-          title?: string | null
           type?: Database["public"]["Enums"]["order_activity_types"] | null
           user_id?: string | null
         }
@@ -685,20 +723,58 @@ export type Database = {
       order_statuses: {
         Row: {
           id: string
-          name: Database["public"]["Enums"]["enum_order_status"] | null
+          name: Database["public"]["Enums"]["order_status_names"] | null
           timestamp: string | null
         }
         Insert: {
           id?: string
-          name?: Database["public"]["Enums"]["enum_order_status"] | null
+          name?: Database["public"]["Enums"]["order_status_names"] | null
           timestamp?: string | null
         }
         Update: {
           id?: string
-          name?: Database["public"]["Enums"]["enum_order_status"] | null
+          name?: Database["public"]["Enums"]["order_status_names"] | null
           timestamp?: string | null
         }
         Relationships: []
+      }
+      order_tokens: {
+        Row: {
+          created_at: string
+          id: number
+          key: string | null
+          metadata: Json | null
+          order_id: string
+          used: boolean | null
+          value: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          key?: string | null
+          metadata?: Json | null
+          order_id: string
+          used?: boolean | null
+          value: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          key?: string | null
+          metadata?: Json | null
+          order_id?: string
+          used?: boolean | null
+          value?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_tokens_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       order_totals: {
         Row: {
@@ -743,11 +819,12 @@ export type Database = {
           last_updated: string | null
           name: string | null
           payment_id: string | null
-          phone: string | null
+          phone: string
           shipping_address_id: string | null
-          status_id: string | null
+          status_id: string
+          storefront_id: string
           stripe_checkout_id: string | null
-          totals_id: string | null
+          totals_id: string
           user_id: string | null
         }
         Insert: {
@@ -759,11 +836,12 @@ export type Database = {
           last_updated?: string | null
           name?: string | null
           payment_id?: string | null
-          phone?: string | null
+          phone: string
           shipping_address_id?: string | null
-          status_id?: string | null
+          status_id: string
+          storefront_id: string
           stripe_checkout_id?: string | null
-          totals_id?: string | null
+          totals_id: string
           user_id?: string | null
         }
         Update: {
@@ -775,11 +853,12 @@ export type Database = {
           last_updated?: string | null
           name?: string | null
           payment_id?: string | null
-          phone?: string | null
+          phone?: string
           shipping_address_id?: string | null
-          status_id?: string | null
+          status_id?: string
+          storefront_id?: string
           stripe_checkout_id?: string | null
-          totals_id?: string | null
+          totals_id?: string
           user_id?: string | null
         }
         Relationships: [
@@ -812,10 +891,150 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "orders_storefront_id_fkey"
+            columns: ["storefront_id"]
+            isOneToOne: false
+            referencedRelation: "storefronts"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "orders_totals_id_fkey"
             columns: ["totals_id"]
             isOneToOne: false
             referencedRelation: "order_totals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      print_item_assets: {
+        Row: {
+          item_asset_id: string
+          print_id: string
+        }
+        Insert: {
+          item_asset_id: string
+          print_id: string
+        }
+        Update: {
+          item_asset_id?: string
+          print_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "print_item_assets_item_asset_id_fkey"
+            columns: ["item_asset_id"]
+            isOneToOne: false
+            referencedRelation: "item_assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "print_item_assets_print_id_fkey"
+            columns: ["print_id"]
+            isOneToOne: false
+            referencedRelation: "prints"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      print_templates: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          name: string
+          psd_id: string
+          thumbnail_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name: string
+          psd_id: string
+          thumbnail_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name?: string
+          psd_id?: string
+          thumbnail_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "print_templates_media_id_fkey"
+            columns: ["psd_id"]
+            isOneToOne: false
+            referencedRelation: "media"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "print_templates_thumbnail_id_fkey"
+            columns: ["thumbnail_id"]
+            isOneToOne: false
+            referencedRelation: "media"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prints: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          locked: boolean | null
+          locked_until: boolean | null
+          opened_by: string | null
+          psd_id: string
+          template_id: string | null
+          thumbnail_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          locked?: boolean | null
+          locked_until?: boolean | null
+          opened_by?: string | null
+          psd_id: string
+          template_id?: string | null
+          thumbnail_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          locked?: boolean | null
+          locked_until?: boolean | null
+          opened_by?: string | null
+          psd_id?: string
+          template_id?: string | null
+          thumbnail_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prints_psd_id_fkey"
+            columns: ["psd_id"]
+            isOneToOne: false
+            referencedRelation: "media"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prints_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "print_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prints_thumbnail_id_fkey"
+            columns: ["thumbnail_id"]
+            isOneToOne: false
+            referencedRelation: "media"
             referencedColumns: ["id"]
           },
         ]
@@ -1028,46 +1247,44 @@ export type Database = {
         }
         Relationships: []
       }
-      scheduled_uploads: {
+      request_logs: {
         Row: {
-          bucket_name: string | null
-          created_at: string
-          group_id: string | null
-          id: string
-          in_progress: boolean | null
-          path: string | null
-          uploaded_at: string | null
-          user_id: string | null
+          body: Json | null
+          domain: string | null
+          headers: Json | null
+          id: number
+          method: Database["public"]["Enums"]["request_methods"] | null
+          request_end: string | null
+          request_start: string | null
+          response: Json | null
+          route: string | null
+          status_code: number | null
         }
         Insert: {
-          bucket_name?: string | null
-          created_at?: string
-          group_id?: string | null
-          id?: string
-          in_progress?: boolean | null
-          path?: string | null
-          uploaded_at?: string | null
-          user_id?: string | null
+          body?: Json | null
+          domain?: string | null
+          headers?: Json | null
+          id?: number
+          method?: Database["public"]["Enums"]["request_methods"] | null
+          request_end?: string | null
+          request_start?: string | null
+          response?: Json | null
+          route?: string | null
+          status_code?: number | null
         }
         Update: {
-          bucket_name?: string | null
-          created_at?: string
-          group_id?: string | null
-          id?: string
-          in_progress?: boolean | null
-          path?: string | null
-          uploaded_at?: string | null
-          user_id?: string | null
+          body?: Json | null
+          domain?: string | null
+          headers?: Json | null
+          id?: number
+          method?: Database["public"]["Enums"]["request_methods"] | null
+          request_end?: string | null
+          request_start?: string | null
+          response?: Json | null
+          route?: string | null
+          status_code?: number | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "scheduled_uploads_group_id_fkey"
-            columns: ["group_id"]
-            isOneToOne: false
-            referencedRelation: "scheduled_uploads_group"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       scheduled_uploads_group: {
         Row: {
@@ -1147,6 +1364,72 @@ export type Database = {
           provider?: string | null
           secret?: string | null
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      storefronts: {
+        Row: {
+          conversion_factor: number | null
+          country_code: string | null
+          currency_symbol: string | null
+          decimal_separator: string | null
+          domain: string
+          id: string
+          locale: string | null
+          measurement_system: string | null
+          symbol_position: string | null
+        }
+        Insert: {
+          conversion_factor?: number | null
+          country_code?: string | null
+          currency_symbol?: string | null
+          decimal_separator?: string | null
+          domain: string
+          id?: string
+          locale?: string | null
+          measurement_system?: string | null
+          symbol_position?: string | null
+        }
+        Update: {
+          conversion_factor?: number | null
+          country_code?: string | null
+          currency_symbol?: string | null
+          decimal_separator?: string | null
+          domain?: string
+          id?: string
+          locale?: string | null
+          measurement_system?: string | null
+          symbol_position?: string | null
+        }
+        Relationships: []
+      }
+      table_logs: {
+        Row: {
+          changes: Json | null
+          created_at: string
+          id: string
+          new_record: Json | null
+          old_record: Json | null
+          schema: string | null
+          table: string | null
+        }
+        Insert: {
+          changes?: Json | null
+          created_at?: string
+          id?: string
+          new_record?: Json | null
+          old_record?: Json | null
+          schema?: string | null
+          table?: string | null
+        }
+        Update: {
+          changes?: Json | null
+          created_at?: string
+          id?: string
+          new_record?: Json | null
+          old_record?: Json | null
+          schema?: string | null
+          table?: string | null
         }
         Relationships: []
       }
@@ -1310,16 +1593,27 @@ export type Database = {
         | "oven"
         | "shipped"
         | "delivered"
+        | "awaiting_feedback"
       order_activity_types: "positive" | "monitor" | "critical"
+      order_status_names:
+        | "placed"
+        | "editing"
+        | "feedback"
+        | "approved"
+        | "printed"
+        | "sorted"
+        | "shipped"
+        | "delivered"
       payment_status:
         | "pending"
         | "failed"
         | "paid"
         | "refunded"
         | "partial_refund"
+      request_methods: "POST" | "GET"
       task_statuses: "pending" | "in_progress" | "uploading" | "complete"
-      task_types: "edit"
-      user_task_interaction_types: "accepted" | "refused" | "shown"
+      task_types: "edit" | "print"
+      user_task_interaction_types: "accepted" | "refused" | "shown" | "canceled"
     }
     CompositeTypes: {
       [_ in never]: never

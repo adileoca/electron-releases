@@ -5,10 +5,11 @@ const { setupIpcEvents } = require("./events/ipcEvents");
 const createWindow = require("./events/windowEvents");
 
 app.whenReady().then(async () => {
-  createWindow();
-  setupIpcEvents();
+  const mainWindow = createWindow();
+  setupIpcEvents(mainWindow);
 
   try {
+    // setup express server
     const expressServerModule = await import("./expressServer.mjs");
     expressServerModule.app.listen();
   } catch (error) {

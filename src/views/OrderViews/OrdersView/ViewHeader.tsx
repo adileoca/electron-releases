@@ -1,11 +1,11 @@
-import { Search, Filter } from "lucide-react";
 import { useState, useRef } from "react";
+import { Search, Filter, XIcon } from "lucide-react";
+
 import ViewHeaderPagination from "@/components/ViewHeader/Pagination";
 import ViewHeaderWrapper from "@/components/ViewHeader/Wrapper";
 import ViewHeaderButton from "@/components/ViewHeader/Button";
 import ViewHeaderTitle from "@/components/ViewHeader/Title";
 import useAnimateViewBar from "@/hooks/useAnimateViewBar";
-import { XIcon } from "lucide-react";
 
 const ViewHeader = () => {
   const [searchView, setSearchView] = useState(false);
@@ -27,7 +27,7 @@ const ViewHeader = () => {
           style={defaultRefStyles}
           className=" flex h-full w-full items-center justify-between"
         >
-          <div >
+          <div>
             <div className="flex items-center ">
               <ViewHeaderTitle title="Orders" />
               <div className="ml-3 flex space-x-2">

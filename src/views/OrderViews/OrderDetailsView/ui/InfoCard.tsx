@@ -15,7 +15,7 @@ const InfoCard = ({
         <div className="p-3 pt-0">
           <button
             onClick={onClick}
-            className="w-full rounded-md bg-white/15 py-1.5 transition dark:hover:bg-white/25"
+            className="w-full rounded-md bg-white/20 border-white/10 border py-1.5 transition dark:hover:bg-white/25"
           >
             <span className="text-white/75 font-medium">{label}</span>
           </button>

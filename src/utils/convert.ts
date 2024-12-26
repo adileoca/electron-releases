@@ -18,3 +18,4 @@ export const blobToUint8Array = (blob: Blob): Promise<Uint8Array> => {
     reader.readAsArrayBuffer(blob);
   });
 };
+

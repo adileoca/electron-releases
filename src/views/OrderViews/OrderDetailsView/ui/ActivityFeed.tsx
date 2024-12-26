@@ -2,9 +2,10 @@
 
 import clsx from "clsx";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
-import { PaperClipIcon } from "@heroicons/react/20/solid";
+// import { PaperClipIcon } from "@heroicons/react/20/solid";
 import { DbEnums, OrderDetailedType } from "@/lib/supabase/database";
 import { formatDate } from "@/utils/format";
+import { Paperclip, PlusCircle } from "lucide-react";
 
 const ActivityFeed: React.FC<{
   activities: OrderDetailedType["activities"];
@@ -27,10 +28,12 @@ const FeedTimeline: React.FC<{
   return (
     <ul role="list" className="space-y-6">
       {activities.map((activityItem, activityItemIdx) => (
-        <li key={activityItemIdx} className="relative flex gap-x-4">
+        <li key={activityItemIdx} className="relative flex gap-x-3">
           <div
             className={clsx(
-              activityItemIdx === 0 && activities.length > 1 ? "top-4 h-10" : "",
+              activityItemIdx === 0 && activities.length > 1
+                ? "top-4 h-10"
+                : "",
               activityItemIdx === activities.length - 1 ? "" : "-bottom-8",
               "absolute left-0 top-0 flex w-6 justify-center"
             )}
@@ -103,11 +106,11 @@ const MiscelaneousContent: React.FC<{
             &nbsp;
           </>
         )}
-        {activityItem.title}
+        {activityItem.description}
       </p>
       <time
         dateTime={activityItem.created_at}
-        className="flex-none py-0.5  leading-5 text-white/80"
+        className="flex-none py-0.5 leading-5 text-white/80"
       >
         {formatDate(activityItem.created_at, { relative: true })}
       </time>
@@ -138,14 +141,14 @@ const ActivityDot: React.FC<{
 
 const AddCommentArea = () => {
   return (
-    <div className="mt-3 flex gap-x-3">
+    <div className="mt-1.5 flex gap-x-3">
       {/* <img
         alt=""
         src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
         className="h-6 w-6 flex-none rounded-full bg-neutral-50"
       /> */}
       <form action="#" className="relative flex-auto">
-        <div className="overflow-hidden border-t border-white/15 bg-white/5 pb-12 shadow-sm focus-within:border-neutral-500">
+        <div className="overflow-hidden border-t border-white/15 bg-white/5 pb-12 shadow-sm ">
           <textarea
             id="comment"
             name="comment"
@@ -156,20 +159,20 @@ const AddCommentArea = () => {
           />
         </div>
 
-        <div className="absolute inset-x-0 bottom-0 flex justify-between py-3 pl-3 pr-3">
-          <div className="flex items-center space-x-5">
-            <div className="flex items-center">
-              <button
-                type="button"
-                className="-m-2.5 flex h-10 w-10 items-center justify-center rounded-full text-neutral-400 hover:text-neutral-500"
-              >
-                <PaperClipIcon className="h-5 w-5" />
-              </button>
-            </div>
+        <div className="absolute inset-x-0 bottom-0 flex justify-end space-x-3 p-3">
+          <div>
+            <button className="flex items-center space-x-1 rounded-md border border-white/10 bg-white/20 py-1.5 pl-3 pr-4 text-sm font-medium text-white/80 shadow-sm hover:bg-neutral-50 hover:bg-white/30 transition">
+              <Paperclip size={16} strokeWidth={1.8} className="-rotate-45" />
+              <span>Ataseaza fisiere</span>
+            </button>
           </div>
-          <button className="rounded-md bg-white/80 px-4 py-1.5 text-sm font-medium  text-black/80 shadow-sm  hover:bg-neutral-50">
-            Comment
-          </button>
+          <div>
+            <button className="flex items-center space-x-1 rounded-md border border-white/10 bg-white/20 py-1.5 pl-3 pr-4 text-sm font-medium text-white/80 shadow-sm hover:bg-neutral-50 hover:bg-white/30 transition">
+              <PlusCircle size={16} strokeWidth={1.8} />
+              <span>Adauga nota</span>
+
+            </button>
+          </div>
         </div>
       </form>
     </div>

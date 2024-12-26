@@ -5,7 +5,6 @@ import ViewHeader from "./ViewHeader";
 const OrdersView = () => (
   <TableProvider>
     <ViewHeader />
-
     <OrdersTable />
   </TableProvider>
 );

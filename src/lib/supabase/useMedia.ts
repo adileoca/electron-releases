@@ -3,7 +3,9 @@
 import { useState, useEffect } from "react";
 import Database from "./database";
 
-export const usePrivateMedia = (
+
+
+export const useMedia = (
   db: Database,
   data: { id: string; bucket_name: string; path: string }[],
   callback?: (assetBlobs: Map<string, string>) => void
