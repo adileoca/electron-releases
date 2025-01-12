@@ -6,7 +6,7 @@ import { useSupabase } from "@/lib/supabase/context";
 import Input from "@/components/ui/Input";
 
 const Login = ({ searchParams }: { searchParams?: any }) => {
-  const supabase = useSupabase();
+  const { supabase } = useSupabase();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -20,8 +20,8 @@ const Login = ({ searchParams }: { searchParams?: any }) => {
     if (error) console.log("loginError: ", error);
   };
   return (
-    <div className="draggable bg-neutral-900 bg-cover flex h-screen w-full antialiased">
-      <div className="m-auto my-auto place-content-center rounded-3xl bg-white/75 p-8 dark:bg-neutral-800/75 backdrop-blur-3xl">
+    <div className="draggable flex h-screen w-full bg-neutral-900 bg-cover antialiased">
+      <div className="m-auto my-auto place-content-center rounded-3xl bg-white/75 p-8 backdrop-blur-3xl dark:bg-neutral-800/75">
         <div className="flex w-96 flex-col gap-8">
           <a href="/">
             <img

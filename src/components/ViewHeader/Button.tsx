@@ -44,8 +44,8 @@ const ViewHeaderButton: React.FC<Props> = ({
       <button
         onClick={onClick}
         className={clsx(
-          label ? "rounded-lg px-2.5 py-0.5" : "rounded-md p-1.5",
-          "flex items-center space-x-2 transition hover:bg-neutral-900/10 dark:hover:bg-white/10"
+          label ? " py-1 pl-2 pr-2.5" : "p-1",
+          "flex items-center border border-transparent rounded-lg text-sm space-x-1.5 transition hover:bg-neutral-900/10 dark:hover:bg-white/5 hover:border-white/15"
         )}
         onMouseEnter={() => setShow(true)}
         onMouseLeave={() => setShow(false)}
@@ -62,7 +62,7 @@ const ViewHeaderButton: React.FC<Props> = ({
 const LabelComponent = ({ label }) => (
   <>
     {label && (
-      <span className="font-medium text-black/60 dark:text-white/60">
+      <span className="font-semibold text-black/80 dark:text-white/80">
         {label}
       </span>
     )}
@@ -71,7 +71,11 @@ const LabelComponent = ({ label }) => (
 
 const IconComponent = ({ Icon, IconSize, tooltipContent, show }) => (
   <div className="relative">
-    <Icon size={IconSize || 16} className=" text-black/60 dark:text-white/60" />
+    <Icon
+      style={{ height: IconSize || 16, width: IconSize || 16, strokeWidth: 2 }}
+      size={IconSize || 16}
+      className="text-black/80 dark:text-white/80"
+    />
     {tooltipContent && <Tooltip content={tooltipContent} show={show} />}
   </div>
 );

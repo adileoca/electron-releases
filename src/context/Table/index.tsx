@@ -8,6 +8,7 @@ type ColMetadata = Record<string, ColProps>;
 export function createTableContext<C extends ColMetadata>(columns: C) {
   type T = keyof C; // T is now the union of the keys of columns
 
+  // move this to reducer file
   const createInitialState = (): TableState<T> => {
     // Build the cols Map from columns
     const cols = new Map<T, ColProps>(
@@ -44,7 +45,8 @@ export function createTableContext<C extends ColMetadata>(columns: C) {
 
   const TableProvider = ({ children }: { children: React.ReactNode }) => {
     const [state, dispatch] = useReducer(reducer<T>, initialState);
-    const tableUpdaters = useDispatch<T>(dispatch);
+    const tableUpdaters = useDispatch<T>(dispatch); // rename this to create actions
+
 
     const handleOnResize = (columnKey: T, newWidth: number) => {
       state.cols.set(columnKey, {

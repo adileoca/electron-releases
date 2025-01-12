@@ -1,6 +1,7 @@
 const { BrowserWindow } = require("electron");
 const isDev = require("electron-is-dev");
 const path = require("path");
+const { autoUpdater } = require("electron-updater");
 
 function createWindow() {
   let window = new BrowserWindow({
@@ -8,6 +9,7 @@ function createWindow() {
     height: 740,
     minWidth: 1200,
     minHeight: 740,
+    hasShadow: true,
     frame: false,
     vibrancy: "sidebar",
     titleBarStyle: "hidden",
@@ -30,7 +32,18 @@ function createWindow() {
     window.webContents.openDevTools({ mode: "detach" });
   }
 
-  return window
+  window.once("ready-to-show", () => {
+    autoUpdater.checkForUpdatesAndNotify();
+  });
+
+  autoUpdater.on("update-available", () => {
+    window.webContents.send("update_available");
+  });
+  autoUpdater.on("update-downloaded", () => {
+    window.webContents.send("update_downloaded");
+  });
+
+  return window;
 }
 
 module.exports = createWindow;

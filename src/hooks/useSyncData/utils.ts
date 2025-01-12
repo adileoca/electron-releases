@@ -1,6 +1,6 @@
 import Database, { DbTables } from "@/lib/supabase/database";
-import { blobToUint8Array } from "@/utils/convert";
-import { cacheFile } from "@/utils/ipc";
+import { blobToUint8Array } from "@/lib/utils/convert";
+import { cacheFile } from "@/lib/utils/ipc";
 
 type Media = DbTables["media"]["Row"];
 

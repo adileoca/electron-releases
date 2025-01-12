@@ -1,6 +1,6 @@
 import PQueue from "p-queue";
 import Database, { DbTables } from "@/lib/supabase/database";
-import { getCachedFilenames, removeFromCache } from "@/utils/ipc";
+import { getCachedFilenames, removeFromCache } from "@/lib/utils/ipc";
 import {
   fetchScheduledMedia,
   fetchOrderItems,

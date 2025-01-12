@@ -1,18 +1,25 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const useIpcListeners = () => {
+  const navigate = useNavigate();
+
   useEffect(() => {
-    const handleDataRequest = async (args) => {
-      // Logic to handle the IPC message from the main process
-      // For example, fetching data and sending it back
-      // const data = await fetchData(args);
-      // send('data-response', data);
+    // preloader strips the event before sending it to the renderer
+    const handleOpenOrder = async (orderId: string) => {
+      navigate(`/orders/details?order_id=${orderId}`);
     };
+    window.electron.on("open-order", handleOpenOrder);
 
-    window.electron.on("data-request", async () => {});
+    window.electron.on("update-available", () => {
+      console.log("update available");
+    })
 
+    window.electron.on("update-downloaded", () => {
+      console.log("update downloaded");
+    })
     return () => {
-      window.electron.removeListener("data-request", handleDataRequest);
+      window.electron.removeListener("open-order", handleOpenOrder);
     };
   }, []);
 };

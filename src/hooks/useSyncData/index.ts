@@ -1,21 +1,23 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import { useDatabase } from "@/lib/supabase/context";
 import pLimit from "p-limit";
 import PQueue from "p-queue";
 
-import { getCachedFilenames } from "@/utils/ipc";
+import { getCachedFilenames } from "@/lib/utils/ipc";
 import { fetchTemplates, cacheMedia } from "./utils";
 
 import { queueScheduledMedia } from "./queueScheduledMedia";
 import { queueScheduledMediaGroups } from "./queueScheduledMediaGroups";
 import { queueCachingPromises } from "./queueCaching";
 
-const queue = new PQueue({ concurrency: 10, autoStart: true });
-const limit = pLimit(10);
-
 export const useSyncData = () => {
-  const db = useDatabase();
+  const queue = useRef(
+    new PQueue({ concurrency: 10, autoStart: true })
+  ).current;
+  const limit = useRef(pLimit(10)).current;
+
+  const { db, session } = useDatabase();
   const [initSyncDone, setInitSyncDone] = useState(false);
 
   // initial syncing effect
@@ -46,16 +48,16 @@ export const useSyncData = () => {
   // main syncing effect, runs every 10 seconds
   // todo: switch to using subscriptions instead of polling
   useEffect(() => {
-    if (!initSyncDone) return;
+    if (!initSyncDone || !session) return;
 
     const interval = setInterval(() => {
       if (!db) return;
 
       try {
         Promise.all([
-          queueScheduledMedia(db, queue), // handles uploading scheduled media
+          queueScheduledMedia(db, queue, session), // handles uploading scheduled media
           queueScheduledMediaGroups(db, queue), // handles triggering upload groups after media is uploaded
-          // queueCachingPromises(db, queue), // handles caching necessary media and removing unnecessary media
+          queueCachingPromises(db, queue), // handles caching necessary media and removing unnecessary media
         ]);
       } catch (err) {
         console.log("error while syncing", err);

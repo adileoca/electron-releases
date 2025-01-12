@@ -2,7 +2,7 @@ import { useDatabase } from "@/lib/supabase/context";
 import { useFetchData } from "@/hooks/useFetchData";
 import { Dispatch, SetStateAction, useEffect } from "react";
 import LoadingBody from "@/components/ui/LoadingBody";
-import { OrderHeaderArgs } from "@/types/misc";
+
 import { OrderDetailedType } from "@/lib/supabase/database";
 import TaskCard from "./ui/TaskCard";
 

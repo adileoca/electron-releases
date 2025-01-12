@@ -299,6 +299,10 @@ export type Database = {
           created_by: string
           id: string
           item_id: string
+          locked: boolean
+          locked_by: string | null
+          locked_until: string
+          print_id: string | null
           printed: boolean
           psd_id: string
           seen: boolean
@@ -313,6 +317,10 @@ export type Database = {
           created_by: string
           id?: string
           item_id: string
+          locked?: boolean
+          locked_by?: string | null
+          locked_until?: string
+          print_id?: string | null
           printed?: boolean
           psd_id: string
           seen?: boolean
@@ -327,6 +335,10 @@ export type Database = {
           created_by?: string
           id?: string
           item_id?: string
+          locked?: boolean
+          locked_by?: string | null
+          locked_until?: string
+          print_id?: string | null
           printed?: boolean
           psd_id?: string
           seen?: boolean
@@ -347,6 +359,13 @@ export type Database = {
             columns: ["item_id"]
             isOneToOne: false
             referencedRelation: "order_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "item_assets_print_id_fkey"
+            columns: ["print_id"]
+            isOneToOne: false
+            referencedRelation: "prints"
             referencedColumns: ["id"]
           },
           {
@@ -941,6 +960,7 @@ export type Database = {
           created_at: string
           created_by: string | null
           id: string
+          metadata: Json | null
           name: string
           psd_id: string
           thumbnail_id: string
@@ -949,6 +969,7 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           id?: string
+          metadata?: Json | null
           name: string
           psd_id: string
           thumbnail_id: string
@@ -957,6 +978,7 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           id?: string
+          metadata?: Json | null
           name?: string
           psd_id?: string
           thumbnail_id?: string
@@ -978,49 +1000,99 @@ export type Database = {
           },
         ]
       }
-      prints: {
+      print_versions: {
         Row: {
           created_at: string
           created_by: string | null
-          id: string
-          locked: boolean | null
-          locked_until: boolean | null
-          opened_by: string | null
-          psd_id: string
-          template_id: string | null
+          file_id: string
+          id: number
+          metadata: Json
+          name: string
+          print_id: string
           thumbnail_id: string
-          updated_at: string | null
         }
         Insert: {
           created_at?: string
           created_by?: string | null
-          id?: string
-          locked?: boolean | null
-          locked_until?: boolean | null
-          opened_by?: string | null
-          psd_id: string
-          template_id?: string | null
+          file_id: string
+          id?: number
+          metadata: Json
+          name: string
+          print_id: string
           thumbnail_id: string
-          updated_at?: string | null
         }
         Update: {
           created_at?: string
           created_by?: string | null
-          id?: string
-          locked?: boolean | null
-          locked_until?: boolean | null
-          opened_by?: string | null
-          psd_id?: string
-          template_id?: string | null
+          file_id?: string
+          id?: number
+          metadata?: Json
+          name?: string
+          print_id?: string
           thumbnail_id?: string
-          updated_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "prints_psd_id_fkey"
-            columns: ["psd_id"]
+            foreignKeyName: "print_versions_created_by_fkey1"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "print_versions_file_id_fkey"
+            columns: ["file_id"]
             isOneToOne: false
             referencedRelation: "media"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "print_versions_print_id_fkey"
+            columns: ["print_id"]
+            isOneToOne: false
+            referencedRelation: "prints"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "print_versions_thumbnail_id_fkey"
+            columns: ["thumbnail_id"]
+            isOneToOne: false
+            referencedRelation: "media"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prints: {
+        Row: {
+          id: string
+          locked: boolean
+          locked_by: string | null
+          locked_until: string
+          printed: boolean
+          template_id: string
+        }
+        Insert: {
+          id?: string
+          locked?: boolean
+          locked_by?: string | null
+          locked_until?: string
+          printed?: boolean
+          template_id: string
+        }
+        Update: {
+          id?: string
+          locked?: boolean
+          locked_by?: string | null
+          locked_until?: string
+          printed?: boolean
+          template_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prints_locked_by_fkey1"
+            columns: ["locked_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
             referencedColumns: ["id"]
           },
           {
@@ -1028,13 +1100,6 @@ export type Database = {
             columns: ["template_id"]
             isOneToOne: false
             referencedRelation: "print_templates"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "prints_thumbnail_id_fkey"
-            columns: ["thumbnail_id"]
-            isOneToOne: false
-            referencedRelation: "media"
             referencedColumns: ["id"]
           },
         ]
@@ -1410,8 +1475,9 @@ export type Database = {
           id: string
           new_record: Json | null
           old_record: Json | null
-          schema: string | null
-          table: string | null
+          record_id: string
+          schema: string
+          table: string
         }
         Insert: {
           changes?: Json | null
@@ -1419,8 +1485,9 @@ export type Database = {
           id?: string
           new_record?: Json | null
           old_record?: Json | null
-          schema?: string | null
-          table?: string | null
+          record_id: string
+          schema: string
+          table: string
         }
         Update: {
           changes?: Json | null
@@ -1428,8 +1495,9 @@ export type Database = {
           id?: string
           new_record?: Json | null
           old_record?: Json | null
-          schema?: string | null
-          table?: string | null
+          record_id?: string
+          schema?: string
+          table?: string
         }
         Relationships: []
       }
@@ -1440,7 +1508,7 @@ export type Database = {
           description: string | null
           id: string
           item_id: string | null
-          locked_for: string | null
+          locked_by: string | null
           locked_until: string | null
           order_id: string | null
           priority: number | null
@@ -1455,7 +1523,7 @@ export type Database = {
           description?: string | null
           id?: string
           item_id?: string | null
-          locked_for?: string | null
+          locked_by?: string | null
           locked_until?: string | null
           order_id?: string | null
           priority?: number | null
@@ -1470,7 +1538,7 @@ export type Database = {
           description?: string | null
           id?: string
           item_id?: string | null
-          locked_for?: string | null
+          locked_by?: string | null
           locked_until?: string | null
           order_id?: string | null
           priority?: number | null
@@ -1485,6 +1553,20 @@ export type Database = {
             columns: ["item_id"]
             isOneToOne: false
             referencedRelation: "order_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tasks_locked_by_fkey"
+            columns: ["locked_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tasks_locked_for_fkey1"
+            columns: ["locked_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
             referencedColumns: ["id"]
           },
           {

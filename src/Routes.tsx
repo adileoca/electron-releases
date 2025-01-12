@@ -1,36 +1,39 @@
 import { HashRouter as Router, Route, Routes } from "react-router-dom";
-import Sidebar from "./components/sidebar";
+import Sidebar from "./components/Sidebar";
 
 import TasksDashboardView from "./views/TasksViews/TasksDashboardView";
-import EmailDetailedView from "./views/EmailViews/EmailDetailsView";
-import OrderDetailsView from "./views/OrderViews/OrderDetailsView";
-import DashboardView from "./views/DashboardViews/DashboardView";
-import OrdersView from "./views/OrderViews/OrdersView";
-import EmailsView from "./views/EmailViews/EmailsView";
-
+import EmailDetailedView from "./views/emails/details";
+import OrderDetailsView from "./views/orders/details";
+import DashboardView from "./views/dashboard";
+import OrdersView from "./views/orders/index";
+import EmailsView from "./views/emails/index";
+import PrintsView from "./views/prints";
+import ReportsView from "./views/reports";
+import DocumentsView from "./views/documents";
 const AppRoutes = () => {
   return (
-    <Router>
-      <div className="relative">
-        <Sidebar />
-        <div className="z-50">
-          <Routes>
-            <Route path="/" element={<DashboardView />} index />
-            <Route path="/tasks" element={<TasksDashboardView />} index />
+    <div className="relative">
+      <Sidebar />
+      <div className="z-50">
+        <Routes>
+          <Route path="/" element={<DashboardView />} index />
+          {/* <Route path="/tasks" element={<TasksDashboardView />} index /> */}
 
-            <Route path="/orders" element={<OrdersView />} index />
-            <Route
-              path="/orders/details"
-              element={<OrderDetailsView />}
-              index
-            />
+          <Route path="/orders" element={<OrdersView />} index />
+          <Route
+            path="/orders/:order_id"
+            element={<OrderDetailsView />}
+            index
+          />
 
-            <Route path="/emails" element={<EmailsView />} index />
-            <Route path="/emails/:emailId" element={<EmailDetailedView />} />
-          </Routes>
-        </div>
+          <Route path="/prints" element={<PrintsView />} index />
+          <Route path="/reports" element={<ReportsView />} index />
+          <Route path="/documents" element={<DocumentsView />} index />
+          {/* <Route path="/emails" element={<EmailsView />} index />
+            <Route path="/emails/:emailId" element={<EmailDetailedView />} /> */}
+        </Routes>
       </div>
-    </Router>
+    </div>
   );
 };
 

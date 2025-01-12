@@ -1,7 +1,6 @@
 import Login from "./views/Login";
 import AppRoutes from "./Routes";
-
-import { useHandleSession } from "./hooks/useHandleSession";
+import { HashRouter as Router } from "react-router-dom";
 import useIpcListeners from "./hooks/useIpcListeners";
 import { useSyncData } from "./hooks/useSyncData";
 import Spinner from "@/static/spinner.svg";
@@ -9,12 +8,15 @@ import Spinner from "@/static/spinner.svg";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
 import "./styles/App.css";
 import { useEffect } from "react";
+import { useSupabase } from "./lib/supabase/context";
 
 const App = () => {
-  const session = useHandleSession();
+  const { session } = useSupabase();
+
   useEffect(() => {
     console.log("session update");
   }, [session]);
+
   if (session === undefined) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-neutral-900/90">
@@ -32,7 +34,11 @@ const App = () => {
     return <Login />;
   }
 
-  return <Routes />;
+  return (
+    <Router>
+      <Routes />
+    </Router>
+  );
 };
 
 export default App;
@@ -40,7 +46,7 @@ export default App;
 const Routes = () => {
   // todo: use this to set navigation in the app from the plugin
   const initSyncDone = useSyncData();
-  // useIpcListeners();
+  useIpcListeners();
 
   if (!initSyncDone) {
     return (

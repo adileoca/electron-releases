@@ -47,9 +47,10 @@ export type TableState<T> = {
   selectedRowIds: number[];
 };
 
-export type TableAction<T> =
-  | { type: "SET_PAYMENT_METHOD"; payload: string }
-  | { type: "SET_ROWS"; payload: Map<T, RowProps<T>>[] };
+export type TableAction<T> = {
+  type: "SET_ROWS";
+  payload: Map<T, RowProps<T>>[];
+};
 // | { type: "SET_PAYMENT_INTENT_ID"; payload: string }
 // | { type: "SET_CUSTOMER_INFO"; payload: Partial<TableState["customer"]> }
 // | {
@@ -76,4 +77,3 @@ export type TableAction<T> =
 // | { type: "SET_ERROR"; payload: string | null }
 // | { type: "RESET_STATE" }
 // | { type: "UPDATE_TOTALS"; payload: Partial<TableState["totals"]> };
-

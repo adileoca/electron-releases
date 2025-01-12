@@ -6,6 +6,11 @@ type QueryType<T extends (...args: any) => any> = QueryData<ReturnType<T>>;
 export type DbTables = DbTypes['public']['Tables'];
 export type DbEnums = DbTypes['public']['Enums'];
 export type Supabase = SupabaseClient<DbTypes>;
+type WithHistory<T> = T & { history: T[] };
+
+type Row = {
+  [K in keyof DbTables]: DbTables[K]['Row'];
+};
 
 class Database {
   private supabase: Supabase;
@@ -28,6 +33,13 @@ class Database {
         `*,
         status: order_statuses(*),
         items: order_items(*, assets: item_assets(*,
+            item: order_items(*,
+              product: products(*),
+              order: orders(*),
+              configuration: item_configurations(*,
+                size: product_sizes(*)
+              )
+            ),
             psd:media!item_assets_psd_id_fkey(*),
             thumbnail:media!item_assets_thumbnail_id_fkey(*)
           )
@@ -68,16 +80,29 @@ class Database {
     return data;
   }
 
-  async insertPrintItemAsset(
-    insert: DbTables['print_item_assets']['Insert'],
+  async insertPrintItemAssets(
+    insert: DbTables['print_item_assets']['Insert'][],
     supabase: Supabase = this.supabase
   ) {
-    const { data, error } = await supabase
-      .from('print_item_assets')
-      .insert(insert);
+    const { error } = await supabase.from('print_item_assets').insert(insert);
 
     if (error) {
       console.error('Error inserting print item asset:', error);
+      throw new Error(error?.message || 'Unknown error occurred');
+    }
+  }
+
+  async deletePrintItemAssets(
+    ids: string[],
+    supabase: Supabase = this.supabase
+  ) {
+    const { error } = await supabase
+      .from('print_item_assets')
+      .delete()
+      .in('item_asset_id', ids);
+
+    if (error) {
+      console.error('Error deleting print item assets:', error);
       throw new Error(error?.message || 'Unknown error occurred');
     }
   }
@@ -117,16 +142,93 @@ class Database {
     return data;
   }
 
-  async getPrints(supabase: Supabase = this.supabase) {
-    const { data, error } = await supabase.from('prints').select(
+  appendHistory<T extends { id: string }>(
+    data: T[],
+    logs: Row['table_logs'][]
+  ): WithHistory<T>[] {
+    const logsByRecordId = logs.reduce((acc: { [key: string]: any[] }, log) => {
+      if (!acc[log.record_id]) {
+        acc[log.record_id] = [];
+      }
+      acc[log.record_id].push(log.old_record);
+      return acc;
+    }, {});
+
+    return data.map(record => ({
+      ...record,
+      history: logsByRecordId[record.id] || [],
+    }));
+  }
+
+  async getTableLogs(recordIds: string[]) {
+    const query = this.supabase
+      .from('table_logs')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (recordIds) {
+      query.in('record_id', recordIds);
+    }
+
+    const { data: logs, error } = await query;
+
+    if (error) {
+      console.error('Error getting table logs:', error);
+      throw new Error(error?.message || 'Unknown error occurred');
+    }
+
+    return logs;
+  }
+
+  async getPrints(params?: { locked?: boolean }) {
+    const query = this.supabase.from('prints').select(
       `*,
-        psd:media!prints_psd_id_fkey(*),
-        thumbnail:media!prints_thumbnail_id_fkey(*)
+        versions: print_versions(*,
+          file: media!print_versions_file_id_fkey(*),
+          thumbnail: media!print_versions_thumbnail_id_fkey(*),
+          created_by: user_profiles(*)
+        ),
+        assets: print_item_assets(*),
+        locked_by: user_profiles(*)
         `
     );
 
+    if (params?.locked) {
+      query.eq('locked', params.locked);
+    }
+
+    const { data, error } = await query;
+
     if (error || !data) {
       console.error('Error getting prints:', error);
+      throw new Error(error?.message || 'Unknown error occurred');
+    }
+
+    return data;
+  }
+
+  async getItemAssets(params?: { ids?: string[]; locked?: boolean }) {
+    const query = this.supabase.from('item_assets').select(
+      `*,
+      psd: media!item_assets_psd_id_fkey(*),
+      thumbnail: media!item_assets_thumbnail_id_fkey(*),
+      created_by: user_profiles(*),
+      item: order_items(*)
+      `
+    );
+
+    if (params?.ids) {
+      query.in('id', params.ids);
+    }
+
+    if (params?.locked) {
+      query.eq('locked', params.locked);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.error('Error getting item assets:', error);
       throw new Error(error?.message || 'Unknown error occurred');
     }
 
@@ -144,6 +246,21 @@ class Database {
       throw new Error(error?.message || 'Unknown error occurred');
     }
   }
+
+  insertPrintVersion = async (insert: DbTables['print_versions']['Insert']) => {
+    const { data, error } = await this.supabase
+      .from('print_versions')
+      .insert(insert)
+      .select('*')
+      .single();
+
+    if (error || !data) {
+      console.error('Error inserting print version:', error);
+      throw new Error(error?.message || 'Unknown error occurred');
+    }
+
+    return data;
+  };
 
   async insertMediaMetadata(
     insert: DbTables['media_metadata']['Insert'],
@@ -449,41 +566,6 @@ class Database {
 
     return { data };
   }
-  uploadScheduledMedia = async (params: {
-    media: DbTables['media']['Row'];
-    file: Blob;
-  }) => {
-    try {
-      await this.update.mediaData(params.media.id, {
-        upload_start: new Date().toISOString(),
-        uploading: true,
-      });
-
-      await this.supabase.storage
-        .from(params.media.bucket_name)
-        .upload(params.media.path!, params.file)
-        .catch(err => {
-          // log error to db
-          throw new Error(err.message || 'Unknown error occurred');
-        });
-
-      await this.update.mediaData(params.media.id, {
-        upload_end: new Date().toISOString(),
-        uploading: false,
-        scheduled: false,
-      });
-    } catch (error) {
-      console.error('Error uploading media', params.media.id, error);
-
-      // todo: log error elsewhere as well
-
-      await this.update.mediaData(params.media.id, {
-        uploading: false,
-        upload_start: null,
-        error: (error as Error).message,
-      });
-    }
-  };
 }
 
 class QueryManager {
@@ -681,6 +763,12 @@ class QueryManager {
         `*,
           interactions: user_task_interactions(*),
           item: order_items(*,
+          order: orders(*, items: order_items(*, assets: item_assets(
+          *,
+            psd: media!item_assets_psd_id_fkey(*),
+            thumbnail: media!item_assets_thumbnail_id_fkey(*),
+            user: user_profiles(*)
+          ))),
           product: products(*),
           assets: item_assets(*,
             psd: media!item_assets_psd_id_fkey(*),
@@ -942,6 +1030,7 @@ class QueryManager {
               status: order_statuses(*),
               activities: order_activities(*, user: user_profiles(*)),
               items: order_items(*,
+                tasks(*),
                 totals: order_item_totals(*),
                 assets: item_assets(*,
                   psd: media!item_assets_psd_id_fkey(*),
@@ -1009,6 +1098,8 @@ export type PrintTemplate = Awaited<
 export type ItemAssetsForPrinting = Awaited<
   ReturnType<Database['getItemAssetsForPrinting']>
 >[0];
+
+export type ItemAssets = Awaited<ReturnType<Database['getItemAssets']>>;
 
 export type Print = Awaited<ReturnType<Database['getPrints']>>[0];
 
