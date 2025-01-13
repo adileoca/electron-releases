@@ -1,3 +1,19 @@
+// todo: maybe make it relative up to a point
+// const dates = [
+//   '3:29pm',
+//   '3:23pm',
+//   '3:19pm',
+//   '3:16pm',
+//   '12:12pm',
+//   '12:10pm',
+//   '11 Jan', // one day ago
+//   '10 Jan',
+//   '9 Jan',
+//   '2 Jan',
+//   '1 Jan',
+//   '26/12/2024',
+//   '12/12/2024'
+// ];
 export const formatDate = (
   date: string,
   options?: {

@@ -22,13 +22,13 @@ export const useItemActivity = (item: OrderDetailedType["items"][0]) => {
     };
   }, []);
 
-  const taskActivities: ActivityItem[] = item.tasks.map((task, idx) => ({
-    date: task.updated_at!,
-    description: `Sarcina de ${taskTypeLabels[task.type!]} ${
-      task.id.split("-")[1]
-    }   a fost creeata.`,
-    type: "positive",
-  }));
+  // const taskActivities: ActivityItem[] = item.tasks.map((task, idx) => ({
+  //   date: task.updated_at!,
+  //   description: `Sarcina de ${taskTypeLabels[task.type!]} ${
+  //     task.id.split("-")[1]
+  //   }   a fost creeata.`,
+  //   type: "positive",
+  // }));
 
-  return taskActivities;
+  return [];
 };

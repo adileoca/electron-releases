@@ -3,19 +3,24 @@
 import { useState } from "react";
 import { Paperclip, PlusCircle } from "lucide-react";
 import clsx from "clsx";
-import { DbEnums } from "@/lib/supabase/database";
+
 import { formatDate } from "@/lib/utils/format";
+import Spinner from "@/static/spinner.svg";
+
+type ActivityTypes = "positive" | "monitor" | "critical";
 
 export type ActivityItem = {
-  description: string;
+  Content: React.ReactNode;
   date: string;
-  type: "positive" | "monitor" | "critical";
+  type: ActivityTypes;
+  image?: string;
   user_id?: string;
-  comment?: string;
+  content?: string;
+  category?: "file" | "general";
 };
 
 const ActivityFeed: React.FC<{
-  activities: ActivityItem[];
+  activities: ActivityItem[] | null;
 }> = ({ activities }) => {
   return (
     <>
@@ -30,88 +35,49 @@ const ActivityFeed: React.FC<{
 export default ActivityFeed;
 
 const FeedTimeline: React.FC<{
-  activities: ActivityItem[];
+  activities: ActivityItem[] | null;
 }> = ({ activities }) => {
   return (
     <ul role="list" className="space-y-6">
-      {activities.map((activityItem, activityItemIdx) => (
-        <li key={activityItemIdx} className="relative flex gap-x-3">
-          <div
-            className={clsx(
-              activityItemIdx === 0 && activities.length > 1
-                ? "top-4 h-10"
-                : "",
-              activityItemIdx === activities.length - 1 ? "" : "-bottom-8",
-              "absolute left-0 top-0 flex w-6 justify-center"
-            )}
+      {activities ? (
+        activities.map((activityItem, activityItemIdx) => (
+          <li
+            key={activityItemIdx}
+            className="relative flex  gap-x-3"
           >
-            <div className="w-[3px] bg-neutral-700 shadow" />
-          </div>
-          {activityItem.comment ? (
-            <CommentContent activityItem={activityItem} />
-          ) : (
+            <div
+              className={clsx(
+                activityItemIdx === 0 && activities.length > 1
+                  ? "top-4 h-10"
+                  : "",
+                activityItemIdx === activities.length - 1 ? "" : "-bottom-8",
+                "absolute left-0 top-0 flex w-6 justify-center"
+              )}
+            >
+              <div className="w-[3px] bg-neutral-700 shadow" />
+            </div>
             <MiscelaneousContent activityItem={activityItem} />
-          )}
-        </li>
-      ))}
+          </li>
+        ))
+      ) : (
+        <div className="flex justify-center">
+          <img className="h-12 w-12" src={Spinner} />
+        </div>
+      )}
     </ul>
   );
 };
 
-const CommentContent: React.FC<{
-  activityItem: ActivityItem;
-}> = ({ activityItem }) => {
+const MiscelaneousContent: React.FC<{ activityItem: ActivityItem }> = ({
+  activityItem,
+}) => {
   return (
     <>
-      <img
-        alt=""
-        // src={activityItem.person.imageUrl}
-        className="relative mt-3 h-6 w-6 flex-none rounded-full bg-neutral-50"
-      />
-      <div className="flex-auto rounded-md bg-neutral-700 p-3 ring-1 ring-inset ring-neutral-600">
-        <div className="flex justify-between gap-x-4">
-          <div className="py-0.5 text-sm leading-5 text-neutral-300">
-            <span className="font-medium text-neutral-300">
-              {activityItem.user_id}
-            </span>{" "}
-            commented
-          </div>
-          <time
-            dateTime={activityItem.date}
-            className="flex-none py-0.5 leading-5 text-neutral-300"
-          >
-            {formatDate(activityItem.date, { relative: true })}
-          </time>
-        </div>
-        <p className="leading-6 text-neutral-300">{activityItem.comment}</p>
-      </div>
-    </>
-  );
-};
-
-const MiscelaneousContent: React.FC<{
-  activityItem: ActivityItem;
-}> = ({ activityItem }) => {
-  return (
-    <>
-      <div className="relative flex h-6 w-6 flex-none items-center justify-center ">
-        <ActivityDot activityType={activityItem.type} />
-      </div>
-      <p className="flex-auto py-0.5 leading-5 text-neutral-300">
-        {/* {activityItem.user && (
-          <>
-            <a
-              href="/"
-              className="font-medium text-neutral-300 hover:underline"
-            >
-              {activityItem.user!.name!}
-            </a>
-            &nbsp;
-          </>
-        )} */}
-        {activityItem.description}
-      </p>
+      <ActivityDot activityType={activityItem.type} />
+      <div className="flex justify-between w-full">
+      {activityItem.Content}
       <Timestamp date={activityItem.date} />
+      </div>
     </>
   );
 };
@@ -127,7 +93,7 @@ const Timestamp: React.FC<{ date: string }> = ({ date }) => {
   });
   return (
     <span
-      className="hover:cursor-context-menu flex-none py-0.5 pl-2 leading-5 text-white/80"
+      className="flex-none py-0.5 pl-2 leading-5 text-white/80 hover:cursor-context-menu"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={() => setClicked(!clicked)}
@@ -138,7 +104,7 @@ const Timestamp: React.FC<{ date: string }> = ({ date }) => {
 };
 
 const ActivityDot: React.FC<{
-  activityType: DbEnums["order_activity_types"];
+  activityType: ActivityTypes;
 }> = ({ activityType }) => {
   const activityColors: {
     [key in typeof activityType]: string;
@@ -149,12 +115,18 @@ const ActivityDot: React.FC<{
   };
 
   return (
-    <div
-      className={clsx(
-        activityColors[activityType],
-        "size-3 rounded-full shadow ring-1"
-      )}
-    />
+    <div className="relative flex h-6 w-6 flex-none items-center justify-center">
+      <div
+        className={clsx(
+          activityColors[activityType],
+          "size-3 rounded-full shadow ring-1"
+        )}
+      />
+      {/* <img
+        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+        className="size-6 rounded-full"
+      /> */}
+    </div>
   );
 };
 

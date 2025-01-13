@@ -1,10 +1,10 @@
 import { useEffect, useMemo } from "react";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
-
+import { MagnifyingGlassIcon, SparklesIcon } from "@heroicons/react/24/outline";
+import { Filter } from "lucide-react";
 import { OrderDetailedType } from "@/lib/supabase/database";
 import { useMedia } from "@/lib/supabase/useMedia";
 import { useDatabase } from "@/lib/supabase/context";
-
 import { parseConfigurationDetails } from "@/lib/utils/parse";
 import { CurrencyFormatter } from "@/lib/utils/format";
 import { ActivityItem } from "@/components/ui/ActivityFeed";
@@ -19,7 +19,7 @@ const taskTypeLabels = {
   edit: "editare",
   print: "printare",
 };
-const OrderItem: React.FC<{ item: Item }> = ({ item }) => {
+const ItemCard: React.FC<{ item: Item }> = ({ item }) => {
   return (
     <CardWrapper>
       <TabGroup>
@@ -30,7 +30,7 @@ const OrderItem: React.FC<{ item: Item }> = ({ item }) => {
   );
 };
 
-export default OrderItem;
+export default ItemCard;
 
 const OrderItemBody: React.FC<{ item: Item }> = ({ item }) => {
   const { db } = useDatabase();
@@ -72,15 +72,15 @@ const OrderItemBody: React.FC<{ item: Item }> = ({ item }) => {
 const parseItemActivity = (item: Item): ActivityItem[] => {
   // todo: get history for tasks tables as well.
 
-  const taskActivities: ActivityItem[] = item.tasks.map((task, idx) => ({
-    date: task.updated_at!,
-    description: `Sarcina de ${taskTypeLabels[task.type!]} ${
-      task.id.split("-")[1]
-    }   a fost creeata.`,
-    type: "positive",
-  }));
+  // const taskActivities: ActivityItem[] = item.tasks.map((task, idx) => ({
+  //   date: task.updated_at!,
+  //   description: `Sarcina de ${taskTypeLabels[task.type!]} ${
+  //     task.id.split("-")[1]
+  //   }   a fost creeata.`,
+  //   type: "positive",
+  // }));
 
-  return taskActivities;
+  return [];
 };
 
 const OrderItemHeader: React.FC<{ item: Item }> = ({ item }) => {
@@ -107,24 +107,50 @@ const OrderItemHeader: React.FC<{ item: Item }> = ({ item }) => {
             </div>
           </div>
           <div>
-            <span className="text-white/80">
+            {/* <span className="text-white/80">
               {item.quantity} x {formatter.format(item.totals?.amount_total!)}
-            </span>
+            </span> */}
           </div>
         </div>
-        <TabList className="flex">
-          <div className="flex space-x-1 rounded-lg border border-white/15 bg-white/5 p-1">
-            {["Details", "Activity", "Assets"].map((label, idx) => (
+        <div className="flex items-center justify-between">
+          <TabList className="flex h-8 items-center space-x-1 rounded-lg border border-white/15 bg-white/5 px-0.5">
+            {["Detalii", "Istoric", "Decaluri"].map((label, idx) => (
               <Tab
                 key={idx}
-                className="rounded px-2 py-0.5 text-sm font-medium text-white/80 hover:bg-white/20 data-[selected]:border-transparent data-[selected]:bg-white/75 data-[selected]:text-black/75 data-[selected]:ring-transparent"
+                className="rounded-md border border-transparent px-2 py-0.5 text-sm font-semibold text-white/80 hover:bg-white/20 focus-visible:outline-none data-[selected]:border-white/60 data-[selected]:bg-white/80 data-[selected]:text-black/75 data-[selected]:ring-transparent"
               >
                 {label}
               </Tab>
             ))}
+          </TabList>
+          <div className="flex space-x-4">
+            <ToolbarButton
+              Icon={<SparklesIcon className="h-4 w-4" />}
+              label="Asistent AI"
+            />
+            <ToolbarButton
+              Icon={<MagnifyingGlassIcon className="h-4 w-4 stroke-2" />}
+              label="Cautǎ"
+            />
+            <ToolbarButton
+              Icon={<Filter className="h-4 w-4" />}
+              label="Filtreazǎ"
+            />
           </div>
-        </TabList>
+        </div>
       </div>
     </div>
+  );
+};
+
+const ToolbarButton: React.FC<{ Icon: React.ReactNode; label: string }> = ({
+  Icon,
+  label,
+}) => {
+  return (
+    <button className="flex  items-center space-x-1 text-white/80 hover:text-white">
+      {Icon}
+      <span className="font-medium">{label}</span>
+    </button>
   );
 };

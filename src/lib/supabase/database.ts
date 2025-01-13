@@ -6,11 +6,11 @@ type QueryType<T extends (...args: any) => any> = QueryData<ReturnType<T>>;
 export type DbTables = DbTypes['public']['Tables'];
 export type DbEnums = DbTypes['public']['Enums'];
 export type Supabase = SupabaseClient<DbTypes>;
-type WithHistory<T> = T & { history: T[] };
+// type WithHistory<T> = T & { history: T[] };
 
-type Row = {
-  [K in keyof DbTables]: DbTables[K]['Row'];
-};
+// type Row = {
+//   [K in keyof DbTables]: DbTables[K]['Row'];
+// };
 
 class Database {
   private supabase: Supabase;
@@ -107,6 +107,25 @@ class Database {
     }
   }
 
+  async getUserProfile(params?: { id?: string; ids?: string[] }) {
+    const query = this.supabase.from('user_profiles').select('*');
+
+    if (params?.id) {
+      query.eq('id', params.id).single();
+    }
+
+    if (params?.ids) {
+      query.in('id', params.ids);
+    }
+    const { data, error } = await query;
+    if (error) {
+      console.error('Error getting user profile:', error);
+      throw new Error(error?.message || 'Unknown error occurred');
+    }
+
+    return data;
+  }
+
   async removePrintItemAsset(
     printId: string,
     itemAssetId: string,
@@ -140,24 +159,6 @@ class Database {
     }
 
     return data;
-  }
-
-  appendHistory<T extends { id: string }>(
-    data: T[],
-    logs: Row['table_logs'][]
-  ): WithHistory<T>[] {
-    const logsByRecordId = logs.reduce((acc: { [key: string]: any[] }, log) => {
-      if (!acc[log.record_id]) {
-        acc[log.record_id] = [];
-      }
-      acc[log.record_id].push(log.old_record);
-      return acc;
-    }, {});
-
-    return data.map(record => ({
-      ...record,
-      history: logsByRecordId[record.id] || [],
-    }));
   }
 
   async getTableLogs(recordIds: string[]) {

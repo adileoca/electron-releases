@@ -6,14 +6,14 @@ import ActivityFeed from "@/components/ui/ActivityFeed";
 import CardWrapper from "@/components/ui/CardWrapper";
 import MiniTable from "@/components/ui/MiniTable";
 import PrintAssets from "./PrintAssets";
-
+import { MagnifyingGlassIcon, SparklesIcon } from "@heroicons/react/24/outline";
 import { ItemAssets, Print } from "@/lib/supabase/database";
-import { useDatabase } from "@/lib/supabase/context";
-import { useMedia } from "@/lib/supabase/useMedia";
 
+import { Filter } from "lucide-react";
 import { useAssetsData } from "../hooks/useAssetsData";
-import { useFetchData } from "@/hooks/useFetchData";
+
 import { formatDate } from "@/lib/utils/format";
+import { usePrintActivity } from "../hooks/usePrintActivity";
 
 const PrintCard: React.FC<{
   print: Print;
@@ -39,6 +39,8 @@ const PrintBody: React.FC<{
 }> = ({ print, assets, mediaUrls }) => {
   const latestVersion = print.versions[0];
   const firstVersion = print.versions.slice(-1)[0];
+
+  const printActivity = usePrintActivity(print);
 
   const createdAtRelative = formatDate(firstVersion.created_at, {
     relative: true,
@@ -78,15 +80,7 @@ const PrintBody: React.FC<{
       </TabPanel>
       <TabPanel>
         <div className="border-t border-white/15 bg-white/5">
-          <ActivityFeed
-            activities={[
-              {
-                date: firstVersion.created_at!,
-                description: "Printul a fost creeat",
-                type: "positive",
-              },
-            ]}
-          />
+          <ActivityFeed activities={printActivity} />
         </div>
       </TabPanel>
       <TabPanel className="border-t border-white/15 bg-white/5 px-3 pb-3">
@@ -117,14 +111,11 @@ const PrintHeader: React.FC<{
         />
       </div>
       <div className="ml-5 flex flex-1 flex-col">
-        <div className="relative -mt-2 flex flex-1 items-center justify-between">
-          <div className="md:pr-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center text-lg font-medium text-neutral-900 transition dark:text-white/80">
-                <span>{latestVersion.name}</span>&nbsp;
-              </div>
-            </div>
-          </div>
+        <div className="relative -mt-3 flex flex-1 items-center space-x-3">
+          <span className=" text-lg font-medium text-neutral-900 transition dark:text-white/80">
+            {latestVersion.name}
+          </span>
+
           <div>
             <OrderStatusBadge
               color="amber"
@@ -132,19 +123,45 @@ const PrintHeader: React.FC<{
             />
           </div>
         </div>
-        <TabList className="flex">
-          <div className="flex space-x-1 rounded-md border border-white/15 bg-white/5 p-1">
-            {["Detalii", "Activitate", "Decaluri"].map((label, idx) => (
+        <div className="flex items-end justify-between">
+          <TabList className="flex h-8 items-center space-x-1 rounded-lg border border-white/15 bg-white/5 px-0.5">
+            {["Detalii", "Istoric", "Decaluri"].map((label, idx) => (
               <Tab
                 key={idx}
-                className="rounded border border-transparent px-2 py-0.5 text-sm font-semibold text-white/80 hover:bg-white/20 focus-visible:outline-none data-[selected]:border-white/60 data-[selected]:bg-white/80 data-[selected]:text-black/75 data-[selected]:ring-transparent"
+                className="rounded-md border border-transparent px-2 py-0.5 text-sm font-semibold text-white/80 hover:bg-white/20 focus-visible:outline-none data-[selected]:border-white/60 data-[selected]:bg-white/80 data-[selected]:text-black/75 data-[selected]:ring-transparent"
               >
                 {label}
               </Tab>
             ))}
+          </TabList>
+          <div className="flex space-x-4">
+            <ToolbarButton
+              Icon={<SparklesIcon className="h-4 w-4" />}
+              label="Asistent AI"
+            />
+            <ToolbarButton
+              Icon={<MagnifyingGlassIcon className="h-4 w-4 stroke-2" />}
+              label="Cautǎ"
+            />
+            <ToolbarButton
+              Icon={<Filter className="h-4 w-4" />}
+              label="Filtreazǎ"
+            />
           </div>
-        </TabList>
+        </div>
       </div>
     </div>
+  );
+};
+
+const ToolbarButton: React.FC<{ Icon: React.ReactNode; label: string }> = ({
+  Icon,
+  label,
+}) => {
+  return (
+    <button className="flex  items-center space-x-1 text-white/80 hover:text-white">
+      {Icon}
+      <span className="font-medium">{label}</span>
+    </button>
   );
 };

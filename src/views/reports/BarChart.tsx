@@ -265,7 +265,7 @@ const BarChartComponent = () => {
   return (
     <>
       <div className="flex h-full">
-        <div className="flex w-48 flex-col border-r border-white/15 bg-white/5 shadow shadow-black">
+        <div className="flex w-48 justify-between flex-col border-r border-white/15 bg-white/5 shadow shadow-black">
 
           <div className="flex flex-col space-y-3 px-3 pt-3">
             <LegendItem
@@ -296,9 +296,9 @@ const BarChartComponent = () => {
               borderColor={chartConfig["losses"]["color"]}
             />
           </div>
-          {/* <div className="flex w-full h-12 border-t border-white/15 flex-col">
-
-          </div> */}
+          <div className="flex w-full h-12 border-t border-white/15 flex-col">
+Compara cu perioada precedenta/ anul trecut
+          </div>
         </div>
 
         <div>

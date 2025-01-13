@@ -17,7 +17,7 @@ const StatusBadge: React.FC<{
       color === undefined
         ? "border-neutral-500 bg-neutral-600 text-neutral-200"
         : "",
-      "inline-flex shadow items-center gap-x-1.5 rounded-full border px-2.5 py-0.5 text-sm font-medium text-white/90 "
+      "inline-flex shadow items-center gap-x-1.5 rounded-md border px-2.5 py-0.5 text-sm font-medium text-white/90 "
     )}
   >
     {capitalizeFirstLetter(text)}
