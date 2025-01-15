@@ -41,10 +41,7 @@ const FeedTimeline: React.FC<{
     <ul role="list" className="space-y-6">
       {activities ? (
         activities.map((activityItem, activityItemIdx) => (
-          <li
-            key={activityItemIdx}
-            className="relative flex  gap-x-3"
-          >
+          <li key={activityItemIdx} className="relative flex gap-x-3">
             <div
               className={clsx(
                 activityItemIdx === 0 && activities.length > 1
@@ -74,9 +71,9 @@ const MiscelaneousContent: React.FC<{ activityItem: ActivityItem }> = ({
   return (
     <>
       <ActivityDot activityType={activityItem.type} />
-      <div className="flex justify-between w-full">
-      {activityItem.Content}
-      <Timestamp date={activityItem.date} />
+      <div className="flex w-full justify-between">
+        {activityItem.Content}
+        <Timestamp date={activityItem.date} />
       </div>
     </>
   );

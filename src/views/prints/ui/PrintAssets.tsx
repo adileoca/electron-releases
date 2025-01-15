@@ -7,7 +7,7 @@ const PrintAssets: React.FC<{
 }> = ({ assets, mediaUrls }) => (
   <>
     {assets.map((asset, index) => (
-      <div key={index} className="flex  space-x-5 py-3">
+      <div key={index} className="flex space-x-5 p-3">
         <div
           style={{ boxShadow: "0 0 0 0.3px black" }}
           className="relative aspect-square h-16 w-16 overflow-hidden rounded-lg border border-neutral-600 bg-neutral-200"

@@ -64,13 +64,18 @@ export const usePrintActivity = (print: Print) => {
       if (log.changes.locked !== undefined) {
         const Content = () => {
           return (
-            <span className="text-white/80">
-              {log.changes.locked
-                ? `Fisierul a fost deschis de ${
-                    userProfiles[log.changes!.locked_by!].name
-                  }.`
-                : `Fisierul a fostinchis.`}
-            </span>
+            <div className="text-white/80">
+              {log.changes.locked ? (
+                <span>
+                  Fisierul a fost deschis de&nbsp;
+                  <a href="/" className="font-semibold hover:underline">
+                    {userProfiles[log.changes!.locked_by!].name}
+                  </a>
+                </span>
+              ) : (
+                `Fisierul a fost inchis.`
+              )}
+            </div>
           );
         };
         acc.push({

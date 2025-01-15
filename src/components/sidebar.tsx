@@ -28,7 +28,7 @@ const Sidebar: React.FC = () => {
   const { session } = useDatabase();
   return (
     <div className="absolute left-0 top-0">
-      <div className="fixed flex h-screen w-48 flex-col overflow-y-auto ">
+      <div className="fixed flex h-screen w-48 flex-col overflow-y-auto">
         <div className="draggable py-6" />
         <nav className="flex flex-1 flex-col justify-between px-2 pb-2 pt-1.5">
           <ul className="space-y-1">

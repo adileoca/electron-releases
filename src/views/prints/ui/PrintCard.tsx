@@ -1,4 +1,3 @@
-import { useEffect, useMemo } from "react";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 
 import OrderStatusBadge from "@/components/ui/OrderStatusBadge";
@@ -6,14 +5,20 @@ import ActivityFeed from "@/components/ui/ActivityFeed";
 import CardWrapper from "@/components/ui/CardWrapper";
 import MiniTable from "@/components/ui/MiniTable";
 import PrintAssets from "./PrintAssets";
-import { MagnifyingGlassIcon, SparklesIcon } from "@heroicons/react/24/outline";
-import { ItemAssets, Print } from "@/lib/supabase/database";
 
-import { Filter } from "lucide-react";
+import { ItemAssets, Print } from "@/lib/supabase/database";
+import { formatDate } from "@/lib/utils/format";
+
+import { usePrintActivity } from "../hooks/usePrintActivity";
 import { useAssetsData } from "../hooks/useAssetsData";
 
-import { formatDate } from "@/lib/utils/format";
-import { usePrintActivity } from "../hooks/usePrintActivity";
+import { Filter, Route } from "lucide-react";
+import {
+  MagnifyingGlassIcon,
+  SparklesIcon,
+  IdentificationIcon,
+  RectangleGroupIcon,
+} from "@heroicons/react/24/outline";
 
 const PrintCard: React.FC<{
   print: Print;
@@ -83,7 +88,7 @@ const PrintBody: React.FC<{
           <ActivityFeed activities={printActivity} />
         </div>
       </TabPanel>
-      <TabPanel className="border-t border-white/15 bg-white/5 px-3 pb-3">
+      <TabPanel className="divide-y divide-white/15 border-t border-white/15 bg-white/5  pb-3">
         {assets ? (
           <PrintAssets assets={assets} mediaUrls={mediaUrls} />
         ) : (
@@ -99,8 +104,8 @@ const PrintHeader: React.FC<{
   mediaUrls: Map<string, string>;
 }> = ({ print, mediaUrls }) => {
   // const formatter = new CurrencyFormatter(item.totals?.currency!);
-  const latestVersion = print.versions[0];
-  const firstVersion = print.versions.slice(-1)[0];
+  const firstVersion = print.versions[0];
+  const latestVersion = print.versions.slice(-1)[0];
   return (
     <div className="flex p-3">
       <div className="relative aspect-square h-full w-full overflow-hidden rounded-md border border-neutral-600 bg-neutral-200 md:h-16 md:w-16">
@@ -111,7 +116,7 @@ const PrintHeader: React.FC<{
         />
       </div>
       <div className="ml-5 flex flex-1 flex-col">
-        <div className="relative -mt-3 flex flex-1 items-center space-x-3">
+        <div className="relative -mt-3 flex flex-1 items-center justify-between space-x-3">
           <span className=" text-lg font-medium text-neutral-900 transition dark:text-white/80">
             {latestVersion.name}
           </span>
@@ -124,17 +129,22 @@ const PrintHeader: React.FC<{
           </div>
         </div>
         <div className="flex items-end justify-between">
-          <TabList className="flex h-8 items-center space-x-1 rounded-lg border border-white/15 bg-white/5 px-0.5">
-            {["Detalii", "Istoric", "Decaluri"].map((label, idx) => (
+          <TabList className="-ml-[11px] flex items-center space-x-1 rounded-lg">
+            {[
+              { label: "Detalii", icon: IdentificationIcon },
+              { label: "Istoric", icon: Route },
+              { label: "Decaluri", icon: RectangleGroupIcon },
+            ].map((tab, idx) => (
               <Tab
                 key={idx}
-                className="rounded-md border border-transparent px-2 py-0.5 text-sm font-semibold text-white/80 hover:bg-white/20 focus-visible:outline-none data-[selected]:border-white/60 data-[selected]:bg-white/80 data-[selected]:text-black/75 data-[selected]:ring-transparent"
+                className="-mb-3 flex items-center space-x-2 rounded-t-lg border-2 border-transparent px-2 pb-2.5 font-medium text-white/80 hover:bg-white/0 hover:text-white focus-visible:outline-none data-[selected]:border-b-green-600 data-[selected]:bg-white/0  data-[selected]:ring-transparent"
               >
-                {label}
+                <tab.icon className="h-4 w-4" />
+                <span>{tab.label}</span>
               </Tab>
             ))}
           </TabList>
-          <div className="flex space-x-4">
+          <div className="flex space-x-5">
             <ToolbarButton
               Icon={<SparklesIcon className="h-4 w-4" />}
               label="Asistent AI"
@@ -159,7 +169,7 @@ const ToolbarButton: React.FC<{ Icon: React.ReactNode; label: string }> = ({
   label,
 }) => {
   return (
-    <button className="flex  items-center space-x-1 text-white/80 hover:text-white">
+    <button className="flex items-center space-x-1 text-white/80 hover:text-white">
       {Icon}
       <span className="font-medium">{label}</span>
     </button>

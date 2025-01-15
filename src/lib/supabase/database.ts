@@ -6,11 +6,6 @@ type QueryType<T extends (...args: any) => any> = QueryData<ReturnType<T>>;
 export type DbTables = DbTypes['public']['Tables'];
 export type DbEnums = DbTypes['public']['Enums'];
 export type Supabase = SupabaseClient<DbTypes>;
-// type WithHistory<T> = T & { history: T[] };
-
-// type Row = {
-//   [K in keyof DbTables]: DbTables[K]['Row'];
-// };
 
 class Database {
   private supabase: Supabase;
