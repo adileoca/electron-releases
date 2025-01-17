@@ -1,0 +1,11 @@
+have app use cache for media, display fallback if media isn't available yet
+
+IMPORTANT: use user credentials when uploading media, remove secret from app
+enable distribuition and auto updating of app, have app install and update plugin when needed
+
+add history navigation to app
+add filters, search functionality for logs
+have a log for active tasks, tab for managing users
+create log for user actions, display analytics to users
+fix orders table
+start implementing analytics

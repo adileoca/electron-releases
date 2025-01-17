@@ -32,6 +32,11 @@
       "@/constants/*": ["src/constants/*"]
     }
   },
-  "include": ["src/**/*"],
+  "include": [
+    "src/**/*",
+    "public/electron.js",
+    "public/electron.js",
+    "public/electron.js"
+  ],
   "exclude": ["node_modules", "**/node_modules/*"]
 }
