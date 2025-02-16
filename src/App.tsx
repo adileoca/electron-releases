@@ -1,14 +1,14 @@
-import Login from "./views/Login";
-import AppRoutes from "./Routes";
+import { useEffect } from "react";
 import { HashRouter as Router } from "react-router-dom";
+
 import useIpcListeners from "./hooks/useIpcListeners";
+import { useSupabase } from "./lib/supabase/context";
 import { useSyncData } from "./hooks/useSyncData";
 import Spinner from "@/static/spinner.svg";
+import Login from "./views/Login";
+import AppRoutes from "./Routes";
 
-import "/node_modules/flag-icons/css/flag-icons.min.css";
-import "./styles/App.css";
-import { useEffect } from "react";
-import { useSupabase } from "./lib/supabase/context";
+// import "/node_modules/flag-icons/css/flag-icons.min.css";
 
 const App = () => {
   const { session } = useSupabase();
@@ -44,10 +44,9 @@ const App = () => {
 export default App;
 
 const Routes = () => {
-  // todo: use this to set navigation in the app from the plugin
   const initSyncDone = useSyncData();
   useIpcListeners();
-
+  
   if (!initSyncDone) {
     return (
       <div className="flex h-screen w-full flex-col items-center justify-center bg-neutral-900/90">
@@ -57,7 +56,9 @@ const Routes = () => {
           alt=""
           loading="eager"
         />
-        <span className="font-semibold text-neutral-200">Please wait</span>
+        <span className="font-semibold text-white/80">
+          Va rugam asteptati, descarc...
+        </span>
       </div>
     );
   }

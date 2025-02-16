@@ -14,7 +14,7 @@ const BillingCard: React.FC<{ order: OrderDetailedType }> = ({ order }) => {
       }}
     >
       <MiniTable
-        title="Address"
+        title="Billing address"
         data={{
           Country: order.billing_address?.country!,
           State: order.billing_address?.state!,
@@ -24,7 +24,7 @@ const BillingCard: React.FC<{ order: OrderDetailedType }> = ({ order }) => {
         }}
       />
       <MiniTable
-        title="Payment"
+        title="Payment info"
         data={{
           status: capitalizeFirstLetter(order.payment?.status!),
           method: capitalizeFirstLetter(

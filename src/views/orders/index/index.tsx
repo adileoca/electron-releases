@@ -1,10 +1,10 @@
-import { TableProvider } from "./context";
+import { OrdersTableProvider } from "./context";
 import OrdersTable from "./OrdersTable";
 
 const OrdersView = () => (
-  <TableProvider>
+  <OrdersTableProvider>
     <OrdersTable />
-  </TableProvider>
+  </OrdersTableProvider>
 );
 
 export default OrdersView;

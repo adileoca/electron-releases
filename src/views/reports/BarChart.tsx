@@ -16,7 +16,7 @@ import clsx from "clsx";
 import { ro } from "react-day-picker/locale";
 import { DayPicker, getDefaultClassNames } from "react-day-picker";
 import "react-day-picker/style.css";
-
+import { ChevronUpDownIcon } from "@heroicons/react/20/solid";
 export function MyDatePicker() {
   const [selected, setSelected] = useState<Date>();
 
@@ -176,16 +176,6 @@ const chartConfig = {
   },
 };
 
-const CustomLegend = (props) => {
-  return (
-    <div className="flex justify-center space-x-2 bg-green-400 text-white/60">
-      {props.payload?.map((entry, index) => (
-        <span key={`item-${index}`}>{entry.value}</span>
-      ))}
-    </div>
-  );
-};
-
 const LegendItem: React.FC<{
   value: string;
   label: string;
@@ -202,25 +192,29 @@ const LegendItem: React.FC<{
           setData(active ? chartData : chartData2);
         }
       }}
-      className=" group transition active:scale-95"
+      className=" group transition"
     >
-      <CardWrapper>
-        <div className="flex flex-1 bg-white/5 group-hover:bg-white/10 group-active:bg-white/15">
+      <div>
+        <div className="flex flex-1 h-16 items-center overflow-hidden border-b border-neutral-700  group-hover:bg-white/5 group-active:bg-white/10">
           <div className="flex w-full flex-col px-3 py-2 text-left ">
             <h2 className="text-lg font-semibold leading-5  text-white/80">
               {value}
             </h2>
-            <span className="text-sm text-white/60">{label}</span>
+            <span className="text-sm text-white/60 flex items-center">{label}<ChevronUpDownIcon className="size-4 group-hover:opacity-100 opacity-0 transition"/></span>
           </div>
           <div
             style={{ backgroundColor: borderColor }}
+            // className={clsx(
+            //   active ? "translate-x-[10px]" : "translate-x-[5px]",
+            //   " w-[10px] h-2  rounded-full transition duration-150"
+            // )}
             className={clsx(
-              active ? "translate-x-[5px]" : "translate-x-0",
-              " w-[5px] transition duration-150"
+              active ? "translate-x-[20px]" : "translate-x-[15px]",
+              " w-[20px] h-6  rounded-l transition duration-150"
             )}
           />
         </div>
-      </CardWrapper>
+      </div>
     </button>
   );
 };
@@ -234,7 +228,10 @@ function CustomTooltip({ payload, label, active }: TooltipProps<any, any>) {
           {payload.map((payloadItem, idx) => {
             const config = chartConfig[payloadItem["dataKey"]!];
             return (
-              <div key={idx} className="flex items-center justify-between space-x-5">
+              <div
+                key={idx}
+                className="flex items-center justify-between space-x-5"
+              >
                 <div className="flex items-center space-x-2">
                   <div
                     style={{ backgroundColor: config.color }}
@@ -265,9 +262,9 @@ const BarChartComponent = () => {
   return (
     <>
       <div className="flex h-full">
-        <div className="flex w-48 justify-between flex-col border-r border-white/15 bg-white/5 shadow shadow-black">
-
-          <div className="flex flex-col space-y-3 px-3 pt-3">
+        <div className="flex w-48 flex-col justify-between border-r border-white/15 bg-neutral-800 shadow shadow-black">
+          <div className="flex flex-col">
+          {/* <div className="flex w-full h-14 border-b border-neutral-700 flex-col">caca</div> */}
             <LegendItem
               value="1432 lei"
               borderColor={chartConfig["revenue"]["color"]}
@@ -296,9 +293,7 @@ const BarChartComponent = () => {
               borderColor={chartConfig["losses"]["color"]}
             />
           </div>
-          <div className="flex w-full h-12 border-t border-white/15 flex-col">
-Compara cu perioada precedenta/ anul trecut
-          </div>
+
         </div>
 
         <div>

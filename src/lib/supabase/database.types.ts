@@ -42,6 +42,24 @@ export type Database = {
         }
         Relationships: []
       }
+      call_logs: {
+        Row: {
+          created_at: string
+          id: string
+          metadata: Json | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+        }
+        Relationships: []
+      }
       cart_items: {
         Row: {
           amount: number | null
@@ -290,6 +308,36 @@ export type Database = {
           refresh_token?: string | null
         }
         Relationships: []
+      }
+      item_asset_attachments: {
+        Row: {
+          asset_id: string
+          media_id: string
+        }
+        Insert: {
+          asset_id: string
+          media_id: string
+        }
+        Update: {
+          asset_id?: string
+          media_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "item_asset_attachments_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "item_assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "item_asset_attachments_media_id_fkey"
+            columns: ["media_id"]
+            isOneToOne: false
+            referencedRelation: "media"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       item_assets: {
         Row: {
@@ -1503,48 +1551,54 @@ export type Database = {
       }
       tasks: {
         Row: {
-          assigned_at: string | null
           created_at: string
           description: string | null
           id: string
           item_id: string | null
+          lock_timeout: string | null
+          locked: boolean
+          locked_at: string
           locked_by: string | null
-          locked_until: string | null
+          locked_until: string
           order_id: string | null
-          priority: number | null
+          priority: number
           status: Database["public"]["Enums"]["task_statuses"] | null
-          type: Database["public"]["Enums"]["task_types"] | null
-          updated_at: string | null
+          type: Database["public"]["Enums"]["task_types"]
+          updated_at: string
           user_id: string | null
         }
         Insert: {
-          assigned_at?: string | null
           created_at?: string
           description?: string | null
           id?: string
           item_id?: string | null
+          lock_timeout?: string | null
+          locked?: boolean
+          locked_at?: string
           locked_by?: string | null
-          locked_until?: string | null
+          locked_until?: string
           order_id?: string | null
-          priority?: number | null
+          priority?: number
           status?: Database["public"]["Enums"]["task_statuses"] | null
-          type?: Database["public"]["Enums"]["task_types"] | null
-          updated_at?: string | null
+          type: Database["public"]["Enums"]["task_types"]
+          updated_at?: string
           user_id?: string | null
         }
         Update: {
-          assigned_at?: string | null
           created_at?: string
           description?: string | null
           id?: string
           item_id?: string | null
+          lock_timeout?: string | null
+          locked?: boolean
+          locked_at?: string
           locked_by?: string | null
-          locked_until?: string | null
+          locked_until?: string
           order_id?: string | null
-          priority?: number | null
+          priority?: number
           status?: Database["public"]["Enums"]["task_statuses"] | null
-          type?: Database["public"]["Enums"]["task_types"] | null
-          updated_at?: string | null
+          type?: Database["public"]["Enums"]["task_types"]
+          updated_at?: string
           user_id?: string | null
         }
         Relationships: [
@@ -1574,6 +1628,36 @@ export type Database = {
             columns: ["order_id"]
             isOneToOne: false
             referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_profile_roles: {
+        Row: {
+          user_id: string
+          user_role: string
+        }
+        Insert: {
+          user_id: string
+          user_role: string
+        }
+        Update: {
+          user_id?: string
+          user_role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_profile_roles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_profile_roles_user_role_fkey"
+            columns: ["user_role"]
+            isOneToOne: false
+            referencedRelation: "user_roles"
             referencedColumns: ["id"]
           },
         ]
@@ -1611,6 +1695,21 @@ export type Database = {
           name?: string | null
           phone?: string | null
           picture?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          title: string
+        }
+        Insert: {
+          id?: string
+          title: string
+        }
+        Update: {
+          id?: string
+          title?: string
         }
         Relationships: []
       }

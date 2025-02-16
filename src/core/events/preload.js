@@ -5,6 +5,7 @@ const validChannels = ["data-request", "data-response", "open-order"]; // List o
 contextBridge.exposeInMainWorld("electron", {
   invoke: (channel, data) => ipcRenderer.invoke(channel, data),
   openLink: (url) => ipcRenderer.send("open-link", url),
+
   uploadFile: ({ filename, accessToken, bucketPath }) => {
     return ipcRenderer.invoke("upload-file", {
       filename,
@@ -12,10 +13,9 @@ contextBridge.exposeInMainWorld("electron", {
       bucketPath,
     });
   },
+  
   setSession: (session) => ipcRenderer.send("set-session", session),
-  send: (channel, data) => {
-    ipcRenderer.send(channel, data);
-  },
+  send: (channel, data) => ipcRenderer.send(channel, data),
 
   on: (channel, func) => {
     // if (validChannels.includes(channel)) {

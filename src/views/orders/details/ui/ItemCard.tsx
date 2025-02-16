@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
-import { MagnifyingGlassIcon, SparklesIcon } from "@heroicons/react/24/outline";
-import { Filter } from "lucide-react";
+
+
 import { OrderDetailedType } from "@/lib/supabase/database";
 import { useMedia } from "@/lib/supabase/useMedia";
 import { useDatabase } from "@/lib/supabase/context";
@@ -12,21 +12,28 @@ import ActivityFeed from "@/components/ui/ActivityFeed";
 import MiniTable from "@/components/ui/MiniTable";
 import ItemAssets from "./ItemAssets";
 import CardWrapper from "@/components/ui/CardWrapper";
-
+import { Filter, Route } from "lucide-react";
+import {
+  MagnifyingGlassIcon,
+  SparklesIcon,
+  IdentificationIcon,
+  RectangleGroupIcon,
+} from "@heroicons/react/24/outline";
 export type Item = OrderDetailedType["items"][0];
 
 const taskTypeLabels = {
   edit: "editare",
   print: "printare",
 };
+
 const ItemCard: React.FC<{ item: Item }> = ({ item }) => {
   return (
-    <CardWrapper>
+    <div>
       <TabGroup>
         <OrderItemHeader item={item} />
         <OrderItemBody item={item} />
       </TabGroup>
-    </CardWrapper>
+    </div>
   );
 };
 
@@ -48,7 +55,7 @@ const OrderItemBody: React.FC<{ item: Item }> = ({ item }) => {
   useEffect(() => {}, [db]);
   return (
     <TabPanels>
-      <TabPanel className="border-t border-white/15 bg-white/5 px-3 pb-3">
+      <TabPanel className="border-t border-white/10  pb-3">
         {item.configuration && (
           <MiniTable
             data={parseConfigurationDetails(item.configuration, {
@@ -62,7 +69,7 @@ const OrderItemBody: React.FC<{ item: Item }> = ({ item }) => {
           <ActivityFeed activities={parseItemActivity(item)} />
         </div>
       </TabPanel>
-      <TabPanel className="border-t border-white/15 bg-white/5 px-3 pb-3">
+      <TabPanel className="border-t border-white/10 pb-3">
         <ItemAssets assets={item.assets} assetUrls={assetUrls} />
       </TabPanel>
     </TabPanels>
@@ -86,7 +93,7 @@ const parseItemActivity = (item: Item): ActivityItem[] => {
 const OrderItemHeader: React.FC<{ item: Item }> = ({ item }) => {
   const formatter = new CurrencyFormatter(item.totals?.currency!);
   return (
-    <div className="flex p-3">
+    <div className="flex pb-3">
       <div className="relative aspect-square h-full w-full overflow-hidden rounded-lg bg-neutral-200 md:h-16 md:w-16">
         <img
           src={item.configuration!.thumbnail_url!}
@@ -112,31 +119,36 @@ const OrderItemHeader: React.FC<{ item: Item }> = ({ item }) => {
             </span> */}
           </div>
         </div>
-        <div className="flex items-center justify-between">
-          <TabList className="flex h-8 items-center space-x-1 rounded-lg border border-white/15 bg-white/5 px-0.5">
-            {["Detalii", "Istoric", "Decaluri"].map((label, idx) => (
+        <div className="flex items-end justify-between">
+          <TabList className="flex -ml-0.5 items-center space-x-4 rounded-lg">
+            {[
+              { label: "Detalii", Icon: <IdentificationIcon className="size-4"/> },
+              { label: "Istoric", Icon: <Route size={14}/> },
+              { label: "Decaluri", Icon: <RectangleGroupIcon className="size-4"/> },
+            ].map((tab, idx) => (
               <Tab
                 key={idx}
-                className="rounded-md border border-transparent px-2 py-0.5 text-sm font-semibold text-white/80 hover:bg-white/20 focus-visible:outline-none data-[selected]:border-white/60 data-[selected]:bg-white/80 data-[selected]:text-black/75 data-[selected]:ring-transparent"
+                className="-mb-[12px] flex items-center space-x-2 rounded-t-lg border-2 border-transparent pb-3 font-medium text-white/80 hover:bg-white/0 hover:text-white focus-visible:outline-none data-[selected]:border-b-white/80 data-[selected]:bg-white/0 data-[selected]:ring-transparent"
               >
-                {label}
+                {/* {tab.Icon} */}
+                <span>{tab.label}</span>
               </Tab>
             ))}
           </TabList>
-          <div className="flex space-x-4">
+          {/* <div className="flex pb-1 space-x-3">
             <ToolbarButton
-              Icon={<SparklesIcon className="h-4 w-4" />}
+              Icon={<SparklesIcon className="size-4" />}
               label="Asistent AI"
             />
             <ToolbarButton
-              Icon={<MagnifyingGlassIcon className="h-4 w-4 stroke-2" />}
+              Icon={<MagnifyingGlassIcon className="size-4 stroke-2" />}
               label="Cautǎ"
             />
             <ToolbarButton
-              Icon={<Filter className="h-4 w-4" />}
+              Icon={<Filter className="size-4" />}
               label="Filtreazǎ"
             />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

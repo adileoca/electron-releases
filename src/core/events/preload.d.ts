@@ -15,7 +15,7 @@ declare global {
         accessToken: string;
       }) => Promise<{ error: string | null }>;
       setSession: (session: Session | null) => void;
-      send: (channel: string, data: any) => void;
+      send: (channel: string, data?: any) => void;
       on: (channel: string, callback: (...args: any[]) => void) => void;
       removeListener: (channel: any, func: any) => void;
       event: (eventName: string, data?: any) => void;

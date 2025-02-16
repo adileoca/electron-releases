@@ -1,6 +1,6 @@
 {
   "name": "adipan",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "main": "src/core/main.js",
   "private": true,
   "homepage": "./",
@@ -15,6 +15,27 @@
       "node_modules/**/*",
       "src/**/*"
     ],
+    "extraResources": [
+      "assets/plugin/**/*"
+    ],
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ]
+    },
     "directories": {
       "buildResources": "assets"
     }
@@ -22,9 +43,9 @@
   "scripts": {
     "package": "craco build && npx electron-packager . YourAppName --platform=darwin --arch=x64 --icon=assets/Icons.icns --out=out --overwrite",
     "dev": "concurrently -k \"BROWSER=none npm start\" \"npm:electron\"",
-    "electron": "wait-on http://127.0.0.1:3001 --timeout=30000 && electron .",
+    "electron": "wait-on http://127.0.0.1:3005 --timeout=30000 && electron .",
     "codegen": "graphql-codegen && node ./src/types/generateFlatTypes.js",
-    "start": "PORT=3001 craco start",
+    "start": "PORT=3005 craco start",
     "build": "craco build && electron-builder build --mac --publish never",
     "deploy": "craco build && git remote set-url origin https://github.com/adileoca/electron-releases.git && electron-builder build --mac --publish always && git remote set-url origin https://github.com/adileoca/ceramica-interface.git",
     "test": "craco test",

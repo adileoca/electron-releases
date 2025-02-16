@@ -22,9 +22,16 @@ const PrintAssets: React.FC<{
           <div className="flex w-full items-center justify-between">
             <h1 className="font-medium text-white/80">{asset.id}</h1>
 
-            <button className="flex items-center space-x-1 rounded-md border border-white/10 bg-white/20 px-2.5 py-1 text-sm font-semibold text-white/90 shadow-sm transition hover:bg-neutral-50 hover:bg-white/30">
+            {/* <button className=" items-center space-x-1 rounded-md border-4 border-solid border-transparent bg-white/20  px-2.5 py-1 text-sm font-semibold text-white/90 shadow-sm transition [border-image:linear-gradient(to_top_right,#f6b73c,#4d9f0c)_30] hover:bg-neutral-50 hover:bg-white/30">
               Marcheazǎ ca defect
-            </button>
+            </button> */}
+            <div className="flex items-center justify-center">
+              <div className="w-full rounded-md bg-gradient-to-t from-neutral-500 from-80% to-neutral-400 p-[1px]">
+                <button className="h-full w-full rounded-[5px] bg-neutral-600 px-2 py-[3px] text-sm font-medium text-white/90">
+                  Marcheazǎ ca defect
+                </button>
+              </div>
+            </div>
           </div>
           <div className=" w-full justify-between">
             <MiniTable

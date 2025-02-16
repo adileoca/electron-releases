@@ -21,6 +21,57 @@ class Database {
   insert: InsertManager;
   update: UpdateManager;
 
+  async getUsersByRole(role: 'grafician') {
+    const { data, error } = await this.supabase
+      .from('user_profiles')
+      .select('id, roles:user_profile_roles(role:user_roles(*))')
+      .eq('user_profile_roles.user_roles.title', role);
+
+    if (error) {
+      console.error('Error getting users by role:', error);
+      throw new Error(error?.message || 'Unknown error occurred');
+    }
+
+    return data.map(user => user.id);
+  }
+
+  async insertItemAssetAttachments(
+    insert: DbTables['item_asset_attachments']['Insert'][]
+  ) {
+    const { error } = await this.supabase
+      .from('item_asset_attachments')
+      .insert(insert);
+
+    if (error) {
+      console.error('Error inserting item asset attachments:', error);
+      throw new Error(error?.message || 'Unknown error occurred');
+    }
+  }
+
+  async getOrderSummaries(params?: { range?: [number, number] }) {
+    const query = this.supabase.from('orders').select(
+      `*,
+      totals:order_totals(*),
+      status:order_statuses(*),
+      payment:order_payments(*),
+      billing_address: addresses!orders_billing_address_id_fkey(*),
+      shipping_address: addresses!orders_shipping_address_id_fkey(*)`
+    );
+
+    if (params?.range) {
+      query.range(params.range[0], params.range[1]);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.error('Error getting orders summaries:', error);
+      throw new Error(error?.message || 'Unknown error occurred');
+    }
+
+    return data;
+  }
+
   async getItemAssetsForPrinting() {
     const { data, error } = await this.supabase
       .from('orders')
@@ -243,7 +294,7 @@ class Database {
     }
   }
 
-  insertPrintVersion = async (insert: DbTables['print_versions']['Insert']) => {
+  async insertPrintVersion(insert: DbTables['print_versions']['Insert']) {
     const { data, error } = await this.supabase
       .from('print_versions')
       .insert(insert)
@@ -256,7 +307,7 @@ class Database {
     }
 
     return data;
-  };
+  }
 
   async insertMediaMetadata(
     insert: DbTables['media_metadata']['Insert'],
@@ -296,11 +347,11 @@ class Database {
     return data;
   }
 
-  updateOrder = async (
+  async updateOrder(
     id: string,
     update: DbTables['orders']['Update'],
     supabase: Supabase = this.supabase
-  ) => {
+  ) {
     const { data, error } = await supabase
       .from('orders')
       .update(update)
@@ -312,7 +363,7 @@ class Database {
     }
 
     return { error: null };
-  };
+  }
 
   async getOrderIdByCheckoutId(id: string, supabase: Supabase = this.supabase) {
     const { data, error } = await supabase
@@ -462,11 +513,11 @@ class Database {
     return data;
   }
 
-  updateOrderToken = async (
+  async updateOrderToken(
     id: number,
     update: DbTables['order_tokens']['Update'],
     supabase: Supabase = this.supabase
-  ) => {
+  ) {
     const { error } = await supabase
       .from('order_tokens')
       .update(update)
@@ -477,13 +528,13 @@ class Database {
     }
 
     return error;
-  };
+  }
 
-  updateOrderStatus = async (
+  async updateOrderStatus(
     id: string,
     update: DbTables['order_statuses']['Update'],
     supabase: Supabase = this.supabase
-  ) => {
+  ) {
     const { error } = await supabase
       .from('order_statuses')
       .update(update)
@@ -493,24 +544,24 @@ class Database {
       console.error('Error updating order status:', error);
       throw new Error(error?.message || 'Unknown error occurred');
     }
-  };
+  }
 
-  insertOrderToken = async (
+  async insertOrderToken(
     insert: DbTables['order_tokens']['Insert'],
     supabase: Supabase = this.supabase
-  ) => {
+  ) {
     const { error } = await supabase.from('order_tokens').insert(insert);
 
     if (error) {
       console.error('Error inserting order token:', error);
       throw new Error(error.message || 'Unknown error occurred');
     }
-  };
+  }
 
-  insertTasks = async (
+  async insertTasks(
     insert: DbTables['tasks']['Insert'] | DbTables['tasks']['Insert'][],
     supabase: Supabase = this.supabase
-  ) => {
+  ) {
     const insertIsArray = Array.isArray(insert);
 
     const { data, error } = await supabase
@@ -524,12 +575,9 @@ class Database {
     }
 
     return { data, error };
-  };
+  }
 
-  getTasksByOrder = async (
-    orderId: string,
-    supabase: Supabase = this.supabase
-  ) => {
+  async getTasksByOrder(orderId: string, supabase: Supabase = this.supabase) {
     const { data, error } = await supabase
       .from('orders')
       .select('*, storefront: storefronts(*), items: order_items(*, tasks(*))')
@@ -543,7 +591,7 @@ class Database {
 
     const tasks = data?.items?.map(item => item.tasks).flat();
     return { data: { tasks, order: data }, error: null };
-  };
+  }
 
   async insertRequestLogs(
     insert: DbTables['request_logs']['Insert'],
@@ -629,6 +677,27 @@ class QueryManager {
       if (error) {
         console.log(
           `error downloading  from ${args.bucketName}, path ${args.path}. `,
+          error
+        );
+        return null;
+      }
+    },
+    signedUrl: async (args: {
+      bucketName: string;
+      path: string;
+      expiresIn: number;
+    }) => {
+      const { data, error } = await this.supabase.storage
+        .from(args.bucketName)
+        .createSignedUrl(args.path, args.expiresIn);
+
+      if (data) {
+        return data.signedUrl;
+      }
+
+      if (error) {
+        console.log(
+          `error creating signed URL from ${args.bucketName}, path ${args.path}.`,
           error
         );
         return null;
@@ -813,6 +882,7 @@ class QueryManager {
     summary: async (options?: {
       where?: {
         id?: string;
+        locked?: boolean;
         status?: DbEnums['task_statuses'];
         user_id?: string;
       };
@@ -828,6 +898,10 @@ class QueryManager {
           )`
       );
 
+      if (options?.where?.locked) {
+        query = query.eq('locked', options.where.locked);
+      }
+
       if (options?.where?.id) {
         query = query.eq('id', options.where.id);
       }
@@ -840,7 +914,14 @@ class QueryManager {
         query = query.eq('user_id', options.where.user_id);
       }
 
-      return await query;
+      const { data, error } = await query;
+
+      if (error) {
+        console.error('Error getting task summary:', error);
+        throw new Error(error?.message || 'Unknown error occurred');
+      }
+
+      return data;
     },
   };
 
@@ -910,8 +991,8 @@ class QueryManager {
           .select(
             'id, name, prices:product_prices(amount), images:product_images(url)'
           )
-          .limit(1, { referencedTable: 'prices' })
-          .limit(1);
+          .limit(1, { referencedTable: 'prices' });
+        // .limit(2);
       },
     },
     detailed: {
@@ -959,7 +1040,10 @@ class QueryManager {
         return await this.supabase
           .from('cart_items')
           .select(
-            `*, product:products(name, slug:product_slugs(name)),
+            `*, product:products(
+              name,
+              slug:product_slugs(name),
+              images:product_images(url)),
               configuration:item_configurations(*,
                   main_media:media!item_configurations_main_media_id_fkey(url),
                   bg_media:media!item_configurations_bg_media_id_fkey(url),
@@ -1082,6 +1166,8 @@ class QueryManager {
     },
   };
 }
+
+export type OrderSummaries = Awaited<ReturnType<Database['getOrderSummaries']>>;
 
 export type PrintItemAssets = Awaited<
   ReturnType<Database['getPrintsItemAssets']>

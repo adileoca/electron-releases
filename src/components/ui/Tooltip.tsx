@@ -7,7 +7,7 @@ const Tooltip = ({ content, show, placement = "down" }) => {
     },
     down: {
       container:
-        "absolute top-full left-1/2 -translate-x-1/2 translate-y-[0.9rem]",
+        "absolute top-full left-1/2 -translate-x-1/2 translate-y-[0.8rem]",
       arrow: "-mt-[0.355rem] inset-x-0 top-0 bottom-full mx-auto -rotate-45",
     },
     // Add more placements if needed, like "left", "up", etc.
@@ -19,11 +19,11 @@ const Tooltip = ({ content, show, placement = "down" }) => {
     <>
       {show && (
         <div className={`absolute z-50 max-w-64 transform ${styles.container}`}>
-          <div className="rounded-lg border border-neutral-700 bg-neutral-900/50 px-3 py-1.5 text-sm text-white">
+          <div className="rounded-lg z-50 border border-neutral-500 bg-neutral-900 backdrop-blur px-3 py-1.5 text-sm text-white">
             <span>{content}</span>
           </div>
           <span
-            className={`absolute h-3 w-3 transform rounded-sm border-r border-t border-neutral-700 bg-neutral-900/90 backdrop-blur ${styles.arrow}`}
+            className={`absolute h-3 w-3 transform rounded-sm border-r border-t border-neutral-500 bg-neutral-900 backdrop-blur ${styles.arrow}`}
           />
         </div>
       )}

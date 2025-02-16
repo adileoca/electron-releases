@@ -8,15 +8,14 @@ import {
   ListboxOption,
   ListboxOptions,
 } from "@headlessui/react";
-import { ChevronUpDownIcon } from "@heroicons/react/16/solid";
+import { ChevronUpDownIcon } from "@heroicons/react/24/solid";
 import { CheckIcon } from "@heroicons/react/20/solid";
 
-
-const people = [
+const options = [
   { id: 1, name: "Comenzi" },
   { id: 2, name: "Clienti" },
   { id: 3, name: "Stocuri" },
-  { id: 4, name: "Tom Cook" },
+  { id: 4, name: "Comenzi" },
   { id: 5, name: "Tanya Fox" },
   { id: 6, name: "Hellen Schmidt" },
   { id: 7, name: "Caroline Schultz" },
@@ -26,24 +25,21 @@ const people = [
 ];
 
 const SelectMenu = () => {
-  const [selected, setSelected] = useState(people[3]);
+  const [selected, setSelected] = useState(options[3]);
 
   return (
     <Listbox value={selected} onChange={setSelected}>
-      <Label className="block text-white/80"></Label>
       <div className="relative">
-        <ListboxButton className="flex hover:cursor-pointer hover:bg-white/10 cursor-default items-center space-x-1 rounded-lg border border-white/15 bg-white/5 py-1 pl-[3px] pr-2.5 text-left text-white/80">
-          <ChevronUpDownIcon className="size-4 self-center justify-self-end " />
-          <span className="truncate text-sm font-semibold">
-            {selected.name}
-          </span>
+        <ListboxButton className="flex cursor-default items-center space-x-1 rounded-lg border border-white/25 py-[3px] pl-3 pr-1.5 text-left text-white/80 hover:cursor-pointer hover:bg-white/10">
+          <span className="truncate font-semibold">{selected.name}</span>
+          <ChevronUpDownIcon className="size-5" />
         </ListboxButton>
 
         <ListboxOptions
           transition
-          className="shadow-xl absolute z-50 mt-3 max-h-60 w-36 overflow-auto rounded-md border border-white/10 bg-white/15 text-sm  backdrop-blur-3xl focus:outline-none data-[closed]:data-[leave]:opacity-0 data-[leave]:transition data-[leave]:duration-100 data-[leave]:ease-in"
+          className="absolute z-50 mt-3 max-h-60 w-36 overflow-auto rounded-md border border-white/10 bg-white/15 text-sm shadow-xl  backdrop-blur-3xl focus:outline-none data-[closed]:data-[leave]:opacity-0 data-[leave]:transition data-[leave]:duration-100 data-[leave]:ease-in"
         >
-          {people.map((person) => (
+          {options.map((person) => (
             <ListboxOption
               key={person.id}
               value={person}

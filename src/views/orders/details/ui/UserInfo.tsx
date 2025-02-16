@@ -3,9 +3,12 @@ import InfoCard from "./InfoCard";
 
 const UserInfo = ({ order }) => {
   return (
-    <InfoCard title="Customer Information" button={{ label: "View details" }}>
+    <InfoCard
+      title="Customer Information"
+      button={{ onClick: () => {}, label: "View details" }}
+    >
       <MiniTable
-        title="Contact"
+        title="Contact info"
         data={{
           name: order.name,
           email: order.email,
@@ -13,7 +16,7 @@ const UserInfo = ({ order }) => {
         }}
       />
       <MiniTable
-        title="Interactions"
+        title="Customer analytics"
         data={{
           "Logged In": order.name,
           Problematic: order.shipping_address?.state!,

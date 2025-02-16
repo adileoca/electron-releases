@@ -1,4 +1,4 @@
-import { HashRouter as Router, Route, Routes } from "react-router-dom";
+import { HashRouter as _, Route, Routes } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 
 import TasksDashboardView from "./views/TasksViews/TasksDashboardView";
@@ -10,6 +10,8 @@ import EmailsView from "./views/emails/index";
 import PrintsView from "./views/prints";
 import ReportsView from "./views/reports";
 import DocumentsView from "./views/documents";
+import SettingsView from "./views/settings";
+import ProfileView from "./views/profile";
 const AppRoutes = () => {
   return (
     <div className="relative">
@@ -29,6 +31,8 @@ const AppRoutes = () => {
           <Route path="/prints" element={<PrintsView />} index />
           <Route path="/reports" element={<ReportsView />} index />
           <Route path="/documents" element={<DocumentsView />} index />
+          <Route path="/settings" element={<SettingsView />} index />
+          <Route path="/profile" element={<ProfileView />} index />
           {/* <Route path="/emails" element={<EmailsView />} index />
             <Route path="/emails/:emailId" element={<EmailDetailedView />} /> */}
         </Routes>

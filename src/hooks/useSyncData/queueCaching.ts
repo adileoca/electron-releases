@@ -7,6 +7,7 @@ import {
   fetchTemplates,
   cacheMedia,
 } from "./utils";
+
 type Media = DbTables["media"]["Row"];
 
 const fetchNecessaryMedia = async (db: Database) => {
@@ -47,6 +48,7 @@ export const queueCachingPromises = async (db: Database, queue: PQueue) => {
   const uncachedButNecessaryMedia = necessaryMedia.filter(
     ({ id }) => !cachedFilenames.includes(id)
   );
+
   uncachedButNecessaryMedia.forEach((media) => {
     const promise = async () => await cacheMedia(db, media);
     queue.add(promise, { priority: 2 });

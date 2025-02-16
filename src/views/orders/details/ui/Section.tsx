@@ -1,4 +1,4 @@
-const Section = ({ title, children }) => (
+const Section = ({ title = "", children }) => (
   <section className="mb-8">
     {title && (
       <div className="mb-4 flex justify-between">

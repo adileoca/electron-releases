@@ -1,11 +1,10 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const { exec } = require("child_process");
 const path = require("path");
 
-const { setupIpcEvents } = require("./events/ipcEvents");
 const setupExpressServer = require("./server/expressServer.js");
-
+const { setupIpcEvents } = require("./events/ipcEvents");
 const createWindow = require("./events/windowEvents");
-
 
 app.whenReady().then(async () => {
   const mainWindow = createWindow();
@@ -46,3 +45,18 @@ app.on("activate", () => {
     createWindow();
   }
 });
+
+// app.on("ready", () => {
+//   installPlugin();
+// });
+
+// app.on("before-quit-for-update", () => {
+//   // Call the bash script and pass variables
+//   installPlugin();
+// });
+
+// app.on("before-quit", () => {
+//   // Perform any other actions before the application quits
+//   installPlugin();
+//   console.log("Application is about to quit.");
+// });

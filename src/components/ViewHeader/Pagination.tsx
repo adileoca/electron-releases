@@ -1,5 +1,9 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { FC } from "react";
+import {
+  ChevronDoubleRightIcon,
+  ChevronDoubleLeftIcon,
+} from "@heroicons/react/24/outline";
 
 const ViewHeaderPagination: React.FC<{
   onNext?: (...args: any[]) => any;

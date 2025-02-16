@@ -10,7 +10,7 @@ import { ItemAssets, Print } from "@/lib/supabase/database";
 import { formatDate } from "@/lib/utils/format";
 
 import { usePrintActivity } from "../hooks/usePrintActivity";
-import { useAssetsData } from "../hooks/useAssetsData";
+import { useAssetsData } from "../hooks/usePrintAssetsData";
 
 import { Filter, Route } from "lucide-react";
 import {
@@ -26,12 +26,12 @@ const PrintCard: React.FC<{
   const { mediaUrls, itemAssets } = useAssetsData(print);
 
   return (
-    <CardWrapper>
+    <div>
       <TabGroup>
         <PrintHeader print={print} mediaUrls={mediaUrls} />
         <PrintBody print={print} assets={itemAssets} mediaUrls={mediaUrls} />
       </TabGroup>
-    </CardWrapper>
+    </div>
   );
 };
 
@@ -73,7 +73,7 @@ const PrintBody: React.FC<{
 
   return (
     <TabPanels>
-      <TabPanel className="border-t border-white/15 bg-white/5 px-3 pb-3">
+      <TabPanel className="border-t border-white/15 pb-3">
         <MiniTable
           data={{
             ID: print.id,
@@ -107,7 +107,7 @@ const PrintHeader: React.FC<{
   const firstVersion = print.versions[0];
   const latestVersion = print.versions.slice(-1)[0];
   return (
-    <div className="flex p-3">
+    <div className="flex pb-3">
       <div className="relative aspect-square h-full w-full overflow-hidden rounded-md border border-neutral-600 bg-neutral-200 md:h-16 md:w-16">
         <img
           src={mediaUrls.get(latestVersion.thumbnail_id)}
@@ -120,7 +120,6 @@ const PrintHeader: React.FC<{
           <span className=" text-lg font-medium text-neutral-900 transition dark:text-white/80">
             {latestVersion.name}
           </span>
-
           <div>
             <OrderStatusBadge
               color="amber"
@@ -129,32 +128,32 @@ const PrintHeader: React.FC<{
           </div>
         </div>
         <div className="flex items-end justify-between">
-          <TabList className="-ml-[11px] flex items-center space-x-1 rounded-lg">
+          <TabList className="flex items-center space-x-4 rounded-lg">
             {[
-              { label: "Detalii", icon: IdentificationIcon },
-              { label: "Istoric", icon: Route },
-              { label: "Decaluri", icon: RectangleGroupIcon },
+              { label: "Detalii", Icon: <IdentificationIcon className="size-4"/> },
+              { label: "Istoric", Icon: <Route size={14}/> },
+              { label: "Decaluri", Icon: <RectangleGroupIcon className="size-4"/> },
             ].map((tab, idx) => (
               <Tab
                 key={idx}
-                className="-mb-3 flex items-center space-x-2 rounded-t-lg border-2 border-transparent px-2 pb-2.5 font-medium text-white/80 hover:bg-white/0 hover:text-white focus-visible:outline-none data-[selected]:border-b-green-600 data-[selected]:bg-white/0  data-[selected]:ring-transparent"
+                className="-mb-[12px] flex items-center space-x-2 rounded-t-lg border-2 border-transparent pb-3 font-medium text-white/80 hover:bg-white/0 hover:text-white focus-visible:outline-none data-[selected]:border-b-white/80 data-[selected]:bg-white/0 data-[selected]:ring-transparent"
               >
-                <tab.icon className="h-4 w-4" />
+                {tab.Icon}
                 <span>{tab.label}</span>
               </Tab>
             ))}
           </TabList>
-          <div className="flex space-x-5">
+          <div className="flex pb-1 space-x-3">
             <ToolbarButton
-              Icon={<SparklesIcon className="h-4 w-4" />}
+              Icon={<SparklesIcon className="size-4" />}
               label="Asistent AI"
             />
             <ToolbarButton
-              Icon={<MagnifyingGlassIcon className="h-4 w-4 stroke-2" />}
+              Icon={<MagnifyingGlassIcon className="size-4 stroke-2" />}
               label="Cautǎ"
             />
             <ToolbarButton
-              Icon={<Filter className="h-4 w-4" />}
+              Icon={<Filter className="size-4" />}
               label="Filtreazǎ"
             />
           </div>
@@ -171,7 +170,7 @@ const ToolbarButton: React.FC<{ Icon: React.ReactNode; label: string }> = ({
   return (
     <button className="flex items-center space-x-1 text-white/80 hover:text-white">
       {Icon}
-      <span className="font-medium">{label}</span>
+      {/* <span className="font-medium">{label}</span> */}
     </button>
   );
 };

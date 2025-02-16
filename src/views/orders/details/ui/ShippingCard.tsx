@@ -3,9 +3,15 @@ import InfoCard from "./InfoCard";
 
 const ShippingCard = ({ order }) => {
   return (
-    <InfoCard title="Shipping Information" button={{ label: "View tracking" }}>
+    <InfoCard
+      title="Shipping Information"
+      button={{
+         onClick: () => {},
+         label: "View tracking"
+        }}
+    >
       <MiniTable
-        title="Address"
+        title="Shipping address"
         data={{
           Country: order.shipping_address?.country!,
           State: order.shipping_address?.state!,

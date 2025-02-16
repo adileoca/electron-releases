@@ -1,54 +1,43 @@
-import { createTableContext } from "@/context/Table";
-import { RowProps } from "@/context/Table/types";
+import React, { useContext, useReducer, createContext, useEffect } from "react";
 
-export const ordersTableColumns = {
-  order_no: {
-    // immutable
-    id: "order_no",
-    label: "Nr. comandǎ",
-    minConstraints: [135, 48] as [number, number],
-    initialWidth: 135,
-    // mutable
-    isSticky: true,
-    position: 1,
-    width: 135,
-  },
-  date_placed: {
-    id: "date_placed",
-    label: "Datǎ plasare",
-    position: 2,
-    minConstraints: [200, 48] as [number, number],
-    initialWidth: 200,
-    width: 200,
-  },
-  status: {
-    id: "status",
-    label: "Stare",
-    position: 3,
-    minConstraints: [150, 48] as [number, number],
-    initialWidth: 150,
-    width: 150,
-  },
-  amount: {
-    id: "amount",
-    label: "Sumǎ",
-    position: 4,
-    minConstraints: [100, 48] as [number, number],
-    initialWidth: 100,
-    width: 100,
-  },
-  address: {
-    id: "address",
-    label: "Adresǎ",
-    position: 5,
-    minConstraints: [400, 48] as [number, number],
-    initialWidth: 400,
-    width: 400,
-  },
-} as const;
+import { reducer, createActions, initialState } from "./reducer";
+import { ContextType, ProviderProps } from "./types";
 
-export type ColumnId = keyof typeof ordersTableColumns;
-export type Row = Map<ColumnId, RowProps<ColumnId>>;
+import { useParseRows } from "./hooks/useParseRows";
+import { useParseCols } from "./hooks/useParseCols";
+import { useData } from "./hooks/useFetchData";
 
-const { TableProvider, useTable } = createTableContext(ordersTableColumns);
-export { useTable, TableProvider };
+const OrdersTableContext = createContext<ContextType>(undefined);
+
+const OrdersTableProvider: React.FC<ProviderProps> = ({ children }) => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const actions = createActions(state, dispatch);
+
+  const data = useData();
+  useParseCols(state, data, actions);
+  useParseRows(state, data, actions);
+
+  useEffect(() => {
+    console.log("table state", state);
+  }, [state]);
+
+  useEffect(() => {
+    console.log("table data", data);
+  }, [data]);
+
+  return (
+    <OrdersTableContext.Provider value={{ state, data, actions }}>
+      {children}
+    </OrdersTableContext.Provider>
+  );
+};
+
+const useOrdersTableContext = () => {
+  const context = useContext(OrdersTableContext);
+  if (!context) {
+    throw Error("use with orders table context");
+  }
+  return context;
+};
+
+export { useOrdersTableContext, OrdersTableProvider };

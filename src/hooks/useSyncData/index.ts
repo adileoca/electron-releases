@@ -20,7 +20,7 @@ export const useSyncData = () => {
   const { db, session } = useDatabase();
   const [initSyncDone, setInitSyncDone] = useState(false);
 
-  // initial syncing effect
+  // initial syncing effect, make sure critical media is cached before starting app
   useEffect(() => {
     if (!db || initSyncDone) return;
 
@@ -45,7 +45,7 @@ export const useSyncData = () => {
     syncTemplates();
   }, [db]);
 
-  // main syncing effect, runs every 10 seconds
+  // main syncing effect, runs every 10 seconds, caches whatever media might be necessary
   // todo: switch to using subscriptions instead of polling
   useEffect(() => {
     if (!initSyncDone || !session) return;

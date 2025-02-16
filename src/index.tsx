@@ -2,9 +2,12 @@ import ReactDOM from "react-dom/client";
 import React from "react";
 
 import { SupabaseProvider } from "./lib/supabase/context";
-import App from "./App";
+import { GlobalProvider } from "./context/global";
 
 import "./styles/index.css";
+import "./styles/App.css";
+import App from "./App";
+
 // import reportWebVitals from "./reportWebVitals";
 
 const rootElement = document.getElementById("root");
@@ -13,9 +16,11 @@ if (rootElement) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <React.StrictMode>
-      <SupabaseProvider>
-        <App />
-      </SupabaseProvider>
+      <GlobalProvider>
+        <SupabaseProvider>
+          <App />
+        </SupabaseProvider>
+      </GlobalProvider>
     </React.StrictMode>
   );
 } else {

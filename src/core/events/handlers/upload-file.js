@@ -7,56 +7,6 @@ const fs = require("fs");
 
 const { storageDir: cacheDir } = require("../../storage.js");
 
-// const uploadFile = async (event, { filename, accessToken, bucketPath }) => {
-//   if (!filename) {
-//     throw new Error("Filename is required.");
-//   }
-//   try {
-//     // Prevent directory traversal attacks
-//     if (filename.includes("..") || path.isAbsolute(filename)) {
-//       throw new Error("Invalid filename.");
-//     }
-
-//     const filePath = path.join(cacheDir, filename);
-//     // Check if the file exists
-//     if (!fs.existsSync(filePath)) {
-//       throw new Error(`File not found: ${filename}`);
-//     }
-
-//     const s3Client = new S3Client({
-//       forcePathStyle: true,
-
-//       endpoint: "https://vrdaoudvtphptybaljqq.supabase.co/storage/v1/s3",
-//       credentials: {
-//         accessKeyId: "vrdaoudvtphptybaljqq",
-//         secretAccessKey: ANON_KEY,
-
-//         accessToken,
-//       },
-//     });
-
-//     const readStream = fs.createReadStream(filePath);
-
-//     const sanitizedBucketPath = bucketPath.startsWith("/")
-//       ? bucketPath.slice(1)
-//       : bucketPath;
-//     console.log("bucketPath", sanitizedBucketPath);
-
-//     const uploadCommand = new PutObjectCommand({
-//       Bucket: "private_bucket",
-//       Body: readStream,
-//       Key: sanitizedBucketPath,
-//     });
-
-//     await s3Client.send(uploadCommand);
-
-//     return { error: null };
-//   } catch (error) {
-//     console.error("Error uploading file:", error.message);
-//     return { error };
-//   }
-// };
-
 const projectId = "vrdaoudvtphptybaljqq";
 
 async function handleUploadFile(event, { filename, accessToken, bucketPath }) {
@@ -131,4 +81,5 @@ async function handleUploadFile(event, { filename, accessToken, bucketPath }) {
     return { error };
   }
 }
+
 module.exports = { handleUploadFile };

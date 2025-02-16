@@ -1,5 +1,5 @@
 const { ipcMain } = require("electron");
-const {autoUpdater} = require("electron-updater");
+const { autoUpdater } = require("electron-updater");
 
 const { handleReadFile } = require("./handlers/read-file.js");
 const { handleDeleteCachedFile } = require("./handlers/delete-cache-file.js");
@@ -23,23 +23,33 @@ const {
  */
 function setupIpcEvents(window, setSession) {
   // Set up IPC event handlers
-  ipcMain.handle("read-file", handleReadFile);
+  // ipcMain.handle("read-file", handleReadFile);
   ipcMain.handle("upload-file", handleUploadFile);
   ipcMain.handle("delete-cache-file", handleDeleteCachedFile);
   ipcMain.handle("get-cached-filenames", handleGetCachedFilenames);
   ipcMain.handle("read-and-stream-file", handleReadAndStreamFile);
   ipcMain.handle("cache-file", handleCacheFile);
-  ipcMain.handle("cache-file-from-url", handleCacheFileFromUrl);
+  // ipcMain.handle("cache-file-from-url", handleCacheFileFromUrl);
   ipcMain.handle("parse-email", handleParseEmail);
 
   // Set up IPC event listeners
   ipcMain.on("set-session", async (_, session) => {
     setSession(session);
   });
-  ipcMain.on("restart_app", () => {
+
+  ipcMain.on("check-updates", (event, data) => {
+    console.log("checking for updates");
+    autoUpdater.checkForUpdatesAndNotify();
+  });
+
+  ipcMain.on("restart-app", () => {
     autoUpdater.quitAndInstall();
   });
+
   ipcMain.on("open-link", onOpenLink);
+
+
+
   ipcMain.on("open-link-in-browser", onOpenLinkInBrowser);
 }
 

@@ -1,46 +1,57 @@
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import clsx from "clsx";
+import { useOrdersTableContext } from "../context";
+import { ColProps } from "../context/types";
 
-import CheckboxInput from "./CheckboxInput";
-import { useTable } from "../context";
-
-const TableBody = ({ widths }) => {
-  const [enabled, setEnabled] = useState(false);
-  const { rows, cols } = useTable();
+const TableBody = () => {
+  const {
+    state: { rows, cols },
+  } = useOrdersTableContext();
 
   return (
     <tbody>
-      {rows.map((row, rowIdx) => (
-        <tr key={rowIdx} className="group items-center">
-          {Array.from(row.entries()).map(([columnKey, cell], cellIdx) => {
-            const col = cols.get(columnKey)!;
-            let tdStyle = {};
-            if (col.isSticky) {
-              tdStyle = { left: `${widths[cellIdx]}px` };
-            }
+      {rows.map((row, rowIdx) => {
+        let prevKey: string | undefined;
+        return (
+          <tr key={rowIdx} className="group items-center">
+            {Object.entries(row)
+              .sort(([a], [b]) => cols[a].position - cols[b].position)
+              .map(([key, cell], cellIdx) => {
+                const col = cols[key] as ColProps;
 
-            return (
-              <Fragment key={`${rowIdx}-${cellIdx}`}>
-                {cellIdx === 0 && (
-                  <TdWrapper
-                    key={`checkbox-${rowIdx}`}
-                    className="is-sticky group sticky left-0 p-0"
-                  >
-                    <CheckboxInput checked={enabled} onChange={setEnabled} />
-                  </TdWrapper>
-                )}
-                <TdWrapper
-                  key={`${cellIdx}-${rowIdx}`}
-                  className={clsx(col.isSticky ? "is-sticky group sticky" : "")}
-                  style={tdStyle}
-                >
-                  {cell.Component ? cell.Component : cell.text}
-                </TdWrapper>
-              </Fragment>
-            );
-          })}
-        </tr>
-      ))}
+                let tdStyle: React.CSSProperties = {
+                  maxWidth: `${col.width}px`,
+                };
+                if (col.isSticky) {
+                  tdStyle = {
+                    ...tdStyle,
+                    left: prevKey ? `${cols[prevKey].width}px` : 0,
+                  };
+                }
+
+                prevKey = key;
+                return (
+                  <Fragment key={`${rowIdx}-${cellIdx}`}>
+                    <TdWrapper
+                      key={`${cellIdx}-${rowIdx}`}
+                      className={clsx(
+                        col.isSticky ? "is-sticky group sticky" : "",
+                        " "
+                      )}
+                      style={tdStyle}
+                    >
+                      {cell.Component ? (
+                        cell.Component
+                      ) : (
+                        <span className="truncate">{cell.text}</span>
+                      )}
+                    </TdWrapper>
+                  </Fragment>
+                );
+              })}
+          </tr>
+        );
+      })}
     </tbody>
   );
 };

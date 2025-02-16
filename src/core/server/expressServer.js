@@ -39,20 +39,36 @@ function setupExpressServer(window) {
   // Variable to hold the session data
   let sessionData = null;
 
-  // Function to update the session data and broadcast to clients
-  function setSession(session) {
-    sessionData = session;
-    // Broadcast the session data to all connected clients
-    const message = JSON.stringify({
-      type: "session",
-      data: sessionData,
-    });
+  function broadcast(message) {
     clients.forEach((ws) => {
       if (ws.readyState === WebSocket.OPEN) {
-        ws.send(message);
+        ws.send(JSON.stringify(message));
       }
     });
   }
+
+  // Function to update the session data and broadcast to clients
+  function setSession(session) {
+    sessionData = session;
+    broadcast({
+      type: "session",
+      data: sessionData,
+    });
+  }
+
+  electronApp.on("before-quit", () => {
+    broadcast({
+      type: "app",
+      data: { isOpen: false },
+    });
+  });
+
+  electronApp.on("ready", () => {
+    broadcast({
+      type: "app",
+      data: { isOpen: true },
+    });
+  });
 
   // Handle WebSocket connections
   wss.on("connection", (ws, req) => {
