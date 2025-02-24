@@ -16,7 +16,7 @@ import clsx from "clsx";
 import { ro } from "react-day-picker/locale";
 import { DayPicker, getDefaultClassNames } from "react-day-picker";
 import "react-day-picker/style.css";
-import { ChevronUpDownIcon } from "@heroicons/react/20/solid";
+import { ChevronUpDownIcon, PlusIcon } from "@heroicons/react/20/solid";
 export function MyDatePicker() {
   const [selected, setSelected] = useState<Date>();
 
@@ -195,12 +195,15 @@ const LegendItem: React.FC<{
       className=" group transition"
     >
       <div>
-        <div className="flex flex-1 h-16 items-center overflow-hidden border-b border-neutral-700  group-hover:bg-white/5 group-active:bg-white/10">
-          <div className="flex w-full flex-col px-3 py-2 text-left ">
+        <div className="flex h-16 flex-1 items-center overflow-hidden border-b border-neutral-700  group-hover:bg-white/5 group-active:bg-white/10">
+          <div className="flex w-full flex-col space-y-0.5 px-3 py-2 text-left ">
             <h2 className="text-lg font-semibold leading-5  text-white/80">
               {value}
             </h2>
-            <span className="text-sm text-white/60 flex items-center">{label}<ChevronUpDownIcon className="size-4 group-hover:opacity-100 opacity-0 transition"/></span>
+            <span className="flex items-center text-sm text-white/60">
+              {label}
+              <ChevronUpDownIcon className="size-4 opacity-0 transition group-hover:opacity-100" />
+            </span>
           </div>
           <div
             style={{ backgroundColor: borderColor }}
@@ -210,7 +213,7 @@ const LegendItem: React.FC<{
             // )}
             className={clsx(
               active ? "translate-x-[20px]" : "translate-x-[15px]",
-              " w-[20px] h-6  rounded-l transition duration-150"
+              " h-6 w-[20px]  rounded transition duration-150"
             )}
           />
         </div>
@@ -264,7 +267,7 @@ const BarChartComponent = () => {
       <div className="flex h-full">
         <div className="flex w-48 flex-col justify-between border-r border-white/15 bg-neutral-800 shadow shadow-black">
           <div className="flex flex-col">
-          {/* <div className="flex w-full h-14 border-b border-neutral-700 flex-col">caca</div> */}
+            {/* <div className="flex w-full h-14 border-b border-neutral-700 flex-col">caca</div> */}
             <LegendItem
               value="1432 lei"
               borderColor={chartConfig["revenue"]["color"]}
@@ -292,8 +295,12 @@ const BarChartComponent = () => {
               label={chartConfig["losses"]["label"]}
               borderColor={chartConfig["losses"]["color"]}
             />
+            <div className="mt-4 flex w-full items-center justify-center">
+              <button className=" p-0.5 rounded-full border border-white/20 text-white/60 hover:text-white hover:border-white/40">
+                <PlusIcon className="size-5" />
+              </button>
+            </div>
           </div>
-
         </div>
 
         <div>

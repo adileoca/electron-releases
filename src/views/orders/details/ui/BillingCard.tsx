@@ -9,22 +9,23 @@ const BillingCard: React.FC<{ order: OrderDetailedType }> = ({ order }) => {
     <InfoCard
       title="Billing Information"
       button={{
-        label: "View invoice",
+        label: "Vezi factură",
         onClick: () => window.electron.openLink(order.payment?.invoice_url),
       }}
     >
       <MiniTable
-        title="Billing address"
+        title="Adresa de facturare"
         data={{
-          Country: order.billing_address?.country!,
-          State: order.billing_address?.state!,
-          "Line 1": order.billing_address?.line_1!,
-          "Line 2": order.billing_address?.line_2!,
-          "Zip Code": order.billing_address?.postal_code!,
+          Țarǎ: order.billing_address?.country!,
+          "Regiune": order.billing_address?.state!,
+          Oraș: order.billing_address?.city!,
+          "Linie 1": order.billing_address?.line_1!,
+          "Linie 2": order.billing_address?.line_2!,
+          "Cod Poştal": order.billing_address?.postal_code!,
         }}
       />
       <MiniTable
-        title="Payment info"
+        title="Plată"
         data={{
           status: capitalizeFirstLetter(order.payment?.status!),
           method: capitalizeFirstLetter(

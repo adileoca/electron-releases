@@ -84,6 +84,13 @@ export const ordersTableColumns: ContextState["cols"] = {
     isSticky: true,
     Component: <CheckboxInput checked={false} onChange={() => {}} />,
   },
+  name: {
+    label: "Nume",
+    position: 2,
+    minConstraints: [200, 48] as [number, number],
+    initialWidth: 200,
+    width: 200,
+  },
   order_no: {
     label: "Nr. comandǎ",
     minConstraints: [135, 48] as [number, number],
@@ -95,9 +102,9 @@ export const ordersTableColumns: ContextState["cols"] = {
   date_placed: {
     label: "Datǎ plasare",
     position: 2,
-    minConstraints: [200, 48] as [number, number],
-    initialWidth: 200,
-    width: 200,
+    minConstraints: [150, 48] as [number, number],
+    initialWidth: 150,
+    width: 150,
   },
   status: {
     label: "Stare",

@@ -1,10 +1,10 @@
-import Logo from "@/static/logo.svg";
 import { useState } from "react";
-// import { FormMessage, Message } from '@/components/FormMessage';
-import { Supabase } from "@/lib/supabase/database";
+
 import { useSupabase } from "@/lib/supabase/context";
+import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
-import CardWrapper from "@/components/ui/CardWrapper";
+import Logo from "@/static/logo.svg";
+
 const Login = ({ searchParams }: { searchParams?: any }) => {
   const { supabase } = useSupabase();
   const [email, setEmail] = useState("");
@@ -22,14 +22,23 @@ const Login = ({ searchParams }: { searchParams?: any }) => {
   return (
     <div className="draggable flex h-screen w-full bg-neutral-900 bg-cover antialiased">
       <div className="m-auto my-auto place-content-center">
-        <CardWrapper>
-          <div className="flex w-96 flex-col gap-8 p-4">
-            {/* {['success', 'error', 'message'].some(
+        <div className="flex w-96 flex-col gap-8 p-4">
+          {/* {['success', 'error', 'message'].some(
             param => param in searchParams
-          ) && <FormMessage message={searchParams} />} */}
-            <div className="flex flex-col gap-4 ">
+            ) && <FormMessage message={searchParams} />} */}
+          <div className="flex flex-col space-y-4">
+            <div className="-mt-[20px] mb-0 flex justify-center">
+              <img
+                src={Logo}
+                alt="logo"
+                width={40}
+                height={40}
+                className="rounded-full bg-blue-500 p-px "
+              />
+            </div>
+            <div className="-space-y-px rounded-md">
               <Input
-                className="h-12 rounded-md"
+                className="relative z-10 h-10 w-full  rounded-t-md  focus:z-50"
                 type="email"
                 name="email"
                 placeholder="you@adipan.eu"
@@ -38,27 +47,19 @@ const Login = ({ searchParams }: { searchParams?: any }) => {
               />
 
               <Input
-                className="h-12 w-full rounded-md"
+                className="relative z-10 h-10 w-full rounded-b-md focus:z-50"
                 type="password"
                 name="password"
                 placeholder="Parola"
                 required
                 onChange={(e) => setPassword(e.target.value)}
               />
-
-              <div className="flex justify-end pt-2">
-                <div className=" rounded-md bg-gradient-to-t from-blue-500 from-80% to-blue-400 p-px">
-                  <button
-                    onClick={() => handleSignIn()}
-                    className="h-8 rounded-[5px] bg-blue-600 px-4 font-medium text-white/90 transition hover:bg-blue-500"
-                  >
-                    Autentificare
-                  </button>
-                </div>
-              </div>
+            </div>
+            <div className="flex justify-end">
+              <Button onClick={() => handleSignIn()}>Autentificare</Button>
             </div>
           </div>
-        </CardWrapper>
+        </div>
       </div>
     </div>
   );

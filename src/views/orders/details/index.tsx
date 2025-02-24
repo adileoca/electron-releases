@@ -22,7 +22,6 @@ const OrderDetailsView: React.FC = () => {
   const body = response?.data ? (
     <ViewBody order={response.data} />
   ) : (
-    // <LoadingBody />
     <LoadingBody />
   );
   return (

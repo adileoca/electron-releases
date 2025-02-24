@@ -1,31 +1,26 @@
 import { useEffect, useMemo } from "react";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
-
-
-import { OrderDetailedType } from "@/lib/supabase/database";
-import { useMedia } from "@/lib/supabase/useMedia";
-import { useDatabase } from "@/lib/supabase/context";
-import { parseConfigurationDetails } from "@/lib/utils/parse";
-import { CurrencyFormatter } from "@/lib/utils/format";
-import { ActivityItem } from "@/components/ui/ActivityFeed";
-import ActivityFeed from "@/components/ui/ActivityFeed";
-import MiniTable from "@/components/ui/MiniTable";
-import ItemAssets from "./ItemAssets";
-import CardWrapper from "@/components/ui/CardWrapper";
-import { Filter, Route } from "lucide-react";
+import { Route } from "lucide-react";
 import {
   MagnifyingGlassIcon,
   SparklesIcon,
   IdentificationIcon,
   RectangleGroupIcon,
 } from "@heroicons/react/24/outline";
-export type Item = OrderDetailedType["items"][0];
 
-const taskTypeLabels = {
-  edit: "editare",
-  print: "printare",
-};
+import { parseConfigurationDetails } from "@/lib/utils/parse";
+import { OrderDetailedType } from "@/lib/supabase/database";
+import { CurrencyFormatter } from "@/lib/utils/format";
+import { useDatabase } from "@/lib/supabase/context";
+import { useMedia } from "@/lib/supabase/useMedia";
 
+import ActivityFeed from "@/components/ui/ActivityFeed";
+import MiniTable from "@/components/ui/MiniTable";
+import ItemAssets from "./ItemAssets";
+
+import { useItemActivity } from "../hooks/useItemActivity";
+
+type Item = OrderDetailedType["items"][0];
 const ItemCard: React.FC<{ item: Item }> = ({ item }) => {
   return (
     <div>
@@ -40,8 +35,6 @@ const ItemCard: React.FC<{ item: Item }> = ({ item }) => {
 export default ItemCard;
 
 const OrderItemBody: React.FC<{ item: Item }> = ({ item }) => {
-  const { db } = useDatabase();
-
   const assetsData = useMemo(() => {
     return item.assets
       .map(({ thumbnail }) => thumbnail)
@@ -49,13 +42,15 @@ const OrderItemBody: React.FC<{ item: Item }> = ({ item }) => {
   }, [item.assets]);
 
   const assetUrls = useMedia(assetsData);
+  const itemActivity = useItemActivity(item);
 
-  const itemActivity = parseItemActivity(item);
+  useEffect(() => {
+    console.log("item", item);
+  }, []);
 
-  useEffect(() => {}, [db]);
   return (
     <TabPanels>
-      <TabPanel className="border-t border-white/10  pb-3">
+      <TabPanel className="border-t border-white/10  ">
         {item.configuration && (
           <MiniTable
             data={parseConfigurationDetails(item.configuration, {
@@ -65,29 +60,15 @@ const OrderItemBody: React.FC<{ item: Item }> = ({ item }) => {
         )}
       </TabPanel>
       <TabPanel>
-        <div className="border-t border-white/15 ">
-          <ActivityFeed activities={parseItemActivity(item)} />
+        <div className="border-t border-white/10 ">
+          <ActivityFeed activities={itemActivity} />
         </div>
       </TabPanel>
-      <TabPanel className="border-t border-white/10 pb-3">
+      <TabPanel className="border-t border-white/10">
         <ItemAssets assets={item.assets} assetUrls={assetUrls} />
       </TabPanel>
     </TabPanels>
   );
-};
-
-const parseItemActivity = (item: Item): ActivityItem[] => {
-  // todo: get history for tasks tables as well.
-
-  // const taskActivities: ActivityItem[] = item.tasks.map((task, idx) => ({
-  //   date: task.updated_at!,
-  //   description: `Sarcina de ${taskTypeLabels[task.type!]} ${
-  //     task.id.split("-")[1]
-  //   }   a fost creeata.`,
-  //   type: "positive",
-  // }));
-
-  return [];
 };
 
 const OrderItemHeader: React.FC<{ item: Item }> = ({ item }) => {
@@ -96,7 +77,7 @@ const OrderItemHeader: React.FC<{ item: Item }> = ({ item }) => {
     <div className="flex pb-3">
       <div className="relative aspect-square h-full w-full overflow-hidden rounded-lg bg-neutral-200 md:h-16 md:w-16">
         <img
-          src={item.configuration!.thumbnail_url!}
+          src={item.product!.images[0].url!}
           className="z-30 mx-auto mb-3 scale-100"
           alt=""
         />
@@ -120,15 +101,22 @@ const OrderItemHeader: React.FC<{ item: Item }> = ({ item }) => {
           </div>
         </div>
         <div className="flex items-end justify-between">
-          <TabList className="flex -ml-0.5 items-center space-x-4 rounded-lg">
+
+          <TabList  className="flex items-center space-x-0.5 p-[3px] border-[0.5px]  border-neutral-700 rounded-lg bg-neutral-800">
             {[
-              { label: "Detalii", Icon: <IdentificationIcon className="size-4"/> },
-              { label: "Istoric", Icon: <Route size={14}/> },
-              { label: "Decaluri", Icon: <RectangleGroupIcon className="size-4"/> },
+              {
+                label: "Detalii",
+                Icon: <IdentificationIcon className="size-4" />,
+              },
+              { label: "Istoric", Icon: <Route size={14} /> },
+              {
+                label: "Decaluri",
+                Icon: <RectangleGroupIcon className="size-4" />,
+              },
             ].map((tab, idx) => (
               <Tab
                 key={idx}
-                className="-mb-[12px] flex items-center space-x-2 rounded-t-lg border-2 border-transparent pb-3 font-medium text-white/80 hover:bg-white/0 hover:text-white focus-visible:outline-none data-[selected]:border-b-white/80 data-[selected]:bg-white/0 data-[selected]:ring-transparent"
+                className="flex items-center space-x-1.5 text-sm px-3.5 py-[3px] rounded-[6px]  border-transparent  font-medium text-white/80 hover:bg-white/0 hover:text-white focus-visible:outline-none data-[selected]:border-b-white/80 data-[selected]:bg-neutral-600 data-[selected]:ring-transparent"
               >
                 {/* {tab.Icon} */}
                 <span>{tab.label}</span>

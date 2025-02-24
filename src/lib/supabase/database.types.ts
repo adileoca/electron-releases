@@ -44,21 +44,41 @@ export type Database = {
       }
       call_logs: {
         Row: {
+          call_sid: string
           created_at: string
+          from: string
           id: string
-          metadata: Json | null
+          recording: string | null
+          to: string
+          transcript: Json | null
         }
         Insert: {
+          call_sid: string
           created_at?: string
+          from: string
           id?: string
-          metadata?: Json | null
+          recording?: string | null
+          to: string
+          transcript?: Json | null
         }
         Update: {
+          call_sid?: string
           created_at?: string
+          from?: string
           id?: string
-          metadata?: Json | null
+          recording?: string | null
+          to?: string
+          transcript?: Json | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "call_logs_recording_fkey"
+            columns: ["recording"]
+            isOneToOne: false
+            referencedRelation: "media"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       cart_items: {
         Row: {
@@ -153,6 +173,38 @@ export type Database = {
           name?: string | null
         }
         Relationships: []
+      }
+      dialed_numbers: {
+        Row: {
+          call_sid: string
+          created_at: string
+          dialed_number: string
+          id: string
+          status: Database["public"]["Enums"]["call_statuses"]
+        }
+        Insert: {
+          call_sid: string
+          created_at?: string
+          dialed_number: string
+          id?: string
+          status: Database["public"]["Enums"]["call_statuses"]
+        }
+        Update: {
+          call_sid?: string
+          created_at?: string
+          dialed_number?: string
+          id?: string
+          status?: Database["public"]["Enums"]["call_statuses"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dialed_numbers_call_sid_fkey"
+            columns: ["call_sid"]
+            isOneToOne: false
+            referencedRelation: "call_logs"
+            referencedColumns: ["call_sid"]
+          },
+        ]
       }
       email_labels: {
         Row: {
@@ -1366,6 +1418,7 @@ export type Database = {
           domain: string | null
           headers: Json | null
           id: number
+          metadata: Json | null
           method: Database["public"]["Enums"]["request_methods"] | null
           request_end: string | null
           request_start: string | null
@@ -1378,6 +1431,7 @@ export type Database = {
           domain?: string | null
           headers?: Json | null
           id?: number
+          metadata?: Json | null
           method?: Database["public"]["Enums"]["request_methods"] | null
           request_end?: string | null
           request_start?: string | null
@@ -1390,6 +1444,7 @@ export type Database = {
           domain?: string | null
           headers?: Json | null
           id?: number
+          metadata?: Json | null
           method?: Database["public"]["Enums"]["request_methods"] | null
           request_end?: string | null
           request_start?: string | null
@@ -1548,6 +1603,48 @@ export type Database = {
           table?: string
         }
         Relationships: []
+      }
+      task_comments: {
+        Row: {
+          created_at: string
+          id: string
+          task_id: string
+          text: string | null
+          type: Database["public"]["Enums"]["task_comment_types"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          task_id: string
+          text?: string | null
+          type: Database["public"]["Enums"]["task_comment_types"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          task_id?: string
+          text?: string | null
+          type?: Database["public"]["Enums"]["task_comment_types"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_comments_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "task_comments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       tasks: {
         Row: {
@@ -1765,6 +1862,15 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      call_statuses:
+        | "queued"
+        | "ringing"
+        | "in-progress"
+        | "completed"
+        | "busy"
+        | "failed"
+        | "no-answer"
+        | "canceled"
       enum_order_status:
         | "placed"
         | "edit_pending"
@@ -1792,6 +1898,7 @@ export type Database = {
         | "refunded"
         | "partial_refund"
       request_methods: "POST" | "GET"
+      task_comment_types: "accepted" | "refused" | "canceled"
       task_statuses: "pending" | "in_progress" | "uploading" | "complete"
       task_types: "edit" | "print"
       user_task_interaction_types: "accepted" | "refused" | "shown" | "canceled"

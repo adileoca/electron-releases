@@ -53,24 +53,21 @@ const ViewHeader = () => {
               <ViewHeaderNavigation />
               <ViewHeaderTitle title="Comenzi" />
               <div className="ml-4 flex space-x-3">
-                <ViewHeaderButton
+                {/* <ViewHeaderButton
                   Icon={ArrowsUpDownIcon}
                   onClick={() => setShowSearch(true)}
                 />
-                <ViewHeaderButton Icon={FunnelIcon} />
+                <ViewHeaderButton Icon={FunnelIcon} /> */}
                 {selectedOrderIds.length > 0 && (
-                  // <Button label="Delete" onClick={() => {}} />
-
-                  <button className="rounded-full border border-red-500/80 bg-red-500/20 px-3 py-px font-medium text-white/90 hover:bg-red-500/30">
+                  <button className="rounded-lg border border-red-500/90  px-3 py-px font-semibold text-red-500/90 hover:text-red-500 hover:border-red-500">
                     Delete
                   </button>
                 )}
-                {/* <ViewHeaderButton label="Settings" Icon={Settings} /> */}
               </div>
             </div>
           </div>
           <div className="mr-2 text-base text-white text-opacity-80">
-            <ViewHeaderPagination />
+            {/* <ViewHeaderPagination /> */}
           </div>
         </div>
 

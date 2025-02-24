@@ -30,8 +30,8 @@ const SelectMenu = () => {
   return (
     <Listbox value={selected} onChange={setSelected}>
       <div className="relative">
-        <ListboxButton className="flex cursor-default items-center space-x-1 rounded-lg border border-white/25 py-[3px] pl-3 pr-1.5 text-left text-white/80 hover:cursor-pointer hover:bg-white/10">
-          <span className="truncate font-semibold">{selected.name}</span>
+        <ListboxButton className="flex cursor-default items-center h-[28px] space-x-1 rounded-full border border-white/25 py-[1px] pl-3 pr-1.5 text-left text-white/80 hover:text-white hover:border-white/40 hover:cursor-pointer ">
+          <span className="truncate text-sm font-medium">{selected.name}</span>
           <ChevronUpDownIcon className="size-5" />
         </ListboxButton>
 

@@ -23,7 +23,7 @@ const navigation = [
   { name: "Printuri", href: "/prints", icon: PrinterIcon },
   // { name: "Emails", href: "/emails", icon: EnvelopeIcon },
   { name: "Rapoarte", href: "/reports", icon: ChartPieIcon },
-  { name: "Documente", href: "/documents", icon: DocumentTextIcon },
+  // { name: "Documente", href: "/documents", icon: DocumentTextIcon },
   { name: "Setǎri", href: "/settings", icon: Cog8ToothIcon },
 ];
 

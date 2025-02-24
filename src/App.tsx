@@ -46,7 +46,7 @@ export default App;
 const Routes = () => {
   const initSyncDone = useSyncData();
   useIpcListeners();
-  
+
   if (!initSyncDone) {
     return (
       <div className="flex h-screen w-full flex-col items-center justify-center bg-neutral-900/90">

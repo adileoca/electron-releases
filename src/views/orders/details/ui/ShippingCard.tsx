@@ -6,26 +6,27 @@ const ShippingCard = ({ order }) => {
     <InfoCard
       title="Shipping Information"
       button={{
-         onClick: () => {},
-         label: "View tracking"
-        }}
+        onClick: () => {},
+        label: "Urmǎrire colet",
+      }}
     >
       <MiniTable
-        title="Shipping address"
+        title="Adresa de livrare"
         data={{
-          Country: order.shipping_address?.country!,
-          State: order.shipping_address?.state!,
-          "Line 1": order.shipping_address?.line_1!,
-          "Line 2": order.shipping_address?.line_2!,
-          "Zip Code": order.shipping_address?.postal_code!,
+          Țarǎ: order.shipping_address?.country!,
+          Regiune: order.shipping_address?.state!,
+          Oraș: order.shipping_address?.city!,
+          "Linie 1": order.shipping_address?.line_1!,
+          "Linie 2": order.shipping_address?.line_2!,
+          "Cod Poştal": order.shipping_address?.postal_code!,
         }}
       />
 
       <MiniTable
-        title="Carrier"
+        title="Curier"
         data={{
-          Name: "UPS",
-          "Label No.": "-",
+          Denumire: "UPS",
+          AWB: "-",
         }}
       />
     </InfoCard>

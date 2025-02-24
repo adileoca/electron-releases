@@ -46,6 +46,10 @@ export const useParseRows = (
           ),
           value: order.id!,
         },
+        name: {
+          text: order?.name!,
+          value: order?.name!,
+        },
         amount: {
           value: order.totals?.amount_total!,
           text: currency.format(order.totals?.amount_total!),

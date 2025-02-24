@@ -50,6 +50,7 @@ export type Pagination = {
 
 export type ColId =
   | "checkbox"
+  | "name"
   | "amount"
   | "address"
   | "status"

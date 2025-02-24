@@ -14,7 +14,6 @@ import clsx from "clsx";
 
 import { formatDate } from "@/lib/utils/format";
 import Spinner from "@/static/spinner.svg";
-import Button from "./Button";
 
 type ActivityTypes = "positive" | "monitor" | "critical";
 
@@ -51,38 +50,41 @@ const FeedTimeline: React.FC<{
   );
   return (
     <>
-      {activities ? (
+      {activities !== null ? (
         <div className="flex ">
           <ul
             role="list"
-            className="flex-1 -space-y-px divide-y divide-white/10  pb-4"
+            className="relative  max-h-[420px] flex-1 overflow-auto"
           >
-            {activities.map((activityItem, activityItemIdx) => (
-              <li
-                key={activityItemIdx}
-                onClick={() => setSelectedActivityIdx(activityItemIdx)}
-                className={clsx(
-                  selectedActivityIdx === activityItemIdx &&
-                    "bg-white/5 text-white/80",
-                  "relative flex cursor-pointer gap-x-3 py-[9px] text-white/60 hover:bg-white/5"
-                )}
-              >
-                <ActivityDot activityType={activityItem.type} />
-                {/* <span className="font-semibold text-white/80">
+            <div className="-space-y-px divide-y divide-white/10 ">
+              {activities.map((activityItem, activityItemIdx) => (
+                <li
+                  key={activityItemIdx}
+                  onClick={() => setSelectedActivityIdx(activityItemIdx)}
+                  className={clsx(
+                    selectedActivityIdx === activityItemIdx &&
+                      "bg-white/5 text-white/80",
+                    "relative flex items-center cursor-pointer gap-x-3 py-[9px] text-white/60 hover:bg-white/5"
+                  )}
+                >
+                  <ActivityDot activityType={activityItem.type} />
+                  {/* <span className="font-semibold text-white/80">
                   {activityItemIdx + 1}
                 </span> */}
-                <div className="flex w-full justify-between">
-                  {activityItem.Content}
-                  <Timestamp
-                    date={activityItem.date}
-                    withPadding={Boolean(selectedActivityIdx !== null)}
-                  />
-                </div>
-              </li>
-            ))}
+                  <div className="flex items-center w-full justify-between">
+                    {activityItem.Content}
+                    <Timestamp
+                      date={activityItem.date}
+                      withPadding={Boolean(selectedActivityIdx !== null)}
+                    />
+                  </div>
+                </li>
+              ))}
+            </div>
+            <div className="sticky bottom-0 left-0 h-4 w-full bg-gradient-to-t from-neutral-900 via-neutral-900/50 to-transparent " />
           </ul>
           {selectedActivityIdx !== null && (
-            <div style={{ width: "32.5%" }}>
+            <div style={{ width: "calc((100% - 64px)/3 + 16px)" }}>
               <div className="h-full border-l border-white/10 text-neutral-200">
                 <div className="flex items-center justify-between py-2 pl-3">
                   <div className="flex items-center space-x-3">
@@ -101,9 +103,9 @@ const FeedTimeline: React.FC<{
                       <ChevronUpIcon
                         onClick={() => {
                           setSelectedActivityIdx(
-                            selectedActivityIdx !== activities.length - 1
-                              ? selectedActivityIdx + 1
-                              : 0
+                            selectedActivityIdx === 0
+                              ? activities.length - 1
+                              : selectedActivityIdx - 1
                           );
                         }}
                         className="size-5 text-white/60 hover:cursor-pointer hover:text-white"
@@ -111,9 +113,9 @@ const FeedTimeline: React.FC<{
                       <button
                         onClick={() => {
                           setSelectedActivityIdx(
-                            selectedActivityIdx === 0
-                              ? activities.length - 1
-                              : selectedActivityIdx - 1
+                            selectedActivityIdx !== activities.length - 1
+                              ? selectedActivityIdx + 1
+                              : 0
                           );
                         }}
                       >
@@ -140,7 +142,7 @@ const FeedTimeline: React.FC<{
         </div>
       ) : (
         <div className="flex justify-center">
-          <img className="h-12 w-12" src={Spinner} />
+          <img className="size-11" src={Spinner} />
         </div>
       )}
     </>
@@ -205,40 +207,36 @@ const AddCommentArea = () => {
   return (
     <div className="flex gap-x-3">
       <div className="relative flex-auto">
-        <div className="overflow-hidden rounded-md border border-neutral-700 bg-neutral-800 pb-12 shadow shadow-black/20">
+        <div className="overflow-hidden rounded-xl border-[0.5px] border-neutral-700 bg-neutral-800 pb-12  shadow-black/20">
           <textarea
             id="comment"
             name="comment"
             rows={2}
             placeholder="Adaugǎ comentariu..."
-            className="block w-full resize-none border-0 bg-transparent p-3 py-1.5 text-white/80 placeholder:text-neutral-400 focus:ring-0 sm:leading-6"
+            className=" block w-full resize-none border-0 bg-transparent px-3 py-2 text-white/80 placeholder:text-neutral-400 focus:ring-0 sm:leading-6"
             defaultValue={""}
           />
         </div>
+        <div className="absolute inset-x-0 bottom-0 flex justify-end space-x-5 px-5 pb-3">
+          <button
+            onClick={() => {}}
+            className="rounded-full text-sm font-medium text-white/80 hover:border-neutral-600 hover:text-white"
+          >
+            <div className="flex items-center space-x-1 ">
+              <Paperclip size={14} strokeWidth={1.8} className="-rotate-45" />
+              <span>Ataşeazǎ fişiere</span>
+            </div>
+          </button>
 
-        <div className="absolute inset-x-0 bottom-0 flex justify-end space-x-3 p-3">
-          <div>
-            <button
-              onClick={() => {}}
-              className="rounded-full border border-neutral-700 hover:text-white  hover:border-neutral-600 py-[3px] pl-2 pr-3 text-sm font-semibold text-white/80"
-            >
-              <div className="flex items-center space-x-1 ">
-                <Paperclip size={14} strokeWidth={1.8} className="-rotate-45" />
-                <span>Ataşeazǎ fişiere</span>
-              </div>
-            </button>
-          </div>
-          <div>
-            <button
-              onClick={() => {}}
-              className="rounded-full border border-neutral-700 hover:text-white  hover:border-neutral-600 py-[3px] pl-2 pr-3 text-sm font-semibold text-white/80"
-            >
-              <div className="flex items-center space-x-1 ">
-                <PlusCircle size={14} strokeWidth={1.8} />
-                <span>Adaugǎ notǎ</span>
-              </div>
-            </button>
-          </div>
+          <button
+            onClick={() => {}}
+            className="rounded-full   border-neutral-700 text-sm font-medium text-white/80 hover:border-neutral-600 hover:text-white"
+          >
+            <div className="flex items-center space-x-1 ">
+              <PlusCircle size={14} strokeWidth={1.8} />
+              <span>Adaugǎ notǎ</span>
+            </div>
+          </button>
         </div>
       </div>
     </div>

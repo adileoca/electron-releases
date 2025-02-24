@@ -1,8 +1,13 @@
-import ViewHeader from "./ViewHeader";
 import ViewShell from "@/components/ViewShell";
+import ViewHeader from "./ViewHeader";
+import ViewBody from "./ViewBody";
 
 const DashboardView = () => {
-  return <ViewShell header={<ViewHeader />}>caca</ViewShell>;
+  return (
+    <ViewShell header={<ViewHeader />}>
+      <ViewBody />
+    </ViewShell>
+  );
 };
 
 export default DashboardView;

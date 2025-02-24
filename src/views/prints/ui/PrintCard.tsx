@@ -1,5 +1,5 @@
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
-
+import { useState } from "react";
 import OrderStatusBadge from "@/components/ui/OrderStatusBadge";
 import ActivityFeed from "@/components/ui/ActivityFeed";
 import CardWrapper from "@/components/ui/CardWrapper";
@@ -19,6 +19,7 @@ import {
   IdentificationIcon,
   RectangleGroupIcon,
 } from "@heroicons/react/24/outline";
+import clsx from "clsx";
 
 const PrintCard: React.FC<{
   print: Print;
@@ -26,7 +27,7 @@ const PrintCard: React.FC<{
   const { mediaUrls, itemAssets } = useAssetsData(print);
 
   return (
-    <div>
+    <div className="group">
       <TabGroup>
         <PrintHeader print={print} mediaUrls={mediaUrls} />
         <PrintBody print={print} assets={itemAssets} mediaUrls={mediaUrls} />
@@ -73,7 +74,8 @@ const PrintBody: React.FC<{
 
   return (
     <TabPanels>
-      <TabPanel className="border-t border-white/15 pb-3">
+      <TabPanel className="border-t border-white/10 pb-3"></TabPanel>
+      <TabPanel className="border-t border-white/10 pb-3">
         <MiniTable
           data={{
             ID: print.id,
@@ -84,11 +86,11 @@ const PrintBody: React.FC<{
         />
       </TabPanel>
       <TabPanel>
-        <div className="border-t border-white/15 bg-white/5">
+        <div className="border-t border-white/10 pb-12">
           <ActivityFeed activities={printActivity} />
         </div>
       </TabPanel>
-      <TabPanel className="divide-y divide-white/15 border-t border-white/15 bg-white/5  pb-3">
+      <TabPanel className="divide-y divide-white/10 border-t border-white/10   pb-3">
         {assets ? (
           <PrintAssets assets={assets} mediaUrls={mediaUrls} />
         ) : (
@@ -106,9 +108,10 @@ const PrintHeader: React.FC<{
   // const formatter = new CurrencyFormatter(item.totals?.currency!);
   const firstVersion = print.versions[0];
   const latestVersion = print.versions.slice(-1)[0];
+  const [clicked, setClicked] = useState(false);
   return (
     <div className="flex pb-3">
-      <div className="relative aspect-square h-full w-full overflow-hidden rounded-md border border-neutral-600 bg-neutral-200 md:h-16 md:w-16">
+      <div className="relative aspect-square h-16 w-16  overflow-hidden rounded-md bg-neutral-200 ">
         <img
           src={mediaUrls.get(latestVersion.thumbnail_id)}
           className="z-30 mx-auto mb-3 scale-100"
@@ -127,24 +130,37 @@ const PrintHeader: React.FC<{
             />
           </div>
         </div>
-        <div className="flex items-end justify-between">
-          <TabList className="flex items-center space-x-4 rounded-lg">
+        <div
+          className={clsx(clicked ? "" : "", "flex items-end justify-between")}
+        >
+          <TabList className="-ml-[2px] flex items-center rounded-lg">
             {[
-              { label: "Detalii", Icon: <IdentificationIcon className="size-4"/> },
-              { label: "Istoric", Icon: <Route size={14}/> },
-              { label: "Decaluri", Icon: <RectangleGroupIcon className="size-4"/> },
+              {},
+              {
+                label: "Detalii",
+                Icon: <IdentificationIcon className="size-4" />,
+              },
+              { label: "Istoric", Icon: <Route size={14} /> },
+              {
+                label: "Decaluri",
+                Icon: <RectangleGroupIcon className="size-4" />,
+              },
             ].map((tab, idx) => (
               <Tab
+                onClick={() => setClicked(true)}
                 key={idx}
-                className="-mb-[12px] flex items-center space-x-2 rounded-t-lg border-2 border-transparent pb-3 font-medium text-white/80 hover:bg-white/0 hover:text-white focus-visible:outline-none data-[selected]:border-b-white/80 data-[selected]:bg-white/0 data-[selected]:ring-transparent"
+                className={clsx(
+                  !tab.label && "hidden",
+                  "-mb-[12px] mr-4 flex items-center space-x-2 rounded-t-lg border-2 border-transparent pb-3 font-medium text-white/80 hover:bg-white/0 hover:text-white focus-visible:outline-none data-[selected]:border-b-white/80 data-[selected]:bg-white/0 data-[selected]:ring-transparent"
+                )}
               >
-                {tab.Icon}
+                {/* {tab.Icon} */}
                 <span>{tab.label}</span>
               </Tab>
             ))}
           </TabList>
-          <div className="flex pb-1 space-x-3">
-            <ToolbarButton
+          <div className="flex space-x-3 pb-1">
+            {/* <ToolbarButton
               Icon={<SparklesIcon className="size-4" />}
               label="Asistent AI"
             />
@@ -155,7 +171,7 @@ const PrintHeader: React.FC<{
             <ToolbarButton
               Icon={<Filter className="size-4" />}
               label="Filtreazǎ"
-            />
+            /> */}
           </div>
         </div>
       </div>

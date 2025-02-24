@@ -8,7 +8,7 @@ interface MiniTableProps {
 
 const MiniTable: React.FC<MiniTableProps> = ({ title, data, onClick }) => {
   return (
-    <div>
+    <div className="">
       {title && (
         <div className="mb-2 flex items-center justify-between">
           <h2 className="font-medium text-white/80">{title}</h2>

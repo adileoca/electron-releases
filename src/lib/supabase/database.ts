@@ -138,6 +138,8 @@ class Database {
     }
   }
 
+  
+
   async deletePrintItemAssets(
     ids: string[],
     supabase: Supabase = this.supabase
@@ -505,12 +507,12 @@ class Database {
 
     const { data, error } = await query;
 
-    if (error) {
-      console.error('Error getting order token:', error);
-      throw new Error(error?.message || 'Unknown error occurred');
-    }
+    // if (error) {
+    //   console.error('Error getting order token:', error);
+    //   throw new Error(error?.message || 'Unknown error occurred');
+    // }
 
-    return data;
+    return { data, error };
   }
 
   async updateOrderToken(
@@ -834,7 +836,7 @@ class QueryManager {
             thumbnail: media!item_assets_thumbnail_id_fkey(*),
             user: user_profiles(*)
           ))),
-          product: products(*),
+          product: products(*, images: product_images(url)),
           assets: item_assets(*,
             psd: media!item_assets_psd_id_fkey(*),
             thumbnail: media!item_assets_thumbnail_id_fkey(*),
@@ -1722,3 +1724,12 @@ export class ErrorCode extends Error {
     this.code = params.code;
   }
 }
+
+export type TableLog<T> = Omit<
+  DbTables['table_logs']['Row'],
+  'new_record' | 'old_record' | 'changes'
+> & {
+  new_record: T | null;
+  old_record: T | null;
+  changes: Partial<T>;
+};

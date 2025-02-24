@@ -5,10 +5,10 @@ const UserInfo = ({ order }) => {
   return (
     <InfoCard
       title="Customer Information"
-      button={{ onClick: () => {}, label: "View details" }}
+      button={{ onClick: () => {}, label: "Vezi analitice" }}
     >
       <MiniTable
-        title="Contact info"
+        title="Contact"
         data={{
           name: order.name,
           email: order.email,
@@ -16,9 +16,10 @@ const UserInfo = ({ order }) => {
         }}
       />
       <MiniTable
-        title="Customer analytics"
+        title="Analitice"
         data={{
-          "Logged In": order.name,
+          Autentificat: "Fals",
+          Sursǎ: "Fals",
           Problematic: order.shipping_address?.state!,
           Revenues: order.shipping_address?.state!,
           "No. of orders": order.shipping_address?.line_1!,

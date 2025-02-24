@@ -19,14 +19,14 @@ const ViewHeader: React.FC<{}> = () => {
           <ViewHeaderNavigation />
           <ViewHeaderTitle title="Printuri" />
           <div className="ml-4 flex space-x-3 items-center">
-            <ViewHeaderButton  Icon={MagnifyingGlassIcon} />
-            <ViewHeaderButton Icon={FunnelIcon} />
+            {/* <ViewHeaderButton  Icon={MagnifyingGlassIcon} />
+            <ViewHeaderButton Icon={FunnelIcon} /> */}
           </div>
           <div className="ml-3 flex space-x-2"></div>
         </div>
 
         <div className="mr-2 text-base text-white text-opacity-80">
-          <ViewHeaderPagination />
+          {/* <ViewHeaderPagination /> */}
         </div>
       </ViewHeaderWrapper>
     </div>

@@ -24,7 +24,7 @@ const ViewBody: React.FC<{ order: OrderDetailedType }> = ({ order }) => {
     console.log("order", order);
   }, [order]);
   return (
-    <div className="mx-auto max-w-7xl space-y-8">
+    <div className="mx-auto  space-y-8">
       <div className="p-4">
         <div className="grid grid-cols-3 gap-8">
           <UserInfo order={order} />
@@ -32,28 +32,29 @@ const ViewBody: React.FC<{ order: OrderDetailedType }> = ({ order }) => {
           <BillingCard order={order} />
         </div>
       </div>
+
       <div className="p-4">
         <div className=" flex items-center justify-between space-x-4 border-b border-white/10 pb-2">
           <h1 className="whitespace-nowrap text-xl font-medium text-white/80">
             Istoric
           </h1>
           <div className="flex space-x-3">
-            <ToolbarButton Icon={<MagnifyingGlassIcon className="size-5" />} />
+            {/* <ToolbarButton Icon={<MagnifyingGlassIcon className="size-5" />} />
             <ToolbarButton Icon={<SparklesIcon className="size-5" />} />
-            <ToolbarButton Icon={<FunnelIcon className="size-5" />} />
+            <ToolbarButton Icon={<FunnelIcon className="size-5" />} /> */}
           </div>
         </div>
         <div>
           {orderActivity && <ActivityFeed activities={orderActivity} />}
         </div>
       </div>
-      <div className="p-4 pb-0">
+      <div className="p-4">
         <div className="mb-4 flex items-center justify-between space-x-4">
           <h1 className="whitespace-nowrap text-xl font-medium text-white/80">
             Produse
           </h1>
         </div>
-        <div className="space-y-3">
+        <div className="space-y-8">
           {order.items.map((item, idx) => (
             <OrderItem key={idx} item={item} />
           ))}
@@ -64,6 +65,7 @@ const ViewBody: React.FC<{ order: OrderDetailedType }> = ({ order }) => {
 };
 
 export default ViewBody;
+
 const ToolbarButton: React.FC<{
   Icon: React.ReactNode;
   children?: any;
