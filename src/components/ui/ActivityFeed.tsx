@@ -64,7 +64,7 @@ const FeedTimeline: React.FC<{
                   className={clsx(
                     selectedActivityIdx === activityItemIdx &&
                       "bg-white/5 text-white/80",
-                    "relative flex items-center cursor-pointer gap-x-3 py-[9px] text-white/60 hover:bg-white/5"
+                    "relative flex items-center cursor-pointer gap-x-3 py-[9px] px-3 text-white/60 hover:bg-white/5"
                   )}
                 >
                   <ActivityDot activityType={activityItem.type} />
@@ -84,7 +84,10 @@ const FeedTimeline: React.FC<{
             <div className="sticky bottom-0 left-0 h-4 w-full bg-gradient-to-t from-neutral-900 via-neutral-900/50 to-transparent " />
           </ul>
           {selectedActivityIdx !== null && (
-            <div style={{ width: "calc((100% - 64px)/3 + 16px)" }}>
+            <div style={{
+              // width: "calc((100% - 64px)/3 + 16px)"
+              width: "50%"
+              }}>
               <div className="h-full border-l border-white/10 text-neutral-200">
                 <div className="flex items-center justify-between py-2 pl-3">
                   <div className="flex items-center space-x-3">
@@ -129,7 +132,7 @@ const FeedTimeline: React.FC<{
                     </div>
                   </div>
                 </div>
-                <div className="pl-3">
+                <div className="px-3 pb-6">
                   {activities[selectedActivityIdx].Details ? (
                     activities[selectedActivityIdx].Details
                   ) : (
@@ -157,6 +160,7 @@ const Timestamp: React.FC<{ date: string; withPadding: boolean }> = ({
   const [clicked, setClicked] = useState(false);
   const relativeDate = formatDate(date, { relative: true, locale: "ro-RO" });
   const absoluteDate = formatDate(date, {
+    month: "short",
     hour: "numeric",
     minute: "2-digit",
     locale: "ro-RO",
@@ -164,7 +168,7 @@ const Timestamp: React.FC<{ date: string; withPadding: boolean }> = ({
   return (
     <span
       className={clsx(
-        withPadding ? "px-2.5" : "",
+        // withPadding ? "px-2.5" : "",
         "flex-none py-0.5 leading-5 text-white/80 hover:cursor-context-menu"
       )}
       onMouseEnter={() => setHovered(true)}
@@ -207,7 +211,7 @@ const AddCommentArea = () => {
   return (
     <div className="flex gap-x-3">
       <div className="relative flex-auto">
-        <div className="overflow-hidden rounded-xl border-[0.5px] border-neutral-700 bg-neutral-800 pb-12  shadow-black/20">
+        <div className="overflow-hidden rounded-xl border-neutral-700 bg-neutral-800 pb-12  shadow-black/20">
           <textarea
             id="comment"
             name="comment"

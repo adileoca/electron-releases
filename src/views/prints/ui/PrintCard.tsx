@@ -1,5 +1,5 @@
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import OrderStatusBadge from "@/components/ui/OrderStatusBadge";
 import ActivityFeed from "@/components/ui/ActivityFeed";
 import CardWrapper from "@/components/ui/CardWrapper";
@@ -24,13 +24,13 @@ import clsx from "clsx";
 const PrintCard: React.FC<{
   print: Print;
 }> = ({ print }) => {
-  const { mediaUrls, itemAssets } = useAssetsData(print);
+  const { mediaUrls } = useAssetsData(print);
 
   return (
     <div className="group">
       <TabGroup>
         <PrintHeader print={print} mediaUrls={mediaUrls} />
-        <PrintBody print={print} assets={itemAssets} mediaUrls={mediaUrls} />
+        <PrintBody print={print} mediaUrls={mediaUrls} />
       </TabGroup>
     </div>
   );
@@ -40,9 +40,8 @@ export default PrintCard;
 
 const PrintBody: React.FC<{
   print: Print;
-  assets: ItemAssets | undefined;
   mediaUrls: Map<string, string>;
-}> = ({ print, assets, mediaUrls }) => {
+}> = ({ print, mediaUrls }) => {
   const latestVersion = print.versions[0];
   const firstVersion = print.versions.slice(-1)[0];
 
@@ -58,6 +57,7 @@ const PrintBody: React.FC<{
     year: "numeric",
     hour: "numeric",
     minute: "numeric",
+    month: "numeric",
   });
 
   const updatedAtRelative = formatDate(latestVersion.created_at, {
@@ -70,6 +70,7 @@ const PrintBody: React.FC<{
     year: "numeric",
     hour: "numeric",
     minute: "numeric",
+    month: "numeric",
   });
 
   return (
@@ -80,8 +81,8 @@ const PrintBody: React.FC<{
           data={{
             ID: print.id,
             Autor: firstVersion.created_by!.name!,
-            Creeat: `${createdAtRelative} (${createdAtAbsolute})`,
-            "Ultima modificare": `${updatedAtRelative} (${updatedAtAbsolute})`,
+            Creeat: `${createdAtAbsolute} (${createdAtRelative})`,
+            "Ultima modificare": `${updatedAtAbsolute} (${updatedAtRelative})`,
           }}
         />
       </TabPanel>
@@ -91,8 +92,12 @@ const PrintBody: React.FC<{
         </div>
       </TabPanel>
       <TabPanel className="divide-y divide-white/10 border-t border-white/10   pb-3">
-        {assets ? (
-          <PrintAssets assets={assets} mediaUrls={mediaUrls} />
+        {print.assets ? (
+          <PrintAssets
+            isPrinted={print.printed}
+            assets={print.assets}
+            mediaUrls={mediaUrls}
+          />
         ) : (
           <div>Loading assets...</div>
         )}
@@ -125,7 +130,7 @@ const PrintHeader: React.FC<{
           </span>
           <div>
             <OrderStatusBadge
-              color="amber"
+              color={print.printed ? "green" : "amber"}
               text={print.printed ? "Printat" : "Neprintat"}
             />
           </div>

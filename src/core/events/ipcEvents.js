@@ -1,4 +1,4 @@
-const { ipcMain } = require("electron");
+const { ipcMain, BrowserWindow } = require("electron");
 const { autoUpdater } = require("electron-updater");
 
 const { handleReadFile } = require("./handlers/read-file.js");
@@ -48,7 +48,44 @@ function setupIpcEvents(window, setSession) {
 
   ipcMain.on("open-link", onOpenLink);
 
+  ipcMain.on("print-label", async (event, url) => {
+    // Create a hidden window to render the label
+    console.log("print-label fired");
+    const printWindow = new BrowserWindow({
+      show: true,
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false,
+      },
+    });
 
+    // const loadUrl = base64 ? `data:image/gif;base64,${base64}` : url;
+    // Load the label HTML content
+    await printWindow.loadURL(url);
+
+    // Open print dialog when content is loaded
+    printWindow.webContents.on("did-finish-load", () => {
+      console.log("Content loaded successfully");
+      setTimeout(() => {
+        printWindow.webContents.print({}, (success, reason) => {
+          console.log(
+            `Print ${success ? "successful" : "failed"}`,
+            reason || ""
+          );
+          printWindow.close();
+        });
+      }, 500); // Small delay to ensure content is fully rendered
+    });
+
+    // Add error handling
+    printWindow.webContents.on(
+      "did-fail-load",
+      (event, errorCode, errorDescription) => {
+        console.error("Failed to load content:", errorCode, errorDescription);
+        printWindow.close();
+      }
+    );
+  });
 
   ipcMain.on("open-link-in-browser", onOpenLinkInBrowser);
 }

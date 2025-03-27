@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { useState } from "react";
-import CheckboxInput from "@/components/ui/CheckboxInput";
+// import CheckboxInput from "@/components/ui/CheckboxInput";
 import { formatDate } from "@/lib/utils/format";
 import { Circle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -33,7 +33,7 @@ const EmailsTable = () => {
               >
                 <TdWrapper className="z-50 w-[3.5rem]">
                   <div className="flex h-12 items-center pl-4">
-                    <CheckboxInput checked={enabled} onChange={setEnabled} />
+                    {/* <CheckboxInput checked={enabled} onChange={setEnabled} /> */}
                   </div>
                 </TdWrapper>
                 <TdWrapper className="w-56">

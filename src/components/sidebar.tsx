@@ -5,8 +5,11 @@ import clsx from "clsx";
 import {
   DocumentTextIcon,
   ChartPieIcon,
+  MapIcon,
   PrinterIcon,
+  BuildingStorefrontIcon,
   FolderIcon,
+  ArchiveBoxIcon,
   HomeIcon,
   Cog8ToothIcon,
   UserCircleIcon,
@@ -23,7 +26,9 @@ const navigation = [
   { name: "Printuri", href: "/prints", icon: PrinterIcon },
   // { name: "Emails", href: "/emails", icon: EnvelopeIcon },
   { name: "Rapoarte", href: "/reports", icon: ChartPieIcon },
+  { name: "Sesiuni", href: "/sessions", icon: BuildingStorefrontIcon },
   // { name: "Documente", href: "/documents", icon: DocumentTextIcon },
+  { name: "Sabloane", href: "/templates", icon: Cog8ToothIcon },
   { name: "Setǎri", href: "/settings", icon: Cog8ToothIcon },
 ];
 

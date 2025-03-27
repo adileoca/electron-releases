@@ -21,7 +21,7 @@ const ViewHeader: React.FC<{}> = () => {
         <div className="flex w-full items-center justify-between mr-2">
           <ViewHeaderNavigation />
           <ViewHeaderTitle title="Rapoarte" />
-          <div className="ml-[22px] flex flex-1 items-center space-x-2">
+          <div className="ml-[px] flex flex-1 items-center space-x-2">
             <SelectMenu />
 
             {/* <button className="h-full  hover:bg-white/5">

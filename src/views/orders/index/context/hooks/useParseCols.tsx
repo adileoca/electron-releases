@@ -2,8 +2,8 @@ import { useEffect } from "react";
 
 import { ContextActions, ordersTableColumns } from "../reducer";
 import { ContextData, ContextState } from "../types";
-import CheckboxInput from "../../ui/CheckboxInput";
 
+import CheckboxInput from "@/components/ui/CheckboxInput";
 export const useParseCols = (
   state: ContextState,
   data: ContextData,

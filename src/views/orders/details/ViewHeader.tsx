@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import {
   EllipsisVerticalIcon,
   EllipsisHorizontalIcon,
+  FlagIcon,
+  BellIcon,
 } from "@heroicons/react/24/outline";
 import ViewHeaderBackButton from "@/components/ViewHeader/BackButton";
 import ViewHeaderWrapper from "@/components/ViewHeader/Wrapper";
@@ -41,7 +43,7 @@ const ViewHeader: React.FC<{ order: OrderDetailedType | undefined }> = ({
             )}
           </div>
         </div>
-        <div className="mr-2 text-base text-white text-opacity-80">
+        <div className="mr-2 flex items-center text-base text-white text-opacity-80">
           {/* {order?.last_updated! && (
             <ViewHeaderInfo
               info={`Ultima actualizare ${formatDate(order.last_updated!, {
@@ -51,12 +53,18 @@ const ViewHeader: React.FC<{ order: OrderDetailedType | undefined }> = ({
             />
           )} */}
           {/* <SelectMenu /> */}
+
           <button
             onClick={() => setIsOpen(true)}
             className="flex items-center p-2"
           >
-            {/* <EllipsisVerticalIcon className="size-5 dark:text-white/80 dark:hover:text-white" /> */}
-            <EllipsisHorizontalIcon className="size-5 dark:text-white/80 dark:hover:text-white" />
+            <BellIcon className="size-5 dark:text-white/80 dark:hover:text-white" />
+          </button>
+          <button
+            onClick={() => setIsOpen(true)}
+            className="flex items-center p-2"
+          >
+            <EllipsisVerticalIcon className="size-5 dark:text-white/80 dark:hover:text-white" />
           </button>
           {/* <OptionsMenu /> */}
         </div>
@@ -67,7 +75,7 @@ const ViewHeader: React.FC<{ order: OrderDetailedType | undefined }> = ({
         className="relative z-50"
       >
         <div className="fixed inset-0 flex w-screen items-center justify-center bg-black/50 p-4">
-          <DialogPanel className="max-w-lg space-y-4 border rounded-lg bg-white p-8">
+          <DialogPanel className="max-w-lg space-y-4 rounded-lg border bg-white p-8">
             <DialogTitle className="font-bold">Deactivate account</DialogTitle>
             <Description>
               This will permanently deactivate your account

@@ -5,7 +5,7 @@ const ViewBody: React.FC<{ prints: Print[] }> = ({ prints }) => {
   return (
     <div className="flex flex-col p-4">
       <div className="">
-        {Array(8).fill(prints[0]).map((print, idx) => (
+        {prints.map((print, idx) => (
           <PrintCard key={idx} print={print} />
         ))}
       </div>

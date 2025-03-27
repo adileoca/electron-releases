@@ -17,11 +17,11 @@ const BillingCard: React.FC<{ order: OrderDetailedType }> = ({ order }) => {
         title="Adresa de facturare"
         data={{
           Țarǎ: order.billing_address?.country!,
-          "Regiune": order.billing_address?.state!,
+          Regiune: order.billing_address?.state!,
           Oraș: order.billing_address?.city!,
           "Linie 1": order.billing_address?.line_1!,
-          "Linie 2": order.billing_address?.line_2!,
-          "Cod Poştal": order.billing_address?.postal_code!,
+          "Linie 2": order.billing_address?.line_2 || "-",
+          "Cod poştal": order.billing_address?.postal_code!,
         }}
       />
       <MiniTable
@@ -29,7 +29,7 @@ const BillingCard: React.FC<{ order: OrderDetailedType }> = ({ order }) => {
         data={{
           status: capitalizeFirstLetter(order.payment?.status!),
           method: capitalizeFirstLetter(
-            (order.payment?.details! as { [key: string]: string }).type!
+            JSON.parse(order.payment?.details! as string).type! || "-"
           ),
         }}
       />

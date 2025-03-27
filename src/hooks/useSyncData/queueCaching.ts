@@ -1,20 +1,16 @@
 import PQueue from "p-queue";
-import Database, { DbTables } from "@/lib/supabase/database";
-import { getCachedFilenames, removeFromCache } from "@/lib/utils/ipc";
-import {
-  fetchScheduledMedia,
-  fetchOrderItems,
-  fetchTemplates,
-  cacheMedia,
-} from "./utils";
+import Database, { DbTables, Supabase } from "@/lib/supabase/database";
+import { getCachedFilenames } from "@/lib/utils/ipc";
+import { fetchScheduledMedia, fetchTemplates, cacheMedia } from "./utils";
+import { getAllUndeliveredOrders } from "@/lib/supabase/queries";
 
 type Media = DbTables["media"]["Row"];
 
-const fetchNecessaryMedia = async (db: Database) => {
+const fetchNecessaryMedia = async (db: Database, supabase: Supabase) => {
   const [scheduledMedia, templates, orders] = await Promise.all([
     fetchScheduledMedia(db),
     fetchTemplates(db),
-    fetchOrderItems(db),
+    getAllUndeliveredOrders(supabase),
   ]);
 
   let allMedia: Media[] = scheduledMedia;
@@ -31,6 +27,9 @@ const fetchNecessaryMedia = async (db: Database) => {
       for (const asset of item.assets) {
         allMedia.push(asset.thumbnail!);
         allMedia.push(asset.psd!);
+        for (const attachment of asset.attachments) {
+          allMedia.push(attachment.media!);
+        }
       }
     }
   }
@@ -38,9 +37,13 @@ const fetchNecessaryMedia = async (db: Database) => {
   return [...templates, ...allMedia];
 };
 
-export const queueCachingPromises = async (db: Database, queue: PQueue) => {
+export const queueCachingPromises = async (
+  db: Database,
+  supabase: Supabase,
+  queue: PQueue
+) => {
   const [necessaryMedia, cachedFilenames] = await Promise.all([
-    fetchNecessaryMedia(db),
+    fetchNecessaryMedia(db, supabase),
     getCachedFilenames(),
   ]);
 
@@ -56,6 +59,7 @@ export const queueCachingPromises = async (db: Database, queue: PQueue) => {
 
   // remove files that are cached but not necessary
   // todo: move this to app startup (first useEffect)
+  // todo: prevent connection to plugin while this is running
   // const necessaryMediaIdsSet = new Set(necessaryMedia.map(({ id }) => id));
   // const cachedButUnecessaryMedia = cachedFilenames.filter(
   //   (filename) => !necessaryMediaIdsSet.has(filename)

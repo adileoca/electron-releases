@@ -1,13 +1,13 @@
 import PQueue from "p-queue";
-
-import Database from "@/lib/supabase/database";
+import Database, { Supabase } from "@/lib/supabase/database";
 import { fetchScheduledMedia } from "./utils";
 import { Session } from "@supabase/supabase-js";
 
 export const queueScheduledMedia = async (
   db: Database,
   queue: PQueue,
-  session: Session
+  session: Session,
+  supabase: Supabase
 ) => {
   const scheduledMedia = await fetchScheduledMedia(db);
 
@@ -18,14 +18,13 @@ export const queueScheduledMedia = async (
       }
       if (upload_start && !upload_end) {
         const uploadStartTime = new Date(upload_start).getTime();
-        return Date.now() - uploadStartTime > 30 * 60 * 1000; // 30 minutes ;
+        return Date.now() - uploadStartTime > 30 * 60 * 1000; // 30 minutes
       }
       return false;
     }
   );
 
   pendingScheduledMedia.forEach((media) => {
-    // todo: add error handling and logging
     const promise = async () => {
       console.log("handling promise for media", media.id);
       try {
@@ -34,14 +33,42 @@ export const queueScheduledMedia = async (
           uploading: true,
         });
 
+        // Get a fresh session right before upload
+        const { data: sessionData } = await supabase.auth.getSession();
+        const currentToken = sessionData.session?.access_token;
+
+        if (!currentToken) {
+          throw new Error("No valid access token available");
+        }
+
         const { error } = await window.electron.uploadFile({
-          accessToken: session.access_token,
+          accessToken: currentToken, // Use the fresh token
           bucketPath: media.path,
           filename: media.id,
         });
 
         if (error) {
-          throw new Error(`Failed to upload media with id ${media.id}` + error);
+          // If token expired, try to refresh and retry once
+          if (error.includes("expired") || error.includes("invalid token")) {
+            console.log("Token expired, refreshing and retrying...");
+            const { data } = await supabase.auth.refreshSession();
+
+            if (data.session) {
+              const { error: retryError } = await window.electron.uploadFile({
+                accessToken: data.session.access_token,
+                bucketPath: media.path,
+                filename: media.id,
+              });
+
+              if (retryError) {
+                throw new Error(`Retry failed: ${retryError}`);
+              }
+            } else {
+              throw new Error("Failed to refresh token");
+            }
+          } else {
+            throw new Error(`Failed to upload media with id ${media.id}: ${error}`);
+          }
         }
 
         await db.update.mediaData(media.id, {
@@ -58,6 +85,7 @@ export const queueScheduledMedia = async (
         });
       }
     };
+
     console.log("queueing media", media.id);
     queue.add(promise, { priority: 1 });
   });

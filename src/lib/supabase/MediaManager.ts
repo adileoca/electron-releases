@@ -3,12 +3,16 @@ import axios from "axios";
 import Database from "./database";
 
 import { blobToUint8Array } from "../utils/convert";
+import { v4 as uuidv4 } from "uuid";
+import { Session } from "@supabase/supabase-js";
 
 class MediaManager {
   private db: Database;
+  private session: Session;
 
-  constructor(db: Database) {
+  constructor(db: Database, session: Session) {
     this.db = db;
+    this.session = session;
   }
 
   async get(
@@ -43,6 +47,48 @@ class MediaManager {
       return file ? blobToUint8Array(file) : null;
     }
   }
+
+  async upload(
+    file: any,
+    config: UploadConfig
+  ): Promise<string> {
+    try {
+      const filename = config.id ? config.id : uuidv4();
+
+      const buffer = await file.read();
+      const blob = new Blob([buffer], { type: "application/octet-stream" });
+
+      const formData = new FormData();
+      formData.append("filename", filename);
+      formData.append("file", blob, filename);
+
+      const serverUrl = "http://localhost:4500/upload";
+      const response = await axios.post(serverUrl, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        maxContentLength: Infinity,
+        maxBodyLength: Infinity,
+      });
+
+      console.log("response", response);
+
+      const id = await this.db.insert.media(
+        {
+          id: filename,
+          user_id: this.session.user.id,
+          ...config,
+        },
+        { content: "schedule" }
+      );
+
+      return id;
+    } catch (error: any) {
+      // Handle errors
+      console.error("Error uploading file:", error);
+      throw error;
+    }
+  }
 }
 
 export default MediaManager;
@@ -71,4 +117,11 @@ export const getCachedFile = async (
     console.error("Error getCachedFile:", error);
     throw error;
   }
+};
+
+export type UploadConfig = {
+  path: string;
+  bucket_name: string;
+  group_id?: string;
+  id?: string;
 };

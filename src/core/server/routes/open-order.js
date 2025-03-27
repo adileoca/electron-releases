@@ -1,8 +1,5 @@
 const { BrowserWindow } = require("electron");
-const path = require("path");
-const fs = require("fs");
 
-const { storageDir } = require("../../storage.js");
 /**
  * Sets up the Express server.
  *

@@ -5,7 +5,6 @@ import {
 } from "@heroicons/react/24/solid";
 
 import { useOrderActivity } from "./hooks/useOrderActivity";
-import { OrderDetailedType } from "@/lib/supabase/database";
 import { CurrencyFormatter } from "@/lib/utils/format";
 
 import ActivityFeed from "@/components/ui/ActivityFeed";
@@ -15,8 +14,8 @@ import BillingCard from "./ui/BillingCard";
 import OrderItem from "./ui/ItemCard";
 import UserInfo from "./ui/UserInfo";
 import { useEffect } from "react";
-
-const ViewBody: React.FC<{ order: OrderDetailedType }> = ({ order }) => {
+import { Order } from "@/lib/supabase/types";
+const ViewBody: React.FC<{ order: Order }> = ({ order }) => {
   const currency = new CurrencyFormatter(order.totals?.currency!);
   const orderActivity = useOrderActivity(order);
 
@@ -24,8 +23,8 @@ const ViewBody: React.FC<{ order: OrderDetailedType }> = ({ order }) => {
     console.log("order", order);
   }, [order]);
   return (
-    <div className="mx-auto  space-y-8">
-      <div className="p-4">
+    <div className="mx-auto max-w-screen-2xl space-y-8">
+      <div className="p-4 ">
         <div className="grid grid-cols-3 gap-8">
           <UserInfo order={order} />
           <ShippingCard order={order} />
@@ -38,11 +37,6 @@ const ViewBody: React.FC<{ order: OrderDetailedType }> = ({ order }) => {
           <h1 className="whitespace-nowrap text-xl font-medium text-white/80">
             Istoric
           </h1>
-          <div className="flex space-x-3">
-            {/* <ToolbarButton Icon={<MagnifyingGlassIcon className="size-5" />} />
-            <ToolbarButton Icon={<SparklesIcon className="size-5" />} />
-            <ToolbarButton Icon={<FunnelIcon className="size-5" />} /> */}
-          </div>
         </div>
         <div>
           {orderActivity && <ActivityFeed activities={orderActivity} />}

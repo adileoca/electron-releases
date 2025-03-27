@@ -17,10 +17,6 @@ const PrintsView = () => {
     console.log("prints", prints);
   }, [prints]);
 
-  // if (!prints) {
-  //   return <div>error fetching data</div>;
-  // }
-
   return (
     <ViewShell header={<ViewHeader />}>
       {prints ? <ViewBody prints={prints} /> : <LoadingBody />}

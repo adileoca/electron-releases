@@ -4,9 +4,9 @@ import { useEffect } from "react";
 import { formatDate, CurrencyFormatter } from "@/lib/utils/format";
 import { ContextData, RowPropsMap, ContextState } from "../types";
 import OrderStatusBadge from "@/components/ui/OrderStatusBadge";
-import CheckboxInput from "../../ui/CheckboxInput";
-import { ContextActions } from "../reducer";
 
+import { ContextActions } from "../reducer";
+import CheckboxInput from "@/components/ui/CheckboxInput";
 export const useParseRows = (
   state: ContextState,
   data: ContextData,

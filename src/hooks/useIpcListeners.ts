@@ -1,12 +1,15 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGlobalContext } from "@/context/global";
+import { useSupabase } from "@/lib/supabase/context";
 
 const useIpcListeners = () => {
   const navigate = useNavigate();
   const {
     actions: { update },
   } = useGlobalContext();
+
+  const { setIpcSession } = useSupabase();
 
   useEffect(() => {
     // ! preloader strips the event before sending it to the renderer
@@ -15,6 +18,11 @@ const useIpcListeners = () => {
     };
 
     window.electron.on("open-order", handleOpenOrder);
+
+    window.electron.on("update-session", (session) => {
+      console.log("updating session via ipc");
+      setIpcSession(session);
+    });
 
     window.electron.on("checking-for-update", () => {
       console.log("checking for update 123");

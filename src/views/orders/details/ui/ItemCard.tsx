@@ -11,8 +11,8 @@ import {
 import { parseConfigurationDetails } from "@/lib/utils/parse";
 import { OrderDetailedType } from "@/lib/supabase/database";
 import { CurrencyFormatter } from "@/lib/utils/format";
-import { useDatabase } from "@/lib/supabase/context";
 import { useMedia } from "@/lib/supabase/useMedia";
+import { formatSize } from "@/lib/utils/format";
 
 import ActivityFeed from "@/components/ui/ActivityFeed";
 import MiniTable from "@/components/ui/MiniTable";
@@ -87,10 +87,12 @@ const OrderItemHeader: React.FC<{ item: Item }> = ({ item }) => {
           <div className="md:pr-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center text-lg font-medium text-neutral-900 transition dark:text-white/80">
-                <span>{item.product?.name}</span>&nbsp;
-                {/* <span className="text-base font-normal text-white/60">
-                  {item.id}
-                </span> */}
+                <span>{item.product?.name}</span>&nbsp;&nbsp;
+                {item.configuration?.size && (
+                  <span className="text-base font-semibold text-white/60">
+                    {formatSize(item.configuration.size)}
+                  </span>
+                )}
               </div>
             </div>
           </div>
@@ -101,8 +103,7 @@ const OrderItemHeader: React.FC<{ item: Item }> = ({ item }) => {
           </div>
         </div>
         <div className="flex items-end justify-between">
-
-          <TabList  className="flex items-center space-x-0.5 p-[3px] border-[0.5px]  border-neutral-700 rounded-lg bg-neutral-800">
+          <TabList className="flex items-center space-x-0.5 rounded-lg  border-neutral-700 bg-neutral-800 p-[3px]">
             {[
               {
                 label: "Detalii",
@@ -116,7 +117,7 @@ const OrderItemHeader: React.FC<{ item: Item }> = ({ item }) => {
             ].map((tab, idx) => (
               <Tab
                 key={idx}
-                className="flex items-center space-x-1.5 text-sm px-3.5 py-[3px] rounded-[6px]  border-transparent  font-medium text-white/80 hover:bg-white/0 hover:text-white focus-visible:outline-none data-[selected]:border-b-white/80 data-[selected]:bg-neutral-600 data-[selected]:ring-transparent"
+                className="flex items-center space-x-1.5 rounded-[6px] border-transparent px-3.5 py-[3px]  text-sm  font-medium text-white/80 hover:bg-white/0 hover:text-white focus-visible:outline-none data-[selected]:border-b-white/80 data-[selected]:bg-neutral-600 data-[selected]:ring-transparent"
               >
                 {/* {tab.Icon} */}
                 <span>{tab.label}</span>

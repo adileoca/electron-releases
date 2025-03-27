@@ -1,9 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 
-const { createServer } = require("http");
 const { WebSocketServer, WebSocket } = require("ws");
 const { app: electronApp } = require("electron");
+const { createServer } = require("http");
 
 const { getMedia } = require("./routes/media");
 const { uploadHandler } = require("./routes/upload");
@@ -84,7 +84,7 @@ function setupExpressServer(window) {
       console.log("WebSocket connection closed");
     });
 
-    // todo: instead of sending the session data, send the JWT, then use that to authenticate with the api in the plugin
+    //  instead of sending the session data, we could send the JWT, then use that to authenticate with the api in the plugin
     if (sessionData) {
       const message = JSON.stringify({
         type: "session",
@@ -97,6 +97,13 @@ function setupExpressServer(window) {
     ws.on("message", async (message) => {
       console.log(`Received message: ${message}`);
       // Handle incoming messages if needed
+      if (message.type === "session") {
+        console.log("Received session");
+        if (JSON.stringify(session) !== JSON.stringify(message.data)) {
+          console.log("setting new access token");
+          updateSession(message.data);
+        }
+      }
     });
   });
 

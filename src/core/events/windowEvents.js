@@ -41,6 +41,9 @@ function createWindow() {
 
   window.once("ready-to-show", () => {
     autoUpdater.checkForUpdatesAndNotify();
+
+    // todo: have the plugin send its version via ws and compare with latest available version
+    // todo: if there's a new plugin version available, install it, and show some notice in the plugin
     installPlugin(window);
   });
 

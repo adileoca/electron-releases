@@ -20,6 +20,7 @@ export const formatDate = (
     hour?: Intl.DateTimeFormatOptions["hour"];
     minute?: Intl.DateTimeFormatOptions["minute"];
     second?: Intl.DateTimeFormatOptions["second"];
+    month?: Intl.DateTimeFormatOptions["month"];
     year?: Intl.DateTimeFormatOptions["year"];
     relative?: boolean; // Add the relative option here
     locale?: string;
@@ -52,7 +53,7 @@ export const formatDate = (
   } else {
     const formatter = new Intl.DateTimeFormat(datetimeLocale, {
       year: options?.year,
-      month: "long",
+      month: options?.month,
       day: "numeric",
       hour: options?.hour,
       minute: options?.minute,

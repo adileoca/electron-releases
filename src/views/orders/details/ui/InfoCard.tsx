@@ -1,11 +1,15 @@
 import React from "react";
 import CardWrapper from "@/components/ui/CardWrapper";
 import Button from "@/components/ui/Button";
+import Spinner from "@/components/ui/Spinner";
+
 const InfoCard: React.FC<{
   title: string;
   button?: {
     label: string;
     onClick: (event: React.MouseEvent<HTMLButtonElement>) => any;
+    loading?: boolean;
+    loadingLabel?: string;
   };
   children: any;
 }> = ({ title, button, children }) => {

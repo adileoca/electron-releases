@@ -5,6 +5,7 @@ import Button from "@/components/ui/Button";
 const ViewBody = () => {
   const {
     state: { update },
+    actions: { update: actions },
   } = useGlobalContext();
 
   return (
@@ -12,7 +13,7 @@ const ViewBody = () => {
       <div className="flex-col ">
         <div className="flex items-center justify-between">
           <h1 className="text-lg font-semibold text-neutral-200">
-            Actualizǎri {update.status}
+            Actualizǎri
           </h1>
           <div>
             <Button
@@ -24,22 +25,27 @@ const ViewBody = () => {
             </Button>
           </div>
         </div>
-        <div className="flex items-center py-2">
-          <span className="ml-1 font-medium text-neutral-300">
-            Sunteți la ultima versiune disponibilǎ: 1.0.2 (12 martie 2022)
-          </span>
-        </div>
-        <div className="flex items-center py-2">
-          <img
-            className="block h-8 w-auto rounded-full ring-offset-2 transition hover:ring-2 "
-            src={Spinner}
-            alt=""
-            loading="eager"
-          />
-          <span className="ml-1 font-medium text-neutral-300">
-            Verific daca exista actualizari disponibile...
-          </span>
-        </div>
+        {!update.status ? (
+          <div className="flex items-center py-2">
+            <img
+              className="block h-8 w-auto rounded-full ring-offset-2 transition hover:ring-2 "
+              src={Spinner}
+              alt=""
+              loading="eager"
+            />
+            <span className="ml-1 font-medium text-neutral-300">
+              Verific daca exista actualizari disponibile...
+            </span>
+          </div>
+        ) : (
+          <div className="flex items-center py-2">
+            <span className="ml-1 font-medium text-neutral-300">
+              {update.status === "update-available"
+                ? "O noua actualizare este disponibila"
+                : "Nu exista actualizari disponibile"}
+            </span>
+          </div>
+        )}
         {update.progress && (
           <div className="my-3 overflow-hidden rounded-full bg-neutral-200">
             <div

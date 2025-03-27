@@ -17,8 +17,30 @@ export const useSyncData = () => {
   ).current;
   const limit = useRef(pLimit(10)).current;
 
-  const { db, session } = useDatabase();
+  const { db, supabase, session } = useDatabase();
   const [initSyncDone, setInitSyncDone] = useState(false);
+
+  // useEffect(() => {
+  //   if (!session) return;
+
+  //   // Check if session has an expires_at property (in seconds)
+  //   const expiryTime = session.expires_at;
+  //   if (!expiryTime) return;
+
+  //   // If the token is set to expire in less than 5 minutes, refresh it
+  //   const now = Math.floor(Date.now() / 1000);
+  //   if (expiryTime - now < 300) {
+  //     console.log("Session is about to expire, refreshing...");
+  //     supabase.auth.refreshSession().then(({ data, error }) => {
+  //       if (error) {
+  //         console.error("Failed to refresh session", error);
+  //       } else {
+  //         console.log("Session refreshed", data);
+  //         // You may want to update your session state here as needed.
+  //       }
+  //     });
+  //   }
+  // }, [session, supabase]);
 
   // initial syncing effect, make sure critical media is cached before starting app
   useEffect(() => {
@@ -55,9 +77,9 @@ export const useSyncData = () => {
 
       try {
         Promise.all([
-          queueScheduledMedia(db, queue, session), // handles uploading scheduled media
+          queueScheduledMedia(db, queue, session, supabase), // handles uploading scheduled media
           queueScheduledMediaGroups(db, queue), // handles triggering upload groups after media is uploaded
-          queueCachingPromises(db, queue), // handles caching necessary media and removing unnecessary media
+          queueCachingPromises(db, supabase, queue), // handles caching necessary media and removing unnecessary media
         ]);
       } catch (err) {
         console.log("error while syncing", err);

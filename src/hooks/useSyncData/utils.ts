@@ -1,5 +1,7 @@
+import { getAllUndeliveredOrders } from "@/lib/supabase/queries";
 import Database, { DbTables } from "@/lib/supabase/database";
 import { blobToUint8Array } from "@/lib/utils/convert";
+import { Supabase } from "@/lib/supabase/database";
 import { cacheFile } from "@/lib/utils/ipc";
 
 type Media = DbTables["media"]["Row"];
@@ -58,12 +60,12 @@ export const fetchScheduledMedia = async (db: Database) => {
   return data;
 };
 
-export const fetchOrderItems = async (db: Database) => {
-  const { data, error } = await db.get.orderItems.all();
-  if (!data || error) {
-    const msg = `Error fetching order item media", ${error.message}`;
-    console.error(msg);
-    throw Error(msg);
-  }
-  return data;
-};
+// export const fetchOrderItems = async (supabase: Supabase) => {
+//   const { data, error } = await getAllUndeliveredOrders(supabase);
+//   if (!data || error) {
+//     const msg = `Error fetching order item media", ${error.message}`;
+//     console.error(msg);
+//     throw Error(msg);
+//   }
+//   return data;
+// };

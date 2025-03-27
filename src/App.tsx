@@ -8,11 +8,10 @@ import Spinner from "@/static/spinner.svg";
 import Login from "./views/Login";
 import AppRoutes from "./Routes";
 
-// import "/node_modules/flag-icons/css/flag-icons.min.css";
-
 const App = () => {
   const { session } = useSupabase();
 
+  // TODO URGENT: add logic to keep jwt token alive (for at most 8 hours in case of inactivity)
   useEffect(() => {
     console.log("session update");
   }, [session]);

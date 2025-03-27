@@ -6,8 +6,8 @@ import {
   ColPropsMap,
   RowPropsMap,
 } from "./types";
-import CheckboxInput from "../ui/CheckboxInput";
 
+import CheckboxInput from "@/components/ui/CheckboxInput";
 export const reducer: React.Reducer<ContextState, ContextReducer> = (
   state,
   action

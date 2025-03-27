@@ -4,6 +4,7 @@ import {
   MagnifyingGlassIcon,
   SparklesIcon,
   FunnelIcon,
+  BellIcon
 } from "@heroicons/react/24/outline";
 import ViewHeaderPagination from "@/components/ViewHeader/Pagination";
 import ViewHeaderNavigation from "@/components/ViewHeader/Navigation";

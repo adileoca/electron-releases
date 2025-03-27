@@ -12,9 +12,11 @@ import ReportsView from "./views/reports";
 import DocumentsView from "./views/documents";
 import SettingsView from "./views/settings";
 import ProfileView from "./views/profile";
+import SessionsView from "./views/sessions";
+import TemplatesView from "./views/templates";
 const AppRoutes = () => {
   return (
-    <div className="relative">
+    <div className="relative ">
       <Sidebar />
       <div className="z-50">
         <Routes>
@@ -29,10 +31,12 @@ const AppRoutes = () => {
           />
 
           <Route path="/prints" element={<PrintsView />} index />
+          <Route path="/sessions" element={<SessionsView />} index />
           <Route path="/reports" element={<ReportsView />} index />
           <Route path="/documents" element={<DocumentsView />} index />
           <Route path="/settings" element={<SettingsView />} index />
           <Route path="/profile" element={<ProfileView />} index />
+          <Route path="/templates" element={<TemplatesView />} index />
           {/* <Route path="/emails" element={<EmailsView />} index />
             <Route path="/emails/:emailId" element={<EmailDetailedView />} /> */}
         </Routes>
@@ -42,3 +46,11 @@ const AppRoutes = () => {
 };
 
 export default AppRoutes;
+
+
+// EXISTS (
+//   SELECT 1
+//   FROM public.user_profile_roles upr
+//   JOIN public.user_roles ur ON ur.id = upr.user_role
+//   WHERE upr.user_id = (select auth.uid()) AND ur.title = 'grafician'
+// )

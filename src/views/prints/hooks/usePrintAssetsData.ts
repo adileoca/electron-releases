@@ -8,11 +8,11 @@ import { Print } from "@/lib/supabase/database";
 export const useAssetsData = (print: Print) => {
   const { db, mediaManager } = useDatabase();
 
-  const itemAssets = useFetchData(
-    db.getItemAssets({
-      ids: print.assets.map((asset) => asset.item_asset_id),
-    })
-  );
+  // const itemAssets = useFetchData(
+  //   db.getItemAssets({
+  //     ids: print.assets.map((asset) => asset.item_asset_id),
+  //   })
+  // );
 
   const assetsData = useMemo(() => {
     const printsMedia = print.versions.reduce(
@@ -29,21 +29,24 @@ export const useAssetsData = (print: Print) => {
       []
     );
 
-    if (itemAssets) {
-      const assetsMedia = itemAssets.reduce((acc: MediaInfo[], asset) => {
-        acc.push({
-          id: asset.thumbnail_id,
-          bucket_name: asset.thumbnail?.bucket_name!,
-          path: asset.thumbnail?.path!,
-        });
-        return acc;
-      }, []);
+    if (print.assets) {
+      const assetsMedia = print.assets.reduce(
+        (acc: MediaInfo[], { item_asset: asset }) => {
+          acc.push({
+            id: asset?.thumbnail_id!,
+            bucket_name: asset?.thumbnail?.bucket_name!,
+            path: asset?.thumbnail?.path!,
+          });
+          return acc;
+        },
+        []
+      );
 
       return [...printsMedia, ...assetsMedia];
     } else {
       return printsMedia;
     }
-  }, [print, itemAssets]);
+  }, [print]);
 
   const mediaUrls = useMedia(assetsData, {
     // alwaysFetch: true,
@@ -52,5 +55,5 @@ export const useAssetsData = (print: Print) => {
     }, []),
   });
 
-  return { mediaUrls, itemAssets };
+  return { mediaUrls };
 };
