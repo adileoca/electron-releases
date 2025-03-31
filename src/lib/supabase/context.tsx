@@ -58,8 +58,12 @@ export const SupabaseProvider = ({
     if (!session?.expires_at) return;
 
     if (ipcSession.expires_at > session.expires_at) {
+      console.log("using ipc session since its fresher");
       setSession(ipcSession);
     } else {
+      console.log(
+        "ipc session less fresh than current session, updating ipc session"
+      );
       window.electron.setSession(session);
     }
   }, [ipcSession]);

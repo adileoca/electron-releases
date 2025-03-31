@@ -23,7 +23,7 @@ const {
  */
 function setupIpcEvents(window, setSession) {
   // Set up IPC event handlers
-  // ipcMain.handle("read-file", handleReadFile);
+  ipcMain.handle("read-file", handleReadFile);
   ipcMain.handle("upload-file", handleUploadFile);
   ipcMain.handle("delete-cache-file", handleDeleteCachedFile);
   ipcMain.handle("get-cached-filenames", handleGetCachedFilenames);

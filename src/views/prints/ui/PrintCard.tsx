@@ -76,7 +76,7 @@ const PrintBody: React.FC<{
   return (
     <TabPanels>
       <TabPanel className="border-t border-white/10 pb-3"></TabPanel>
-      <TabPanel className="border-t border-white/10 pb-3">
+      <TabPanel className="border-t border-white/10 pb-12">
         <MiniTable
           data={{
             ID: print.id,
@@ -91,7 +91,7 @@ const PrintBody: React.FC<{
           <ActivityFeed activities={printActivity} />
         </div>
       </TabPanel>
-      <TabPanel className="divide-y divide-white/10 border-t border-white/10   pb-3">
+      <TabPanel className="divide-y divide-white/10 border-t border-white/10   pb-12">
         {print.assets ? (
           <PrintAssets
             isPrinted={print.printed}
@@ -116,10 +116,10 @@ const PrintHeader: React.FC<{
   const [clicked, setClicked] = useState(false);
   return (
     <div className="flex pb-3">
-      <div className="relative aspect-square h-16 w-16  overflow-hidden rounded-md bg-neutral-200 ">
+      <div className="relative aspect-square h-16 w-16 border border-neutral-800 overflow-hidden rounded-md bg-neutral-800 ">
         <img
           src={mediaUrls.get(latestVersion.thumbnail_id)}
-          className="z-30 mx-auto mb-3 scale-100"
+          className="z-30 mx-auto mb-3 scale-100 object-contain"
           alt=""
         />
       </div>

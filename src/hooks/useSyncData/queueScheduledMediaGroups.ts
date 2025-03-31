@@ -5,7 +5,7 @@ import { fetchScheduledUploadGroups } from "./utils";
 
 const getPendingScheduledMediaGroups = async (db: Database) => {
   const scheduldedUploadsGroups = await fetchScheduledUploadGroups(db);
-  console.log("scheduldedUploadsGroups", scheduldedUploadsGroups);
+  // console.log("scheduldedUploadsGroups", scheduldedUploadsGroups);
   const pendingUploadsGroups = scheduldedUploadsGroups.filter((group) => {
     return (
       !group.uploads.some(({ upload_end }) => !upload_end) && // make sure all uploads are complete
@@ -32,7 +32,7 @@ export const queueScheduledMediaGroups = async (
   queue: PQueue
 ) => {
   const pendingUploadsGroups = await getPendingScheduledMediaGroups(db);
-  console.log("pendingUploadsGroups", pendingUploadsGroups);
+  // console.log("pendingUploadsGroups", pendingUploadsGroups);
 
   pendingUploadsGroups.forEach((group) => {
     // todo: add error handling and logging

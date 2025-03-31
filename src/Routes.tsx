@@ -14,39 +14,41 @@ import SettingsView from "./views/settings";
 import ProfileView from "./views/profile";
 import SessionsView from "./views/sessions";
 import TemplatesView from "./views/templates";
+
 const AppRoutes = () => {
   return (
-    <div className="relative ">
-      <Sidebar />
-      <div className="z-50">
-        <Routes>
-          <Route path="/" element={<DashboardView />} index />
-          {/* <Route path="/tasks" element={<TasksDashboardView />} index /> */}
+    <div className=" z-10 relative h-screen w-screen">
+      <div className="m-2 z-20">
+        <Sidebar />
+        <div className="z-50">
+          <Routes>
+            <Route path="/" element={<DashboardView />} index />
+            {/* <Route path="/tasks" element={<TasksDashboardView />} index /> */}
 
-          <Route path="/orders" element={<OrdersView />} index />
-          <Route
-            path="/orders/:order_id"
-            element={<OrderDetailsView />}
-            index
-          />
+            <Route path="/orders" element={<OrdersView />} index />
+            <Route
+              path="/orders/:order_id"
+              element={<OrderDetailsView />}
+              index
+            />
 
-          <Route path="/prints" element={<PrintsView />} index />
-          <Route path="/sessions" element={<SessionsView />} index />
-          <Route path="/reports" element={<ReportsView />} index />
-          <Route path="/documents" element={<DocumentsView />} index />
-          <Route path="/settings" element={<SettingsView />} index />
-          <Route path="/profile" element={<ProfileView />} index />
-          <Route path="/templates" element={<TemplatesView />} index />
-          {/* <Route path="/emails" element={<EmailsView />} index />
+            <Route path="/prints" element={<PrintsView />} index />
+            <Route path="/sessions" element={<SessionsView />} index />
+            <Route path="/reports" element={<ReportsView />} index />
+            <Route path="/documents" element={<DocumentsView />} index />
+            <Route path="/settings" element={<SettingsView />} index />
+            <Route path="/profile" element={<ProfileView />} index />
+            <Route path="/templates" element={<TemplatesView />} index />
+            {/* <Route path="/emails" element={<EmailsView />} index />
             <Route path="/emails/:emailId" element={<EmailDetailedView />} /> */}
-        </Routes>
+          </Routes>
+        </div>
       </div>
     </div>
   );
 };
 
 export default AppRoutes;
-
 
 // EXISTS (
 //   SELECT 1

@@ -2,7 +2,7 @@ const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 
 const { setupIpcEvents } = require("../src/core/events/ipcEvents.js");
-const setupExpressServer = require("../src/core/server/expressServer.js");
+const setupExpressServer = require("../src/core/server/index.js");
 
 const createWindow = require("../src/core/events/windowEvents.js");
 

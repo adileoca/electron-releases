@@ -4,7 +4,7 @@ import Spinner from "@/static/spinner.svg";
 import Button from "@/components/ui/Button";
 const ViewBody = () => {
   const {
-    state: { update },
+    state: { update, plugin },
     actions: { update: actions },
   } = useGlobalContext();
 
@@ -47,10 +47,10 @@ const ViewBody = () => {
           </div>
         )}
         {update.progress && (
-          <div className="my-3 overflow-hidden rounded-full bg-neutral-200">
+          <div className="my-3 w-full overflow-hidden rounded-full bg-neutral-200">
             <div
               className="h-1.5 rounded-full bg-green-600"
-              style={{ width: update.progress.total }}
+              style={{ width: update.progress.percent + "%" }}
             />
           </div>
         )}

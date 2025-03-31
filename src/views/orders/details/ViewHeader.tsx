@@ -54,12 +54,12 @@ const ViewHeader: React.FC<{ order: OrderDetailedType | undefined }> = ({
           )} */}
           {/* <SelectMenu /> */}
 
-          <button
+          {/* <button
             onClick={() => setIsOpen(true)}
             className="flex items-center p-2"
           >
             <BellIcon className="size-5 dark:text-white/80 dark:hover:text-white" />
-          </button>
+          </button> */}
           <button
             onClick={() => setIsOpen(true)}
             className="flex items-center p-2"

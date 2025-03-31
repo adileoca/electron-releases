@@ -3,10 +3,13 @@ import Database, { DbTables, Supabase } from "@/lib/supabase/database";
 import { getCachedFilenames } from "@/lib/utils/ipc";
 import { fetchScheduledMedia, fetchTemplates, cacheMedia } from "./utils";
 import { getAllUndeliveredOrders } from "@/lib/supabase/queries";
+import { removeFromCache } from "@/lib/utils/ipc";
+import { LimitFunction } from "p-limit";
 
 type Media = DbTables["media"]["Row"];
 
 const fetchNecessaryMedia = async (db: Database, supabase: Supabase) => {
+  // todo: also fetch prints
   const [scheduledMedia, templates, orders] = await Promise.all([
     fetchScheduledMedia(db),
     fetchTemplates(db),
@@ -56,17 +59,27 @@ export const queueCachingPromises = async (
     const promise = async () => await cacheMedia(db, media);
     queue.add(promise, { priority: 2 });
   });
+};
 
-  // remove files that are cached but not necessary
-  // todo: move this to app startup (first useEffect)
-  // todo: prevent connection to plugin while this is running
-  // const necessaryMediaIdsSet = new Set(necessaryMedia.map(({ id }) => id));
-  // const cachedButUnecessaryMedia = cachedFilenames.filter(
-  //   (filename) => !necessaryMediaIdsSet.has(filename)
-  // );
-  // cachedButUnecessaryMedia.forEach((filename) => {
-  //   // todo: implement looking at date modified and waiting at least 5 mins before removing in removeFromCache
-  //   const promise = async () => await removeFromCache(filename);
-  //   queue.add(promise, { priority: 3 });
-  // });
+export const queueCachingCleanupPromises = async (
+  db: Database,
+  supabase: Supabase,
+  limit: LimitFunction
+) => {
+  const [necessaryMedia, cachedFilenames] = await Promise.all([
+    fetchNecessaryMedia(db, supabase),
+    getCachedFilenames(),
+  ]);
+
+  const necessaryMediaIdsSet = new Set(necessaryMedia.map(({ id }) => id));
+
+  const cachedButUnecessaryMedia = cachedFilenames.filter(
+    (filename) => !necessaryMediaIdsSet.has(filename)
+  );
+
+  const promises = cachedButUnecessaryMedia.map(
+    (filename) => async () => await removeFromCache(filename)
+  );
+
+  await Promise.all(promises.map((promise) => limit(promise)));
 };

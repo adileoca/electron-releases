@@ -1,4 +1,6 @@
 const { storageDir: cacheDir } = require("../../storage.js");
+const path = require("path");
+const fs = require("fs");
 
 /**
  * IPC handler for reading a file.

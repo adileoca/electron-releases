@@ -5,7 +5,7 @@ const { BrowserWindow } = require("electron");
  *
  * @param {BrowserWindow} window - The Electron BrowserWindow instance.
  */
-const handleOpenOrder = (req, res, window) => {
+const openOrder = (req, res, getWindow) => {
   try {
     console.log("opening order");
     const { order_id } = req.body;
@@ -15,6 +15,7 @@ const handleOpenOrder = (req, res, window) => {
       return res.status(400).json({ message: "order_id is required" });
     }
 
+    const window = getWindow();
     window.show(); // Ensure the window is shown and focused
     window.focus(); // Focus the window
     console.log("focused order")
@@ -28,4 +29,4 @@ const handleOpenOrder = (req, res, window) => {
   }
 };
 
-module.exports = { handleOpenOrder };
+module.exports = { openOrder };

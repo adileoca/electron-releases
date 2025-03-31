@@ -9,7 +9,7 @@ const { storageDir: cacheDir } = require("../../storage.js");
  */
 const handleGetCachedFilenames = async (event) => {
   try {
-    console.log("cacheDir", cacheDir);
+    // console.log("cacheDir", cacheDir);
     return fs.readdirSync(cacheDir);
   } catch (err) {
     console.error("Error fetching cached files:", err);

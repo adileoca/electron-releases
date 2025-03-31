@@ -48,7 +48,7 @@ const Routes = () => {
 
   if (!initSyncDone) {
     return (
-      <div className="flex h-screen w-full flex-col items-center justify-center bg-neutral-900/90">
+      <div className="flex h-screen w-full flex-col items-center justify-center bg-neutral-900">
         <img
           className="block h-8 w-auto rounded-full ring-blue-500 ring-offset-2 transition hover:ring-2 lg:h-12"
           src={Spinner}
@@ -56,7 +56,7 @@ const Routes = () => {
           loading="eager"
         />
         <span className="font-semibold text-white/80">
-          Va rugam asteptati, descarc...
+          Va rugam asteptati...
         </span>
       </div>
     );

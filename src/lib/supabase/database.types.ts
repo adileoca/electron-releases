@@ -536,6 +536,7 @@ export type Database = {
           text_details: string | null
           thumbnail_url: string | null
           url: string | null
+          wants_adhesive: string | null
           wants_edit: string | null
           wants_preview: string | null
         }
@@ -556,6 +557,7 @@ export type Database = {
           text_details?: string | null
           thumbnail_url?: string | null
           url?: string | null
+          wants_adhesive?: string | null
           wants_edit?: string | null
           wants_preview?: string | null
         }
@@ -576,6 +578,7 @@ export type Database = {
           text_details?: string | null
           thumbnail_url?: string | null
           url?: string | null
+          wants_adhesive?: string | null
           wants_edit?: string | null
           wants_preview?: string | null
         }
@@ -851,6 +854,32 @@ export type Database = {
             columns: ["totals_id"]
             isOneToOne: true
             referencedRelation: "order_item_totals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      order_keys: {
+        Row: {
+          created_at: string | null
+          id: string
+          order_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          order_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          order_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_keys_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
             referencedColumns: ["id"]
           },
         ]
@@ -1217,6 +1246,7 @@ export type Database = {
       }
       prints: {
         Row: {
+          created_at: string | null
           id: string
           locked: boolean
           locked_by: string | null
@@ -1225,6 +1255,7 @@ export type Database = {
           template_id: string
         }
         Insert: {
+          created_at?: string | null
           id?: string
           locked?: boolean
           locked_by?: string | null
@@ -1233,6 +1264,7 @@ export type Database = {
           template_id: string
         }
         Update: {
+          created_at?: string | null
           id?: string
           locked?: boolean
           locked_by?: string | null
@@ -1303,17 +1335,28 @@ export type Database = {
       product_backgrounds: {
         Row: {
           id: number
+          media_id: string | null
           url: string | null
         }
         Insert: {
           id?: number
+          media_id?: string | null
           url?: string | null
         }
         Update: {
           id?: number
+          media_id?: string | null
           url?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "product_backgrounds_media_id_fkey"
+            columns: ["media_id"]
+            isOneToOne: false
+            referencedRelation: "media"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       product_images: {
         Row: {
@@ -1672,33 +1715,36 @@ export type Database = {
       }
       session_order_tokens: {
         Row: {
-          id: number
+          created_at: string | null
+          id: string
+          key_id: string | null
           session_id: string
-          token_id: number
         }
         Insert: {
-          id?: number
+          created_at?: string | null
+          id?: string
+          key_id?: string | null
           session_id: string
-          token_id: number
         }
         Update: {
-          id?: number
+          created_at?: string | null
+          id?: string
+          key_id?: string | null
           session_id?: string
-          token_id?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "session_order_tokens_key_id_fkey"
+            columns: ["key_id"]
+            isOneToOne: false
+            referencedRelation: "order_keys"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "session_order_tokens_session_id_fkey"
             columns: ["session_id"]
             isOneToOne: false
             referencedRelation: "sessions"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "session_order_tokens_token_id_fkey"
-            columns: ["token_id"]
-            isOneToOne: false
-            referencedRelation: "order_tokens"
             referencedColumns: ["id"]
           },
         ]

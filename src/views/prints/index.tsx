@@ -1,18 +1,14 @@
 import { useEffect } from "react";
 
-import { useDatabase } from "@/lib/supabase/context";
-import { useFetchData } from "@/hooks/useFetchData";
-
 import LoadingBody from "@/components/ui/LoadingBody";
 import ViewShell from "@/components/ViewShell";
-
+import { useFetchPrints } from "./hooks/useFetchPrints";
 import ViewHeader from "./ViewHeader";
 import ViewBody from "./ViewBody";
 
 const PrintsView = () => {
-  const { db } = useDatabase();
-  const prints = useFetchData(db.getPrints());
-
+  const prints = useFetchPrints();
+  
   useEffect(() => {
     console.log("prints", prints);
   }, [prints]);

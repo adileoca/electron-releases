@@ -20,7 +20,6 @@ export const useParseRows = (
   data: ContextData,
   actions: ContextActions
 ) => {
-  const navigate = useNavigate();
   const { db } = useDatabase();
   useEffect(() => {
     console.log("state.selected", state.selected);

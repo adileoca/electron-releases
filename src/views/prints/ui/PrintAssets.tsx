@@ -19,7 +19,7 @@ const PrintAssets: React.FC<{
           <div key={index} className="flex space-x-5 py-3">
             <div
               style={{ boxShadow: "0 0 0 0.3px black" }}
-              className="relative aspect-square h-16 w-16 overflow-hidden rounded-lg  bg-neutral-200"
+              className="relative aspect-square h-16 w-16 overflow-hidden rounded-lg border border-neutral-800 bg-white"
             >
               <img
                 src={mediaUrls.get(asset.thumbnail_id)!}

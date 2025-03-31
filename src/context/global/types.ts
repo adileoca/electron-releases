@@ -13,6 +13,10 @@ export type UpdateStatusType =
   | null;
 
 export type State = {
+  plugin: {
+    version: string | null;
+    updateError: string | null;
+  };
   update: { status: UpdateStatusType; progress?: any; error?: any };
   navigation: {
     latestIndex: number;
@@ -37,6 +41,8 @@ export type Actions =
   | { type: "setUpdateError"; payload: any }
   | { type: "setNavigationLatestIndex"; payload: number }
   | { type: "setNavigationCanGoBack"; payload: boolean }
-  | { type: "setNavigationCanGoForward"; payload: boolean };
+  | { type: "setNavigationCanGoForward"; payload: boolean }
+  | { type: "setPluginVersion"; payload: string }
+  | { type: "setPluginUpdateError"; payload: string };
 
 export type ReducerType = Reducer<State, Actions>;

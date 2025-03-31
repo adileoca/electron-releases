@@ -24,7 +24,7 @@ class Database {
   insert: InsertManager;
   update: UpdateManager;
 
-  async getUsersByRole(role: "grafician") {
+  async getUsersByRole(role: string) {
     const { data, error } = await this.supabase
       .from("user_profiles")
       .select("id, roles:user_profile_roles(role:user_roles(*))")
@@ -1315,7 +1315,7 @@ class InsertManager {
         throw new Error(uploadError.message || "Unknown error occurred");
       }
 
-      if (insertError || !insertData) {
+      if (insertError) {
         console.error("Error inserting media into db:", insertError);
         if (insertError)
           throw new Error(insertError.message || "Unknown error occurred");

@@ -1,8 +1,9 @@
 {
   "name": "adipan",
-  "version": "0.2.1",
+  "version": "0.2.5",
   "main": "src/core/main.js",
   "private": true,
+  "pluginVersion": "1.0.6",
   "homepage": "./",
   "repository": {
     "type": "git",

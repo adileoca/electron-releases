@@ -1,9 +1,0 @@
-have app use cache for media, display fallback if media isn't available yet
-
-add filters, search functionality for logs
-have a log for active tasks, tab for managing users
-create log for user actions, display analytics to users
-fix orders table
-start implementing analytics
-
-

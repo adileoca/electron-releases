@@ -6,18 +6,23 @@ import { useSupabase } from "@/lib/supabase/context";
 const useIpcListeners = () => {
   const navigate = useNavigate();
   const {
-    actions: { update },
+    actions: { update, photoshop },
   } = useGlobalContext();
 
   const { setIpcSession } = useSupabase();
 
   useEffect(() => {
-    // ! preloader strips the event before sending it to the renderer
+    // ? preloader strips the event before sending it to the renderer
     const handleOpenOrder = async (orderId: string) => {
       navigate(`/orders/${orderId}`);
     };
 
     window.electron.on("open-order", handleOpenOrder);
+
+    window.electron.on("current-plugin-version", (version) => {
+      console.log("received current plugin version from electron", version);
+      photoshop.setVersion(version);
+    });
 
     window.electron.on("update-session", (session) => {
       console.log("updating session via ipc");

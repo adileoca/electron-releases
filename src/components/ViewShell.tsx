@@ -1,15 +1,18 @@
 import React from "react";
 import LoadingBody from "./ui/LoadingBody";
+import useAnimateWidthTransition from "@/hooks/useAnimateWidth";
 
 const ViewShell: React.FC<{
   children: any;
 
   header: React.ReactNode;
 }> = ({ children, header }) => {
+  // const ref = useAnimateWidthTransition(true);
   return (
     <>
       {header}
       <div
+        // ref={ref}
         style={{
           width: "calc(100% - 200px)",
           boxShadow: "0 0 0 0.5px black",

@@ -16,8 +16,16 @@ export const useFetchSessions = (supabase: Supabase) => {
 };
 
 const fetchSessions = async (supabase: Supabase) => {
-  const { data, error } = await supabase.from("sessions").select(`*,
-        replayEvents: session_replay_events(*)`);
+  const { data, error } = await supabase
+    .from("sessions")
+    .select(
+      `*,
+        replayEvents: session_replay_events(*)`
+    )
+    .eq("id", "e9888d26-63b0-417b-b108-05f228799132")
+    .gte("session_replay_events.created_at", "2025-03-28 00:00:00+00");
+
+  console.log("Data", data);
   if (error) {
     console.error(error);
     throw error;

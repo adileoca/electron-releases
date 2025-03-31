@@ -34,6 +34,16 @@ export const reducer: Reducer<State, Actions> = (state, action) => {
         ...state,
         navigation: { ...state.navigation, canGoForward: action.payload },
       };
+    case "setPluginVersion":
+      return {
+        ...state,
+        plugin: { ...state.plugin, version: action.payload },
+      };
+    case "setPluginUpdateError":
+      return {
+        ...state,
+        plugin: { ...state.plugin, updateError: action.payload },
+      };
     default:
       return state;
   }
@@ -80,6 +90,21 @@ export const createActions = (state: State, dispatch: Dispatch<Actions>) => ({
       });
     },
   },
+  photoshop: {
+    setVersion: (version: string) => {
+      console.log("setting plugin version...", version);
+      dispatch({
+        type: "setPluginVersion",
+        payload: version,
+      });
+    },
+    setUpdateError: (error: string) => {
+      dispatch({
+        type: "setPluginUpdateError",
+        payload: error,
+      });
+    },
+  },
 });
 
 export type ContextActions = ReturnType<typeof createActions>;
@@ -87,4 +112,5 @@ export type ContextActions = ReturnType<typeof createActions>;
 export const initialState: State = {
   update: { status: null, progress: null },
   navigation: { latestIndex: 0, canGoBack: false, canGoForward: false },
+  plugin: { version: null, updateError: null },
 };

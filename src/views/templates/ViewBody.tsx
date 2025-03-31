@@ -2,7 +2,7 @@ import ViewShell from "@/components/ViewShell";
 
 import { useTemplatesTableContext } from "./context";
 import ViewHeader from "./ViewHeader";
-
+import UploadButton from "./ui/UploadButton";
 import LoadingBody from "./ui/LoadingBody";
 import TableHeader from "./ui/TableHeader";
 import TableBody from "./ui/TableBody";
@@ -12,16 +12,15 @@ const ViewBody = () => {
     state: { loading },
   } = useTemplatesTableContext();
 
+
   return (
     <ViewShell header={<ViewHeader />}>
       <div className="relative h-full overflow-auto">
         {loading ? (
           <LoadingBody />
         ) : (
-          <table>
-            <TableHeader />
-            <TableBody />
-          </table>
+          <UploadButton/>
+     
         )}
       </div>
     </ViewShell>
