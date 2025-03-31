@@ -45,7 +45,7 @@ function createWindow() {
 
     // todo: have the plugin send its version via ws and compare with latest available version
     // todo: if there's a new plugin version available, install it, and show some notice in the plugin
-    // installPlugin(window);
+    installPlugin(window);
   });
 
   // setInterval(() => {
@@ -82,6 +82,10 @@ function createWindow() {
 module.exports = createWindow;
 
 const installPlugin = (window) => {
+  if (isDev) {
+    return;
+  }
+
   const pluginDir = isDev
     ? "../../../assets/plugin"
     : "../../../../assets/plugin";
