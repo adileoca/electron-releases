@@ -2,30 +2,15 @@ const { app, BrowserWindow, ipcMain, dialog, session } = require("electron");
 const { exec } = require("child_process");
 const path = require("path");
 
-const setupServer = require("./server/index.js");
 const { setupIpcEvents } = require("./events/ipcEvents");
 const createWindow = require("./events/windowEvents");
+const setupServer = require("./server/index.js");
+const { getWindow } = require("./getWindow.js");
 
-let mainWindow = null;
-
-function getWindow() {
-  if (!mainWindow || mainWindow.isDestroyed()) {
-    mainWindow = createWindow();
-    
-    mainWindow.on("closed", () => {
-      console.log("Main window closed");
-      mainWindow = null;
-    });
-  }
-  return mainWindow;
-}
-
-app.whenReady().then(async () => {
-  mainWindow = getWindow();
-  const { setSession } = setupServer(getWindow);
-  setupIpcEvents(getWindow, setSession);
-
-  // cors settings
+app.whenReady().then(() => {
+  const mainWindow = getWindow();
+   setupServer();
+  setupIpcEvents();
 });
 
 app.on("window-all-closed", () => {
@@ -35,10 +20,8 @@ app.on("window-all-closed", () => {
 });
 
 app.on("activate", () => {
-  console.log("activating app");
   if (BrowserWindow.getAllWindows().length === 0) {
-    console.log("creating window");
-    mainWindow = createWindow();
+    getWindow();
   }
 });
 

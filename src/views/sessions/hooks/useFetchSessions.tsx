@@ -22,8 +22,8 @@ const fetchSessions = async (supabase: Supabase) => {
       `*,
         replayEvents: session_replay_events(*)`
     )
-    .eq("id", "e9888d26-63b0-417b-b108-05f228799132")
-    .gte("session_replay_events.created_at", "2025-03-28 00:00:00+00");
+    .eq("id", "abc8a880-ee7d-44e1-91f5-bc3076b61296")
+    // .gte("session_replay_events.created_at", "2025-03-28 00:00:00+00");
 
   console.log("Data", data);
   if (error) {

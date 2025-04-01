@@ -29,13 +29,12 @@ export const SupabaseProvider = ({
   const [ipcSession, setIpcSession] = useState<Session | null | undefined>(
     undefined
   );
-  const [session, setSession] = useState<Session | null | undefined>(undefined);
+  const [session, setSession] = useState<Session | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [lastActivity, setLastActivity] = useState(Date.now());
-  const [lastRefreshed, setLastRefreshed] = useState(Date.now());
-  const [isRefreshing, setIsRefreshing] = useState(false); // Add this line
 
   const updateSession = (session: Session | null) => {
+    console.log("updating session, sending session to main process..", session);
     setSession(session);
     window.electron.setSession(session);
   };
@@ -58,72 +57,12 @@ export const SupabaseProvider = ({
     if (!session?.expires_at) return;
 
     if (ipcSession.expires_at > session.expires_at) {
-      console.log("using ipc session since its fresher");
       setSession(ipcSession);
     } else {
-      console.log(
-        "ipc session less fresh than current session, updating ipc session"
-      );
       window.electron.setSession(session);
     }
   }, [ipcSession]);
 
-  // useEffect(() => {
-  //   if (!session) return;
-
-  //   const THIRTY_MINUTES = 10 * 60 * 1000;
-  //   const intervalId = setInterval(async () => {
-  //     const now = Date.now();
-  //     if (now - lastRefreshed > THIRTY_MINUTES && !isRefreshing) {
-  //       try {
-  //         setIsRefreshing(true);
-  //         console.log("Refreshing session after 30 minutes");
-  //         const { data, error } = await supabase.auth.refreshSession();
-
-  //         if (error) {
-  //           if (error.message.includes("Request rate limit reached")) {
-  //             console.warn(
-  //               "Refresh rate limit reached, skipping refresh attempt for now."
-  //             );
-  //           } else if (error.message.includes("Invalid Refresh Token")) {
-  //             console.warn(
-  //               "Token already used or invalid. Attempting to recover session..."
-  //             );
-  //             // Try to get the existing session instead of refreshing
-  //             const { data: sessionData } = await supabase.auth.getSession();
-  //             if (sessionData.session) {
-  //               console.log("Successfully recovered session");
-  //               updateSession(sessionData.session);
-  //               setLastRefreshed(Date.now());
-  //             } else {
-  //               console.warn(
-  //                 "Could not recover session, user may need to log in again"
-  //               );
-  //             }
-  //           } else {
-  //             console.error("Failed to refresh session", error);
-  //           }
-  //         } else {
-  //           console.log("Session refreshed successfully", data);
-  //           setLastRefreshed(Date.now());
-  //           updateSession(data.session);
-  //         }
-  //       } catch (err) {
-  //         console.error("Unexpected error refreshing session:", err);
-  //       } finally {
-  //         setIsRefreshing(false);
-  //       }
-  //     }
-  //   }, 5 * 60000); // check every 5 minutes
-
-  //   return () => clearInterval(intervalId);
-  // }, [session, supabase, lastRefreshed, isRefreshing]);
-
-  // useEffect(() => {
-  //   if (session) {
-  //     supabase.auth.setSession(session);
-  //   }
-  // }, [session]);
   useEffect(() => {
     const resetTimer = () => {
       setLastActivity(Date.now());

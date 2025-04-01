@@ -1,13 +1,9 @@
 const { BrowserWindow } = require("electron");
+const { getWindow } = require("../../getWindow");
 
-/**
- * Sets up the Express server.
- *
- * @param {BrowserWindow} window - The Electron BrowserWindow instance.
- */
-const openOrder = (req, res, getWindow) => {
+const openOrder = async (req, res) => {
   try {
-    console.log("opening order");
+    console.log("Opening order - Request received");
     const { order_id } = req.body;
 
     if (!order_id) {
@@ -15,17 +11,26 @@ const openOrder = (req, res, getWindow) => {
       return res.status(400).json({ message: "order_id is required" });
     }
 
-    const window = getWindow();
-    window.show(); // Ensure the window is shown and focused
-    window.focus(); // Focus the window
-    console.log("focused order")
+    const window = await getWindow();
+
+    if (!window) {
+      console.error("ERROR: Window reference is null");
+      return res.status(500).json({ message: "Main window is not available" });
+    }
+
+    window.show();
+    window.focus();
     window.webContents.send("open-order", order_id);
-    console.log("sent message to renderer")
+
+    console.log("IPC message completed, returning success response");
     res.status(200).json({ message: "Order opened" });
-    // send ipc event to renderer with the order no to focus on
   } catch (error) {
-    console.error("Error handling open order:", error);
-    res.status(500).json({ message: "Error handling open order" });
+    console.error("Error handling open order:", error.message);
+    console.error("Error stack:", error.stack);
+    res.status(500).json({
+      error: error.message,
+      message: "Error handling open order",
+    });
   }
 };
 

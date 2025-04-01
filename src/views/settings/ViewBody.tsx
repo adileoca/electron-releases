@@ -17,6 +17,7 @@ const ViewBody = () => {
           </h1>
           <div>
             <Button
+              disabled={update.progress}
               onClick={() => {
                 window.electron.send("check-updates", null);
               }}
@@ -25,27 +26,29 @@ const ViewBody = () => {
             </Button>
           </div>
         </div>
-        {!update.status ? (
-          <div className="flex items-center py-2">
-            <img
-              className="block h-8 w-auto rounded-full ring-offset-2 transition hover:ring-2 "
-              src={Spinner}
-              alt=""
-              loading="eager"
-            />
-            <span className="ml-1 font-medium text-neutral-300">
-              Verific daca exista actualizari disponibile...
-            </span>
-          </div>
-        ) : (
-          <div className="flex items-center py-2">
-            <span className="ml-1 font-medium text-neutral-300">
-              {update.status === "update-available"
-                ? "O noua actualizare este disponibila"
-                : "Nu exista actualizari disponibile"}
-            </span>
-          </div>
-        )}
+        {!update.progress ? (
+          !update.status ? (
+            <div className="flex items-center py-2">
+              <img
+                className="block h-8 w-auto rounded-full ring-offset-2 transition hover:ring-2 "
+                src={Spinner}
+                alt=""
+                loading="eager"
+              />
+              <span className="ml-1 font-medium text-neutral-300">
+                Verific daca exista actualizari disponibile...
+              </span>
+            </div>
+          ) : (
+            <div className="flex items-center py-2">
+              <span className="ml-1 font-medium text-neutral-300">
+                {update.status === "update-available"
+                  ? "O noua actualizare este disponibila"
+                  : "Nu exista actualizari disponibile"}
+              </span>
+            </div>
+          )
+        ) : null}
         {update.progress && (
           <div className="my-3 w-full overflow-hidden rounded-full bg-neutral-200">
             <div

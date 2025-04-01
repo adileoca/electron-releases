@@ -12,15 +12,16 @@ const ViewBody = () => {
     state: { loading },
   } = useTemplatesTableContext();
 
-
   return (
     <ViewShell header={<ViewHeader />}>
       <div className="relative h-full overflow-auto">
         {loading ? (
           <LoadingBody />
         ) : (
-          <UploadButton/>
-     
+          <>
+            <TableHeader />
+            <TableBody />
+          </>
         )}
       </div>
     </ViewShell>

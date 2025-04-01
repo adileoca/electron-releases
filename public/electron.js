@@ -7,7 +7,7 @@ const setupExpressServer = require("../src/core/server/index.js");
 const createWindow = require("../src/core/events/windowEvents.js");
 
 app.whenReady().then(async () => {
-  const mainWindow = createWindow();
+  const mainWindow = await createWindow();
   const { app, setSession } = setupExpressServer(mainWindow);
   setupIpcEvents(mainWindow, setSession);
 

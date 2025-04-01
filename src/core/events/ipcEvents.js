@@ -16,12 +16,8 @@ const {
   handleReadAndStreamFile,
 } = require("./handlers/read-and-stream-file.js");
 
-/**
- * Sets up IPC event handlers.
- *
- * @param {BrowserWindow} window - The Electron BrowserWindow instance.
- */
-function setupIpcEvents(window, setSession) {
+
+function setupIpcEvents(broadcast) {
   // Set up IPC event handlers
   ipcMain.handle("read-file", handleReadFile);
   ipcMain.handle("upload-file", handleUploadFile);
@@ -33,9 +29,7 @@ function setupIpcEvents(window, setSession) {
   ipcMain.handle("parse-email", handleParseEmail);
 
   // Set up IPC event listeners
-  ipcMain.on("set-session", async (_, session) => {
-    setSession(session);
-  });
+
 
   ipcMain.on("check-updates", (event, data) => {
     console.log("checking for updates");
@@ -49,7 +43,6 @@ function setupIpcEvents(window, setSession) {
   ipcMain.on("open-link", onOpenLink);
 
   ipcMain.on("print-label", async (event, url) => {
-    // Create a hidden window to render the label
     console.log("print-label fired");
     const printWindow = new BrowserWindow({
       show: true,
@@ -58,9 +51,6 @@ function setupIpcEvents(window, setSession) {
         contextIsolation: false,
       },
     });
-
-    // const loadUrl = base64 ? `data:image/gif;base64,${base64}` : url;
-    // Load the label HTML content
     await printWindow.loadURL(url);
 
     // Open print dialog when content is loaded

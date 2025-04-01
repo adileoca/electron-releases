@@ -3,13 +3,8 @@ const { app: electronApp } = require("electron");
 const { manageSession } = require("./helpers/manageSession");
 const { createApp } = require("./helpers/createApp");
 
-/**
- * Sets up the Express server.
- *
- * @param {BrowserWindow} window - The Electron BrowserWindow instance.
- */
-function setupServer(getWindow) {
-  const { broadcast, setSession } = createApp(getWindow);
+function setupServer() {
+  const { broadcast } = createApp();
 
   electronApp.on("before-quit", () => {
     broadcast({ type: "app", data: { isOpen: false } });
@@ -19,7 +14,7 @@ function setupServer(getWindow) {
     broadcast({ type: "app", data: { isOpen: true } });
   });
 
-  return { setSession };
+  return broadcast;
 }
 
 module.exports = setupServer;

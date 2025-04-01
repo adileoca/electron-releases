@@ -20,7 +20,7 @@ const Sessions = () => {
       sessions?.find(
         (session) =>
           session.replayEvents.length > 0 ||
-          session.id === "e9888d26-63b0-417b-b108-05f228799132"
+          session.id === "abc8a880-ee7d-44e1-91f5-bc3076b61296"
       ),
     [sessions]
   );

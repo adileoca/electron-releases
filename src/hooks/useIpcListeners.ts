@@ -24,6 +24,11 @@ const useIpcListeners = () => {
       photoshop.setVersion(version);
     });
 
+    window.electron.on("log", (message) => {
+      const parsedMessage = JSON.parse(message);
+      console.log("MAIN: " + parsedMessage.info, parsedMessage);
+    });
+
     window.electron.on("update-session", (session) => {
       console.log("updating session via ipc");
       setIpcSession(session);

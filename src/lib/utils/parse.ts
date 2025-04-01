@@ -8,28 +8,28 @@ export const parseConfigurationDetails = (
 ) => {
   const list = [
     {
-      label: "Orientation",
+      label: "Drientare",
       value: options.orientation.find(
         (option) => option.id === Number(configuration?.orientation)
       )?.label,
     },
     {
-      label: "Size",
+      label: "Dimensiune",
       value: formatSize(configuration?.size),
     },
     {
-      label: "Remove background",
+      label: "Personalizare fundal",
       value: options.removeBackground.find(
         (option) => option.id === Number(configuration?.remove_bg)
       )?.label,
     },
 
     {
-      label: "Edit details",
+      label: "Detalii de editare",
       value: configuration?.edit_details,
     },
     {
-      label: "Preview",
+      label: "Previzualizare",
       value: options.wantsPreview.find(
         (option) => option.id === Number(configuration?.wants_preview)
       )?.label,

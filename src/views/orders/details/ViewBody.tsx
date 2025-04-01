@@ -15,6 +15,7 @@ import OrderItem from "./ui/ItemCard";
 import UserInfo from "./ui/UserInfo";
 import { useEffect } from "react";
 import { Order } from "@/lib/supabase/types";
+
 const ViewBody: React.FC<{ order: Order }> = ({ order }) => {
   const currency = new CurrencyFormatter(order.totals?.currency!);
   const orderActivity = useOrderActivity(order);
