@@ -13,7 +13,11 @@ contextBridge.exposeInMainWorld("electron", {
       bucketPath,
     });
   },
-  
+  createShipment: ({ order_id, session }) => {
+    console.log("invoking shipment...", { order_id, session });
+
+    return ipcRenderer.invoke("create-shipment", { order_id, session });
+  },
   setSession: (session) => ipcRenderer.send("set-session", session),
   send: (channel, data) => ipcRenderer.send(channel, data),
 

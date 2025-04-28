@@ -19,6 +19,10 @@ declare global {
       on: (channel: string, callback: (...args: any[]) => void) => void;
       removeListener: (channel: any, func: any) => void;
       event: (eventName: string, data?: any) => void;
+      createShipment: (params: {
+        order_id: string;
+        session: any;
+      }) => Promise<{ error: string | null; url: string | null }>;
     };
   }
 }

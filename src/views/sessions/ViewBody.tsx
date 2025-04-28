@@ -1,35 +1,50 @@
 import { useState, useRef, useEffect, useMemo } from "react";
-
-import { useFetchSessions } from "./hooks/useFetchSessions";
+import Input from "@/components/ui/Input";
+import { useFetchSession } from "./hooks/useFetchSessions";
 import { useDatabase } from "@/lib/supabase/context";
 import { Session } from "./hooks/useFetchSessions";
-
+import Button from "@/components/ui/Button";
 import rrwebPlayer from "rrweb-player";
 import "rrweb-player/dist/style.css"; // Add this import
+import { useEffectTrigger } from "../media/context/hooks/useEffectTrigger";
 
 const Sessions = () => {
   const { supabase } = useDatabase();
-  const sessions = useFetchSessions(supabase);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [shouldFetch, triggerFetch] = useEffectTrigger();
+  const session = useFetchSession(supabase, sessionId, shouldFetch);
 
-  useEffect(() => {
-    console.log("sessions", sessions);
-  }, [sessions]);
-
-  const session = useMemo(
-    () =>
-      sessions?.find(
-        (session) =>
-          session.replayEvents.length > 0 ||
-          session.id === "abc8a880-ee7d-44e1-91f5-bc3076b61296"
-      ),
-    [sessions]
-  );
   useEffect(() => {
     console.log("found session", session);
   }, [session]);
 
   return (
     <div className="p-4">
+      <div className="space-y-2 pb-4">
+        <h1 className="text-white">Session id</h1>
+
+        <Input
+          className="h-7 w-full rounded-lg"
+          onChange={(e) => setSessionId(e.target.value.trim())}
+        />
+        <div>
+          <Button onClick={() => triggerFetch()}>Cauta </Button>
+        </div>
+        <div>
+          {session &&
+            session.fbclid.map(({ fbclid }) => (
+              <div className="text-white">
+                Session fbclid: <strong>{fbclid}</strong>
+              </div>
+            ))}
+          {session &&
+            session.gclid.map(({ gclid }) => (
+              <div className="text-white">
+                Session gclid: <strong>{gclid}</strong>
+              </div>
+            ))}
+        </div>
+      </div>
       {session ? <SessionCard session={session} /> : <div>Loading...</div>}
     </div>
   );
@@ -48,14 +63,6 @@ const SessionCard: React.FC<{ session: Session }> = ({ session }) => {
       }
       return acc;
     }, [] as any[]);
-  }, []);
-
-  useEffect(() => {
-    console.log("events", events);
-  }, [events]);
-
-  useEffect(() => {
-    console.log("replayEvents", session);
   }, [session]);
 
   useEffect(() => {
@@ -72,7 +79,7 @@ const SessionCard: React.FC<{ session: Session }> = ({ session }) => {
         props: {
           events,
           showController: true,
-          skipInactive: false,
+          // skipInactive: false,
           // Consider setting useVirtualDom: false to avoid conflicts
           useVirtualDom: true,
           width: playerRef.current.clientWidth,
@@ -87,10 +94,7 @@ const SessionCard: React.FC<{ session: Session }> = ({ session }) => {
       {/* <span>
         {session.id} count: {session.replayEvents.length}
       </span> */}
-      <div
-        ref={playerRef}
-        className="relative aspect-video rounded-3xl"
-      />
+      <div ref={playerRef} className="relative aspect-video rounded-3xl" />
     </div>
   );
 };

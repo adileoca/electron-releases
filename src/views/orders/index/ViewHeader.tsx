@@ -58,11 +58,11 @@ const ViewHeader = () => {
                   onClick={() => setShowSearch(true)}
                 />
                 <ViewHeaderButton Icon={FunnelIcon} /> */}
-                {selectedOrderIds.length > 0 && (
+                {/* {selectedOrderIds.length > 0 && (
                   <button className="rounded-lg border border-red-500/90  px-3 py-px font-semibold text-red-500/90 hover:text-red-500 hover:border-red-500">
                     Delete
                   </button>
-                )}
+                )} */}
               </div>
             </div>
           </div>

@@ -1,5 +1,4 @@
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Spinner from "@/components/ui/Spinner";
 
 import { ContextData, RowPropsMap, ContextState } from "../types";
@@ -97,40 +96,68 @@ export const useParseRows = (
 const UploadButton: React.FC<{ db: Database; id: number }> = ({ db, id }) => {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+  const uploadInProgressRef = useRef(false);
+
   const { getRootProps, getInputProps, open } = useUpload((imageFile: File) => {
     setFile(imageFile);
   });
 
   useEffect(() => {
-    if (!file) return;
+    if (!file || uploadInProgressRef.current) return;
+
+    let mounted = true;
+    uploadInProgressRef.current = true;
 
     const uploadFile = async () => {
-      setUploading(true);
-      const filename = uuid();
-      await Promise.all([
-        db.insert.media(
+      try {
+        setUploading(true);
+        const filename = uuid();
+        await db.insert.media(
           {
             bucket_name: "private_bucket",
             path: `templates/${filename}`,
             id: filename,
           },
           { content: file }
-        ),
-        db.supabase
+        );
+        await db.supabase
           .from("product_sizes")
           .update({ template_id: filename })
-          .eq("id", id),
-      ]);
+          .eq("id", id);
 
-      setUploading(false);
-      setFile(null);
+        if (mounted) {
+          setUploading(false);
+          setFile(null);
+        }
+      } catch (error) {
+        console.error("Upload failed:", error);
+        if (mounted) {
+          setUploading(false);
+        }
+      } finally {
+        if (mounted) {
+          uploadInProgressRef.current = false;
+        }
+      }
     };
+
     uploadFile();
-  }, [file]);
+
+    return () => {
+      mounted = false;
+    };
+  }, [file, db, id]);
 
   return (
-    <div {...getRootProps()} onClick={open} className="w-full">
-      <Button className="flex items-center">
+    <div className="w-full">
+      <Button
+        onClick={(e) => {
+          e.stopPropagation();
+          if (!uploading) open();
+        }}
+        className="flex items-center"
+        disabled={uploading}
+      >
         <input {...getInputProps()} />
         {uploading && (
           <Spinner color1="fill-neutral-500" color2="fill-neutral-100" />
@@ -140,7 +167,6 @@ const UploadButton: React.FC<{ db: Database; id: number }> = ({ db, id }) => {
     </div>
   );
 };
-
 const DownloadButton: React.FC<{
   db: Database;
   template: NonNullable<TemplatesData[0]["template"]>;

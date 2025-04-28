@@ -1,29 +1,32 @@
 import { Supabase } from "@/lib/supabase/database";
 import { useEffect, useState } from "react";
 
-export const useFetchSessions = (supabase: Supabase) => {
-  const [sessions, setSessions] = useState<Session[]>();
+export const useFetchSession = (
+  supabase: Supabase,
+  session_id: string | null,
+  shouldFetch: number
+) => {
+  const [sessions, setSessions] = useState<Session>();
 
   useEffect(() => {
-    const sessions = fetchSessions(supabase);
-    sessions.then((data) => {
-      if (data) setSessions(data);
-      console.log("sessions", data);
+    if (!session_id) return;
+    fetchSessions(supabase, session_id).then((data) => {
+      setSessions(data);
+      console.log("session", data);
     });
-  }, [supabase]);
+  }, [supabase, shouldFetch]);
 
   return sessions;
 };
 
-const fetchSessions = async (supabase: Supabase) => {
+const fetchSessions = async (supabase: Supabase, session_id: string) => {
   const { data, error } = await supabase
     .from("sessions")
     .select(
-      `*,
-        replayEvents: session_replay_events(*)`
+      `*, replayEvents: session_replay_events(*), gclid: session_gclids(*), fbclid: session_fbclids(*)`
     )
-    .eq("id", "abc8a880-ee7d-44e1-91f5-bc3076b61296")
-    // .gte("session_replay_events.created_at", "2025-03-28 00:00:00+00");
+    .eq("id", session_id)
+    .single();
 
   console.log("Data", data);
   if (error) {
@@ -33,4 +36,4 @@ const fetchSessions = async (supabase: Supabase) => {
   return data;
 };
 
-export type Session = Awaited<ReturnType<typeof fetchSessions>>[0];
+export type Session = Awaited<ReturnType<typeof fetchSessions>>;

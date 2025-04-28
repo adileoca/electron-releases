@@ -13,6 +13,7 @@ import {
   HomeIcon,
   Cog8ToothIcon,
   UserCircleIcon,
+  ListBulletIcon,
 } from "@heroicons/react/24/outline";
 
 import { useDatabase } from "@/lib/supabase/context";
@@ -25,6 +26,7 @@ const navigation = [
   { name: "Comenzi", href: "/orders", icon: FolderIcon },
   { name: "Printuri", href: "/prints", icon: PrinterIcon },
   // { name: "Emails", href: "/emails", icon: EnvelopeIcon },
+  { name: "Produse", href: "/products", icon: ListBulletIcon },
   { name: "Rapoarte", href: "/reports", icon: ChartPieIcon },
   { name: "Sesiuni", href: "/sessions", icon: BuildingStorefrontIcon },
   // { name: "Documente", href: "/documents", icon: DocumentTextIcon },

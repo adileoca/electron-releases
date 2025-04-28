@@ -1,20 +1,15 @@
-import {
-  MagnifyingGlassIcon,
-  SparklesIcon,
-  FunnelIcon,
-} from "@heroicons/react/24/solid";
+import { useEffect } from "react";
 
 import { useOrderActivity } from "./hooks/useOrderActivity";
 import { CurrencyFormatter } from "@/lib/utils/format";
+import { Order } from "@/lib/supabase/types";
 
+import OrderStatusBadge from "@/components/ui/OrderStatusBadge";
 import ActivityFeed from "@/components/ui/ActivityFeed";
-
 import ShippingCard from "./ui/ShippingCard";
 import BillingCard from "./ui/BillingCard";
 import OrderItem from "./ui/ItemCard";
 import UserInfo from "./ui/UserInfo";
-import { useEffect } from "react";
-import { Order } from "@/lib/supabase/types";
 
 const ViewBody: React.FC<{ order: Order }> = ({ order }) => {
   const currency = new CurrencyFormatter(order.totals?.currency!);
@@ -23,8 +18,13 @@ const ViewBody: React.FC<{ order: Order }> = ({ order }) => {
   useEffect(() => {
     console.log("order", order);
   }, [order]);
+
+  const noOfAdhesives = order.items.reduce((acc, item) => {
+    if (item.configuration?.wants_adhesive === "2") acc++;
+    return acc;
+  }, 0);
   return (
-    <div className="mx-auto max-w-screen-2xl space-y-8">
+    <div className="mx-auto space-y-8">
       <div className="p-4 ">
         <div className="grid grid-cols-3 gap-8">
           <UserInfo order={order} />
@@ -48,6 +48,12 @@ const ViewBody: React.FC<{ order: Order }> = ({ order }) => {
           <h1 className="whitespace-nowrap text-xl font-medium text-white/80">
             Produse
           </h1>
+          {noOfAdhesives ? (
+            <OrderStatusBadge
+              text={`+ ${noOfAdhesives} tuburi de adeziv`}
+              color="amber"
+            />
+          ) : null}
         </div>
         <div className="space-y-8">
           {order.items.map((item, idx) => (

@@ -28,12 +28,12 @@ function createApp() {
   const server = createServer(app);
   const ws = new WebSocketServer({ server, maxPayload: 1024 * 1024 * 1024 });
   const clients = [];
-  const window = getWindow();
 
   let sessionData = null;
   function broadcast(message) {
     clients.forEach((ws) => {
       if (ws.readyState === WebSocket.OPEN) {
+        const window = getWindow();
         window.webContents.send(
           "log",
           JSON.stringify({
@@ -51,21 +51,22 @@ function createApp() {
   }
 
   ipcMain.on("set-session", (_, session) => {
-
+    const window = getWindow();
+    window.webContents.send(
+      "log",
+      JSON.stringify({
+        info: "IPC event set-session got called...",
+        message: { session },
+      })
+    );
     broadcast({ type: "session", data: session });
-    // window.webContents.send(
-    //   "log",
-    //   JSON.stringify({
-    //     info: "IPC event set-session got called...",
-    //     message: { session },
-    //   })
-    // );
   });
 
   ws.on("connection", (ws, req) => {
     clients.push(ws);
-
     const window = getWindow();
+    
+    window.webContents.send("get-session");
     if (sessionData) {
       broadcast({ type: "session", data: sessionData });
     } else {

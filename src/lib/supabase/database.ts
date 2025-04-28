@@ -749,6 +749,7 @@ class QueryManager {
             *,
             configuration: item_configurations(
               *,
+              size: product_sizes(*),
               main_media: media!item_configurations_main_media_id_fkey(*),
               bg_media: media!item_configurations_bg_media_id_fkey(*)
             ),
@@ -801,7 +802,7 @@ class QueryManager {
       user_id?: string;
     };
   }) => {
-    let query = this.supabase.from("order_activities").select("*");
+    let query = this.supabase.from("order_comments").select("*");
 
     if (options?.where) {
       for (const [key, value] of Object.entries(options.where)) {
@@ -1109,7 +1110,7 @@ class QueryManager {
               totals: order_totals(*),
               payment: order_payments(*),
               status: order_statuses(*),
-              activities: order_activities(*, user: user_profiles(*)),
+              activities: order_comments(*, user: user_profiles(*)),
               items: order_items(*,
                 tasks(*),
                 totals: order_item_totals(*),
@@ -1142,7 +1143,7 @@ class QueryManager {
             totals: order_totals(*),
             payment: order_payments(*),
             status: order_statuses(*),
-            activities: order_activities(*, user: user_profiles(*)),
+            activities: order_comments(*, user: user_profiles(*)),
             items: order_items(*,
               totals: order_item_totals(*),
               assets: item_assets(*,
@@ -1252,9 +1253,9 @@ class InsertManager {
     return data.id;
   }
 
-  async orderActivities(insert: DbTables["order_activities"]["Insert"]) {
+  async orderActivities(insert: DbTables["order_comments"]["Insert"]) {
     const { data, error } = await this.supabase
-      .from("order_activities")
+      .from("order_comments")
       .insert(insert)
       .select("id")
       .single();
@@ -1632,10 +1633,10 @@ class UpdateManager {
 
   orderActivities = async (
     id: string,
-    update: DbTables["order_activities"]["Update"]
+    update: DbTables["order_comments"]["Update"]
   ) => {
     const { data, error } = await this.supabase
-      .from("order_activities")
+      .from("order_comments")
       .update(update)
       .eq("id", parseInt(id))
       .select("id")

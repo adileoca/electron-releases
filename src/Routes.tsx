@@ -14,7 +14,8 @@ import SettingsView from "./views/settings";
 import ProfileView from "./views/profile";
 import SessionsView from "./views/sessions";
 import TemplatesView from "./views/templates";
-
+import ProductsView from "./views/products/table";
+import ProductDetailsView from "./views/products/details";
 const AppRoutes = () => {
   return (
     <div className=" z-10 relative h-screen w-screen">
@@ -35,6 +36,8 @@ const AppRoutes = () => {
             <Route path="/prints" element={<PrintsView />} index />
             <Route path="/sessions" element={<SessionsView />} index />
             <Route path="/reports" element={<ReportsView />} index />
+            <Route path="/products" element={<ProductsView />} index />
+            <Route path="/products/:product_id" element={<ProductDetailsView />} />
             <Route path="/documents" element={<DocumentsView />} index />
             <Route path="/settings" element={<SettingsView />} index />
             <Route path="/profile" element={<ProfileView />} index />

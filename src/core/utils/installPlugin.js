@@ -1,15 +1,16 @@
-const { app, BrowserWindow, dialog, pushNotifications } = require("electron");
-const { autoUpdater } = require("electron-updater");
+const { dialog } = require("electron");
+
 const { exec } = require("child_process");
 const isDev = require("electron-is-dev");
 const path = require("path");
 const packageJson = require("../../../package.json");
+const { getWindow } = require("../getWindow");
 
-const installPlugin = (window) => {
-  if (isDev) {
-    return;
-  }
-
+const installPlugin = () => {
+  // if (isDev) {
+  //   return;
+  // }
+  const window = getWindow()
   const pluginDir = isDev
     ? "../../../assets/plugin"
     : "../../../../assets/plugin";
@@ -59,7 +60,11 @@ const installPlugin = (window) => {
 
     const adipanPlugin = psPlugins.find(({ name }) => name === "adipan");
 
-    if (!adipanPlugin || adipanPlugin.version !== packageJson.pluginVersion) {
+    if (
+      psPlugins.length === 0 ||
+      !adipanPlugin ||
+      adipanPlugin.version !== packageJson.pluginVersion
+    ) {
       window.webContents.send("plugin-message", {
         message:
           "Plugin not installed or version mismatch, installing plugin...",
@@ -117,4 +122,5 @@ function parseOutput(text) {
 
   return result;
 }
+
 module.exports = { installPlugin };

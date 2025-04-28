@@ -29,7 +29,7 @@ export const SupabaseProvider = ({
   const [ipcSession, setIpcSession] = useState<Session | null | undefined>(
     undefined
   );
-  const [session, setSession] = useState<Session | null>(null);
+  const [session, setSession] = useState<Session | null | undefined>(undefined);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [lastActivity, setLastActivity] = useState(Date.now());
 
@@ -40,16 +40,61 @@ export const SupabaseProvider = ({
   };
 
   useEffect(() => {
+    // Check session expiry every minute
+    const interval = setInterval(() => {
+      if (session && session.expires_at) {
+        const now = Math.floor(Date.now() / 1000); // seconds
+        if (session.expires_at < now + 120) {
+          console.log("Session expired, logging out...");
+          updateSession(null);
+          supabase.auth.signOut();
+        }
+      }
+    }, 60 * 1000); // every minute
+
+    return () => clearInterval(interval);
+  }, [session]);
+
+  useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       updateSession(session);
     });
 
     const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session && session.expires_at) {
+        const now = Math.floor(Date.now() / 1000);
+        if (session.expires_at < now + 120) {
+          updateSession(null);
+          supabase.auth.signOut();
+          return;
+        }
+      }
       updateSession(session);
     });
 
     return () => data.subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    // Define the handler functions
+    const getSessionHandler = () => {
+      window.electron.setSession(session === undefined ? null : session);
+    };
+
+    const updateSessionHandler = (newSession) => {
+      setIpcSession(newSession);
+    };
+
+    // Add the listeners
+    window.electron.on("get-session", getSessionHandler);
+    window.electron.on("update-session", updateSessionHandler);
+
+    // Return cleanup function to remove listeners on unmount
+    return () => {
+      window.electron.removeListener("get-session", getSessionHandler);
+      window.electron.removeListener("update-session", updateSessionHandler);
+    };
+  }, [session]); // Add session as dependency so it gets the latest value
 
   useEffect(() => {
     if (JSON.stringify(ipcSession) === JSON.stringify(session)) return;

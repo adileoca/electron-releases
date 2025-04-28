@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import axios from "axios";
 
 import MiniTable from "@/components/ui/MiniTable";
@@ -11,10 +11,55 @@ import { Order } from "@/lib/supabase/types";
 import { electron } from "process";
 
 const ShippingCard: React.FC<{ order: Order }> = ({ order }) => {
-  const [generatedUrl, setGeneratedUrl] = useState(null);
+  const [generatedUrl, setGeneratedUrl] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const { supabase } = useSupabase();
+  const { supabase, session } = useSupabase();
+
+  const createShipment = useCallback(async () => {
+    if (!session) return
+    // Check if the URL is already generated
+    if (generatedUrl) {
+      window.electron.send("open-link-in-browser", generatedUrl);
+      return;
+    }
+
+    // Check if the order has shipments and if not generate a new one
+    if (order.shipments.length === 0) {
+      setLoading(true);
+
+      const { url, error } = await window.electron.createShipment({
+        order_id: order.id,
+        session,
+      });
+
+      if (error) {
+        console.log("Error generating signed URL:", error);
+        setLoading(false);
+        setError(error);
+        return;
+      }
+
+      window.electron.send("open-link-in-browser", url);
+      setGeneratedUrl(url);
+      setLoading(false);
+      return;
+    }
+
+    // If the order has shipments, open the link
+    const { bucket_name, path } = order.shipments[0].media!;
+    const { data, error } = await supabase.storage
+      .from(bucket_name)
+      .createSignedUrl(path, 3600); // 1 hour
+
+    if (error) {
+      console.log("Error generating signed URL:", error);
+      setError(error.message);
+      return;
+    }
+    window.electron.send("open-link-in-browser", data?.signedUrl);
+  }, [order, generatedUrl, session, supabase]);
+
   return (
     <InfoCard title="Shipping Information">
       <MiniTable
@@ -37,7 +82,7 @@ const ShippingCard: React.FC<{ order: Order }> = ({ order }) => {
             <button
               onClick={() =>
                 window.electron.send(
-                  "open-link",
+                  "open-link-in-browser",
                   `https://www.ups.com/track?tracknum=${order.shipments[0]?.tracking_number}&loc=en_US&requester=ST/trackdetails`
                 )
               }
@@ -50,40 +95,7 @@ const ShippingCard: React.FC<{ order: Order }> = ({ order }) => {
         }}
       />
       <div className="mt-4">
-        <Button
-          onClick={async () => {
-            if (generatedUrl) {
-              window.electron.send("print-label", generatedUrl);
-              return;
-            }
-
-            if (order.shipments.length === 0) {
-              setLoading(true);
-              const response = await axios.post(
-                "http://localhost:3000/api/ups/create-shipping",
-                { orderId: order.id },
-                {}
-              );
-
-              console.log("response.data.data", response.data.data);
-              const { url } = response.data.data;
-              setLoading(false);
-              setGeneratedUrl(url);
-
-              window.electron.send("print-label", url);
-              return;
-            }
-
-            const { bucket_name, path } = order.shipments[0].media!;
-            const { data, error } = await supabase.storage
-              .from(bucket_name)
-              .createSignedUrl(path, 3600);
-            console.log("signedUrl", data?.signedUrl);
-            if (error) console.log("error", error);
-
-            window.electron.send("print-label", data?.signedUrl);
-          }}
-        >
+        <Button onClick={() => createShipment()}>
           {loading ? (
             <Spinner h="h-3.5" color1="fill-neutral-500" color2="fill-white" />
           ) : null}

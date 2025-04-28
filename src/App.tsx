@@ -11,7 +11,6 @@ import AppRoutes from "./Routes";
 const App = () => {
   const { session } = useSupabase();
 
-  // TODO URGENT: add logic to keep jwt token alive (for at most 8 hours in case of inactivity)
   useEffect(() => {
     console.log("session update");
   }, [session]);

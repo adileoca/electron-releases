@@ -18,10 +18,10 @@ const ViewBody = () => {
         {loading ? (
           <LoadingBody />
         ) : (
-          <>
+          <table>
             <TableHeader />
             <TableBody />
-          </>
+          </table>
         )}
       </div>
     </ViewShell>

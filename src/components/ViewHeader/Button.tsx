@@ -45,7 +45,7 @@ const ViewHeaderButton: React.FC<Props> = ({
         onClick={onClick}
         className={clsx(
           label ? " py-1 pl-2 pr-2.5" : "p-1",
-          "flex items-center border border-transparent group rounded-lg text-sm space-x-1.5 transition hover:bg-neutral-900/10 "
+          "flex items-center border border-transparent group rounded-lg text-sm space-x-1 hover:bg-white/10 "
         )}
         onMouseEnter={() => setShow(true)}
         onMouseLeave={() => setShow(false)}
@@ -62,7 +62,7 @@ const ViewHeaderButton: React.FC<Props> = ({
 const LabelComponent = ({ label }) => (
   <>
     {label && (
-      <span className="font-medium text-black/80 dark:text-white/80 ">
+      <span className="font-medium text-black/80 dark:text-white/80 dark:group-hover:text-white">
         {label}
       </span>
     )}

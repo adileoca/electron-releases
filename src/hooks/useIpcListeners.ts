@@ -9,8 +9,6 @@ const useIpcListeners = () => {
     actions: { update, photoshop },
   } = useGlobalContext();
 
-  const { setIpcSession } = useSupabase();
-
   useEffect(() => {
     // ? preloader strips the event before sending it to the renderer
     const handleOpenOrder = async (orderId: string) => {
@@ -27,11 +25,6 @@ const useIpcListeners = () => {
     window.electron.on("log", (message) => {
       const parsedMessage = JSON.parse(message);
       console.log("MAIN: " + parsedMessage.info, parsedMessage);
-    });
-
-    window.electron.on("update-session", (session) => {
-      console.log("updating session via ipc");
-      setIpcSession(session);
     });
 
     window.electron.on("checking-for-update", () => {

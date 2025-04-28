@@ -1,9 +1,9 @@
 import { configuratorOptions as options } from "@/constants";
 import { formatSize } from "@/lib/utils/format";
 import { CartItemsType } from "@/lib/supabase/database";
-
+import { OrderDetailedType } from "@/lib/supabase/database";
 export const parseConfigurationDetails = (
-  configuration: CartItemsType[0]["configuration"],
+  configuration: OrderDetailedType["items"][0]["configuration"] ,
   config: { asObject: boolean }
 ) => {
   const list = [
@@ -29,10 +29,18 @@ export const parseConfigurationDetails = (
       value: configuration?.edit_details,
     },
     {
+      label: "Detalii text",
+      value: configuration?.text_details,
+    },
+    {
       label: "Previzualizare",
       value: options.wantsPreview.find(
         (option) => option.id === Number(configuration?.wants_preview)
       )?.label,
+    },
+    {
+      label: "Are template",
+      value: configuration?.size?.template_id ? "Da" : "Nu",
     },
   ];
 

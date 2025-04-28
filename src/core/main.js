@@ -2,15 +2,16 @@ const { app, BrowserWindow, ipcMain, dialog, session } = require("electron");
 const { exec } = require("child_process");
 const path = require("path");
 
+const { installPlugin } = require("./utils/installPlugin");
 const { setupIpcEvents } = require("./events/ipcEvents");
 const createWindow = require("./events/windowEvents");
-const setupServer = require("./server/index.js");
-const { getWindow } = require("./getWindow.js");
+const setupServer = require("./server/index");
 
+// ! make sure to apply changes to electron.js as well
 app.whenReady().then(() => {
-  const mainWindow = getWindow();
-   setupServer();
+  createWindow();
   setupIpcEvents();
+  setupServer();
 });
 
 app.on("window-all-closed", () => {
@@ -21,38 +22,6 @@ app.on("window-all-closed", () => {
 
 app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) {
-    getWindow();
+    createWindow();
   }
 });
-
-// // const filter = { urls: ["*://*.adipan.eu/*"] };
-// const filter = { urls: ["http://localhost:*/*", "https://localhost:*/*"] };
-
-// session.defaultSession.webRequest.onBeforeSendHeaders(
-//   filter,
-//   (details, callback) => {
-//     callback({ requestHeaders: details.requestHeaders });
-//   }
-// );
-
-// // Add CORS headers to responses
-// session.defaultSession.webRequest.onHeadersReceived(
-//   filter,
-//   (details, callback) => {
-//     if (!details.responseHeaders) {
-//       details.responseHeaders = {};
-//     }
-
-//     details.responseHeaders["Access-Control-Allow-Origin"] = [
-//       "http://localhost:3005",
-//     ];
-//     details.responseHeaders["Access-Control-Allow-Methods"] = [
-//       "GET, POST, PUT, DELETE, OPTIONS",
-//     ];
-//     details.responseHeaders["Access-Control-Allow-Headers"] = [
-//       "Content-Type, Authorization",
-//     ];
-
-//     callback({ responseHeaders: details.responseHeaders });
-//   }
-// );

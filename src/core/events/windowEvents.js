@@ -17,6 +17,7 @@ function createWindow() {
     titleBarStyle: "hidden",
     trafficLightPosition: { x: 16, y: 16 },
     webPreferences: {
+
       contextIsolation: true,
       preload: path.join(__dirname, "preload.js"),
     },
@@ -42,7 +43,6 @@ function createWindow() {
 
   window.once("ready-to-show", () => {
     autoUpdater.checkForUpdatesAndNotify();
-
     installPlugin(window);
   });
 

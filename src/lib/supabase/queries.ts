@@ -12,7 +12,7 @@ export const getOrderById = async (supabase: Supabase, orderId: string) => {
         totals: order_totals(*),
         payment: order_payments(*),
         status: order_statuses(*),
-        activities: order_activities(*, user: user_profiles(*)),
+        activities: order_comments(*, user: user_profiles(*)),
         items: order_items(*,
           tasks(*),
           totals: order_item_totals(*),
@@ -67,5 +67,3 @@ export const getAllUndeliveredOrders = async (supabase: Supabase) => {
   }
   return data;
 };
-
-
