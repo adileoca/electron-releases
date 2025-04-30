@@ -64,7 +64,7 @@ export const useOrderActivity = (order: OrderDetailedType) => {
         id: "1",
         date: order.created_at!,
         Content: <div>Comanda a fost plasatǎ.</div>,
-        Details: <div>caca</div>,
+        Details: <div>{`ID: ${order.id}`}</div>,
         type: "positive",
         category: "general",
       },

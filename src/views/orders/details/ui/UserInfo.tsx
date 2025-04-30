@@ -1,7 +1,8 @@
 import MiniTable from "../../../../components/ui/MiniTable";
 import InfoCard from "./InfoCard";
-
-const UserInfo = ({ order }) => {
+import { Order } from "@/lib/supabase/types";
+import { formatDate } from "@/lib/utils/format";
+const UserInfo: React.FC<{ order: Order }> = ({ order }) => {
   return (
     <InfoCard
       title="Customer Information"
@@ -18,11 +19,21 @@ const UserInfo = ({ order }) => {
       <MiniTable
         title="Analitice"
         data={{
-          Autentificat: "Fals",
-          Sursǎ: "Fals",
-          Problematic: order.shipping_address?.state!,
-          Revenues: order.shipping_address?.state!,
-          "No. of orders": order.shipping_address?.line_1!,
+          Autentificat: order.user_id ? "Da" : "Nu",
+          Sursǎ:
+            order.session?.gclids && order.session?.gclids.length > 0
+              ? `Google (${order.session?.gclids.length} vizite)`
+              : "Direct",
+          "Prima vizitǎ": formatDate(order.session?.created_at!, {
+            relative: true,
+            locale: "ro-RO",
+          }),
+          "Ultima vizitǎ": "-",
+
+          "Duratǎ vizionare":
+            order.session?.created_at && order.created_at
+              ? formatDuration(order.session.created_at, order.created_at)
+              : "-",
         }}
       />
     </InfoCard>
@@ -30,3 +41,18 @@ const UserInfo = ({ order }) => {
 };
 
 export default UserInfo;
+
+function formatDuration(from: string | Date, to: string | Date) {
+  const ms = new Date(to).getTime() - new Date(from).getTime();
+  if (ms < 0) return "-";
+  const minutes = Math.floor(ms / 60000) % 60;
+  const hours = Math.floor(ms / 3600000) % 24;
+  const days = Math.floor(ms / 86400000);
+
+  const parts: string[] = [];
+  if (days > 0) parts.push(`${days} zi${days > 1 ? "le" : ""}`);
+  if (hours > 0) parts.push(`${hours} or${hours > 1 ? "e" : "ă"}`);
+  if (minutes > 0 || parts.length === 0) parts.push(`${minutes} minute`);
+  return parts.join(", ");
+}
+// ...existing code...
