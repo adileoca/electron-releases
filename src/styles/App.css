@@ -2,6 +2,11 @@
   -webkit-app-region: drag;
 }
 
+.clickable {
+  -webkit-app-region: no-drag;
+  pointer-events: all;
+}
+
 
 /* MGc-aYY_J47mvHC */
 

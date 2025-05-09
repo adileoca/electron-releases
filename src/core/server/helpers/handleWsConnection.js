@@ -13,7 +13,7 @@ const handleWsConnection = (ws, req) => {
     // });
     if (type === "session") {
       const receviedSession = data;
-      window.webContents.send("session-update", receviedSession);
+      window.webContents.send("update-session", receviedSession);
     }
 
     if (type === "pluginVersion") {

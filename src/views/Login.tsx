@@ -26,7 +26,7 @@ const Login = ({ searchParams }: { searchParams?: any }) => {
           {/* {['success', 'error', 'message'].some(
             param => param in searchParams
             ) && <FormMessage message={searchParams} />} */}
-          <div className="flex flex-col space-y-4">
+          <div className="clickable flex flex-col space-y-4">
             <div className="-mt-[20px] mb-0 flex justify-center">
               <img
                 src={Logo}

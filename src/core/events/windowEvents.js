@@ -1,9 +1,11 @@
 const { app, BrowserWindow, dialog, pushNotifications } = require("electron");
+const packageJson = require("../../../package.json");
 const { autoUpdater } = require("electron-updater");
 const { exec } = require("child_process");
 const isDev = require("electron-is-dev");
+const { platform } = require("os");
 const path = require("path");
-const packageJson = require("../../../package.json");
+const url = require("url");
 
 function createWindow() {
   let window = new BrowserWindow({
@@ -17,18 +19,24 @@ function createWindow() {
     titleBarStyle: "hidden",
     trafficLightPosition: { x: 16, y: 16 },
     webPreferences: {
-
       contextIsolation: true,
       preload: path.join(__dirname, "preload.js"),
     },
   });
   window.isMainWindow = true;
 
-  window.setWindowButtonVisibility(true);
+  if (platform() === "darwin") {
+    window.setWindowButtonVisibility(true);
+  }
+
   window.loadURL(
     isDev
       ? "http://localhost:3005"
-      : `file://${path.join(__dirname, "../../../build/index.html")}`
+      : url.format({
+          pathname: path.join(__dirname, "../../../build/index.html"),
+          protocol: "file:",
+          slashes: true,
+        })
   );
 
   if (isDev) {

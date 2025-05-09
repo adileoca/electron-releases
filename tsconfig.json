@@ -37,6 +37,6 @@
     "public/electron.js",
     "public/electron.js",
     "public/electron.js"
-  ],
+, "sign/esign-windows.js"  ],
   "exclude": ["node_modules", "**/node_modules/*"]
 }

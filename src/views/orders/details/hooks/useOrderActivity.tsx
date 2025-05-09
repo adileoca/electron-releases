@@ -59,16 +59,19 @@ export const useOrderActivity = (order: OrderDetailedType) => {
   useEffect(() => {
     if (!orderLogs || !userProfiles) return;
 
-    let activities: ActivityItem[] = [
-      {
-        id: "1",
-        date: order.created_at!,
-        Content: <div>Comanda a fost plasatǎ.</div>,
-        Details: <div>{`ID: ${order.id}`}</div>,
-        type: "positive",
+    let activities: ActivityItem[] = [];
+
+    order.activities.forEach((activity) => {
+      console.log("Activity metadata", activity.metadata);
+      activities.push({
+        id: String(activity.id),
+        type: activity.type || "critical",
+        date: activity.created_at!,
+        Content: <div>{activity.description}</div>,
+        Details: JSON.stringify(activity.metadata),
         category: "general",
-      },
-    ];
+      });
+    });
 
     callLogs?.forEach((log) => {
       activities.push({

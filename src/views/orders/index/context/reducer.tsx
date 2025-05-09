@@ -93,11 +93,11 @@ export const ordersTableColumns: ContextState["cols"] = {
   },
   order_no: {
     label: "Nr. comandǎ",
-    minConstraints: [135, 48] as [number, number],
-    initialWidth: 135,
+    minConstraints: [140, 48] as [number, number],
+    initialWidth: 140,
     isSticky: true,
     position: 1,
-    width: 135,
+    width: 140,
   },
   date_placed: {
     label: "Datǎ plasare",

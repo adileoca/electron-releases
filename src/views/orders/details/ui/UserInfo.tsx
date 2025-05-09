@@ -24,11 +24,24 @@ const UserInfo: React.FC<{ order: Order }> = ({ order }) => {
             order.session?.gclids && order.session?.gclids.length > 0
               ? `Google (${order.session?.gclids.length} vizite)`
               : "Direct",
-          "Prima vizitǎ": formatDate(order.session?.created_at!, {
+          "Primul click": formatDate(order.session?.created_at!, {
             relative: true,
             locale: "ro-RO",
           }),
-          "Ultima vizitǎ": "-",
+          "Ultimul click":
+            order.session?.gclids && order.session?.gclids.length > 0
+              ? formatDate(
+                  order.session.gclids.sort(
+                    (a, b) =>
+                      new Date(b.created_at || 0).getTime() -
+                      new Date(a.created_at || 0).getTime()
+                  )[0].created_at || "0",
+                  {
+                    relative: true,
+                    locale: "ro-RO",
+                  }
+                )
+              : "-",
 
           "Duratǎ vizionare":
             order.session?.created_at && order.created_at
