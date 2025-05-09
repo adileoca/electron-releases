@@ -17,7 +17,9 @@ function createWindow() {
     frame: false,
     vibrancy: "sidebar",
     titleBarStyle: "hidden",
-    trafficLightPosition: { x: 16, y: 16 },
+    backgroundMaterial: "mica",
+    darkTheme: true,
+     trafficLightPosition: { x: 16, y: 16 },
     webPreferences: {
       contextIsolation: true,
       preload: path.join(__dirname, "preload.js"),
