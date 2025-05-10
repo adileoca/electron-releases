@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import React from "react";
+import React, { useMemo } from "react";
 import clsx from "clsx";
 
 import {
@@ -15,22 +15,57 @@ import {
   UserCircleIcon,
   ListBulletIcon,
 } from "@heroicons/react/24/outline";
-
+import { UserProfile } from "@/lib/supabase/types";
 import { useDatabase } from "@/lib/supabase/context";
 import { useGlobalContext } from "@/context/global";
 
 // todo: look at user data to decide what should be available based on role
-const navigation = [
+const navigation: {
+  name: string;
+  href: string;
+  icon: typeof HomeIcon;
+  visibleByRoles?: string[];
+}[] = [
   { name: "Acasǎ", href: "/", icon: HomeIcon },
   // { name: "Tasks", href: "/tasks", icon: RectangleStackIcon },
-  { name: "Comenzi", href: "/orders", icon: FolderIcon },
-  { name: "Printuri", href: "/prints", icon: PrinterIcon },
+  {
+    name: "Comenzi",
+    href: "/orders",
+    icon: FolderIcon,
+    visibleByRoles: ["admin"],
+  },
+  {
+    name: "Printuri",
+    href: "/prints",
+    icon: PrinterIcon,
+    visibleByRoles: ["admin", "printing"],
+  },
   // { name: "Emails", href: "/emails", icon: EnvelopeIcon },
-  { name: "Produse", href: "/products", icon: ListBulletIcon },
-  { name: "Rapoarte", href: "/reports", icon: ChartPieIcon },
-  { name: "Sesiuni", href: "/sessions", icon: BuildingStorefrontIcon },
+  {
+    name: "Produse",
+    href: "/products",
+    icon: ListBulletIcon,
+    visibleByRoles: ["admin"],
+  },
+  {
+    name: "Rapoarte",
+    href: "/reports",
+    icon: ChartPieIcon,
+    visibleByRoles: ["admin"],
+  },
+  {
+    name: "Sesiuni",
+    href: "/sessions",
+    icon: BuildingStorefrontIcon,
+    visibleByRoles: ["admin"],
+  },
   // { name: "Documente", href: "/documents", icon: DocumentTextIcon },
-  { name: "Sabloane", href: "/templates", icon: Cog8ToothIcon },
+  {
+    name: "Sabloane",
+    href: "/templates",
+    icon: Cog8ToothIcon,
+    visibleByRoles: ["admin"],
+  },
   { name: "Setǎri", href: "/settings", icon: Cog8ToothIcon },
 ];
 
@@ -43,13 +78,25 @@ const Sidebar: React.FC = () => {
     state: { update },
   } = useGlobalContext();
 
+  const filteredNavigation = useMemo(
+    () =>
+      navigation.filter(
+        (nItem) =>
+          !nItem.visibleByRoles ||
+          nItem.visibleByRoles.some((requiredRole) =>
+            userProfile?.roles.some((userRole) => userRole === requiredRole)
+          )
+      ),
+    [userProfile]
+  );
+
   return (
     <div className="absolute left-0 top-0">
       <div className="fixed flex h-screen w-48 flex-col overflow-y-auto">
         <div className="draggable py-6" />
         <nav className="flex flex-1 flex-col justify-between p-2">
           <ul className="space-y-1">
-            {navigation.map((item) => (
+            {filteredNavigation.map((item) => (
               <li key={item.name}>
                 <button
                   onClick={() => navigate(item.href)}

@@ -40,14 +40,14 @@ const ViewHeaderNavigation = () => {
       <button
         onClick={goBack}
         disabled={!navigation.canGoBack}
-        className=" text-white/80 p-1 pl-0.5 hover:text-white disabled:text-white/40"
+        className=" text-white/80 clickable p-1 pl-0.5 hover:text-white disabled:text-white/40"
       >
         <ChevronLeftIcon className="size-5 stroke-2" />
       </button>
       <button
         onClick={goForward}
         disabled={!navigation.canGoForward}
-        className=" text-white/80 p-1 hover:text-white disabled:text-white/40"
+        className=" text-white/80 p-1 clickable hover:text-white disabled:text-white/40"
       >
         <ChevronRightIcon className="size-5 stroke-2" />
       </button>

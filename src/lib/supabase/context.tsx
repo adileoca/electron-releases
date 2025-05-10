@@ -2,11 +2,12 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { Session } from "@supabase/supabase-js";
 
 import { SupabaseContextType, UserProfile } from "./types";
+import { getUserProfile } from "./queries";
 import MediaManager from "./MediaManager";
 import { createClient } from "./client";
 import Database from "./database";
 
-const EIGHT_HOURS = 8 * 60 * 60 * 1000; // 8 hours in milliseconds
+const EIGHT_HOURS = 8 * 60 * 60 * 1000;
 
 const supabase = createClient();
 const SupabaseContext = createContext<SupabaseContextType | undefined>(
@@ -32,14 +33,14 @@ export const SupabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     });
 
     const { data } = supabase.auth.onAuthStateChange((_, session) => {
-      if (session && session.expires_at) {
-        const now = Math.floor(Date.now() / 1000);
-        if (session.expires_at < now + 60) {
-          updateSession(null);
-          supabase.auth.signOut();
-          return;
-        }
-      }
+      // if (session && session.expires_at) {
+      //   const now = Math.floor(Date.now() / 1000);
+      //   if (session.expires_at < now + 60) {
+      //     updateSession(null);
+      //     supabase.auth.signOut();
+      //     return;
+      //   }
+      // }
       updateSession(session);
     });
 
@@ -102,20 +103,10 @@ export const SupabaseProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     if (!session) return;
-
     const fetchProfile = async () => {
-      const { data, error } = await supabase
-        .from("user_profiles")
-        .select("*")
-        .eq("id", session?.user?.id)
-        .single();
-      if (error) {
-        console.error("error", error);
-      } else {
-        setUserProfile(data);
-      }
+      const data = await getUserProfile(supabase, session.user.id);
+      setUserProfile(data);
     };
-
     fetchProfile();
   }, [session]);
 

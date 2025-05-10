@@ -2,13 +2,13 @@ import React from "react";
 import { Session } from "@supabase/supabase-js";
 
 import { DbTables, Supabase } from "./database";
-import { getOrderById } from "./queries";
+import { getOrderById, getUserProfile } from "./queries";
 
 export type Order = NonNullable<
   Awaited<ReturnType<typeof getOrderById>>["data"]
 >;
 
-export type UserProfile = DbTables["user_profiles"]["Row"] | null;
+export type UserProfile = Awaited<ReturnType<typeof getUserProfile>>;
 
 export type SupabaseContextType = {
   supabase: Supabase;

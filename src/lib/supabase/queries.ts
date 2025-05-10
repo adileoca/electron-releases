@@ -68,3 +68,18 @@ export const getAllUndeliveredOrders = async (supabase: Supabase) => {
   }
   return data;
 };
+
+export const getUserProfile = async (supabase: Supabase, userId: string) => {
+  const { data, error } = await supabase
+    .from("user_profiles")
+    .select("*, roles:user_profile_roles(*, role: user_roles(*))")
+    .eq("id", userId)
+    .single();
+
+  if (error || !data) {
+    console.error("error", error);
+    return null;
+  }
+
+  return { ...data, roles: data.roles.map(({ role }) => role.title) };
+};
