@@ -17,7 +17,7 @@ function createWindow() {
     frame: false,
     vibrancy: "sidebar",
     titleBarStyle: "hidden",
-    backgroundMaterial: "mica",
+    backgroundMaterial: "acrylic",
     darkTheme: true,
      trafficLightPosition: { x: 16, y: 16 },
     webPreferences: {

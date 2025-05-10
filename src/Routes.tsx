@@ -1,5 +1,5 @@
 import { HashRouter as _, Route, Routes } from "react-router-dom";
-import Sidebar from "./components/Sidebar";
+import Sidebar from "./components/sidebar";
 
 import TasksDashboardView from "./views/TasksViews/TasksDashboardView";
 import EmailDetailedView from "./views/emails/details";

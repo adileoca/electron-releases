@@ -81,5 +81,5 @@ export const getUserProfile = async (supabase: Supabase, userId: string) => {
     return null;
   }
 
-  return { ...data, roles: data.roles.map(({ role }) => role.title) };
+  return { ...data, roles: data.roles.map(({ role }) => role?.title) };
 };

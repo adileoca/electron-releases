@@ -10,19 +10,20 @@ const installPlugin = () => {
   // if (isDev) {
   //   return;
   // }
-  const window = getWindow()
+  const window = getWindow();
+
+  const isWindows = process.platform === "win32";
+  const scriptExt = isWindows ? "bat" : "sh";
+
   const pluginDir = isDev
     ? "../../../assets/plugin"
     : "../../../../assets/plugin";
 
-  const listScriptPath = path.join(
-    __dirname,
-    isDev ? `${pluginDir}/list.sh` : `${pluginDir}/list.sh`
-  );
+  const listScriptPath = path.join(__dirname, `${pluginDir}/list.${scriptExt}`);
 
   const installScriptPath = path.join(
     __dirname,
-    isDev ? `${pluginDir}/install.sh` : `${pluginDir}/install.sh`
+    `${pluginDir}/install.${scriptExt}`
   );
 
   const pluginPath = path.join(
@@ -34,7 +35,11 @@ const installPlugin = () => {
     message: "Checking if plugin is installed...",
   });
 
-  exec(`bash ${listScriptPath}`, (error, stdout, stderr) => {
+  const execCmd = isWindows
+    ? `"${listScriptPath}"`
+    : `bash "${listScriptPath}"`;
+
+  exec(execCmd, (error, stdout, stderr) => {
     if (error) {
       const message = `Error executing script: ${error.message}`;
       window.webContents.send("plugin-message", { message });
@@ -69,25 +74,27 @@ const installPlugin = () => {
         message:
           "Plugin not installed or version mismatch, installing plugin...",
       });
-      exec(
-        `bash ${installScriptPath} ${pluginPath}`,
-        (error, stdout, stderr) => {
-          if (error) {
-            const message = `Error executing script: ${error.message}`;
-            window.webContents.send("plugin-message", { message });
-            return;
-          }
-          if (stderr) {
-            const message = `Script stderr: ${stderr}`;
-            window.webContents.send("plugin-message", { message });
-            return;
-          }
 
-          const message = `Script output: ${stdout}`;
+      const execCmd = isWindows
+        ? `"${installScriptPath} ${pluginPath}"`
+        : `bash "${installScriptPath} ${pluginPath}"`;
+
+      exec(execCmd, (error, stdout, stderr) => {
+        if (error) {
+          const message = `Error executing script: ${error.message}`;
           window.webContents.send("plugin-message", { message });
-          console.log(message);
+          return;
         }
-      );
+        if (stderr) {
+          const message = `Script stderr: ${stderr}`;
+          window.webContents.send("plugin-message", { message });
+          return;
+        }
+
+        const message = `Script output: ${stdout}`;
+        window.webContents.send("plugin-message", { message });
+        console.log(message);
+      });
     }
   });
 };
