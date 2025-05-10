@@ -8,6 +8,20 @@
   pointer-events: all;
 }
 
+*::-webkit-scrollbar {
+  height: 10px;
+  width: 0px;    /* Hides vertical scrollbar */
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgb(134, 134, 134);
+  border-radius: 4px;
+}
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 
 /* MGc-aYY_J47mvHC */
 

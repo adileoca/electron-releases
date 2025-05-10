@@ -60,12 +60,12 @@ const ViewHeader: React.FC<{ order: OrderDetailedType | undefined }> = ({
           >
             <BellIcon className="size-5 dark:text-white/80 dark:hover:text-white" />
           </button> */}
-          <button
+          {/* <button
             onClick={() => setIsOpen(true)}
             className="flex items-center p-2"
           >
             <EllipsisVerticalIcon className="size-5 dark:text-white/80 dark:hover:text-white" />
-          </button>
+          </button> */}
           {/* <OptionsMenu /> */}
         </div>
       </ViewHeaderWrapper>
