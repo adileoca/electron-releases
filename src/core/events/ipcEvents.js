@@ -13,8 +13,10 @@ const {
   handleGetCachedFilenames,
 } = require("./handlers/get-cached-filenames.js");
 const { handleDownloadFile } = require("./handlers/download-file.js");
-
+const { platform } = require("os");
 const { installPlugin } = require("../utils/installPlugin.js");
+const { getWindow } = require("../getWindow.js");
+
 function setupIpcEvents(broadcast) {
   // Set up IPC event handlers
   ipcMain.handle("read-file", handleReadFile);
@@ -41,7 +43,33 @@ function setupIpcEvents(broadcast) {
     autoUpdater.quitAndInstall();
   });
 
+  const mainWindow = getWindow();
+
+  ipcMain.on("window-minimize", () => {
+    if (mainWindow && !mainWindow.isMinimized()) {
+      mainWindow.minimize();
+    }
+  });
+
+  ipcMain.on("window-maximize", () => {
+    if (!mainWindow) return;
+
+    if (mainWindow.isMaximized()) {
+      mainWindow.unmaximize();
+    } else {
+      mainWindow.maximize();
+    }
+  });
+
+  ipcMain.on("window-close", () => {
+    if (mainWindow) {
+      mainWindow.close();
+    }
+  });
+
   ipcMain.on("open-link", onOpenLink);
+
+  ipcMain.handle("get-platform", () => platform());
 
   ipcMain.handle("create-shipment", async (event, { order_id, session }) => {
     try {

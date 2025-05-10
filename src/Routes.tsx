@@ -1,5 +1,5 @@
 import { HashRouter as _, Route, Routes } from "react-router-dom";
-import Sidebar from "./components/sidebar";
+import Sidebar from "./components/Sidebar";
 
 import TasksDashboardView from "./views/TasksViews/TasksDashboardView";
 import EmailDetailedView from "./views/emails/details";
@@ -16,10 +16,21 @@ import SessionsView from "./views/sessions";
 import TemplatesView from "./views/templates";
 import ProductsView from "./views/products/table";
 import ProductDetailsView from "./views/products/details";
+import clsx from "clsx";
+import { useGlobalContext } from "./context/global";
+
 const AppRoutes = () => {
+  const {
+    state: { platform },
+  } = useGlobalContext();
   return (
-    <div className=" z-10 relative h-screen w-screen">
-      <div className="m-2 z-20">
+    <div
+      className={clsx(
+        platform === "win32" && "bg-neutral-900/50",
+        "relative z-10  h-screen w-screen"
+      )}
+    >
+      <div className="z-20 m-2">
         <Sidebar />
         <div className="z-50">
           <Routes>
@@ -37,7 +48,10 @@ const AppRoutes = () => {
             <Route path="/sessions" element={<SessionsView />} index />
             <Route path="/reports" element={<ReportsView />} index />
             <Route path="/products" element={<ProductsView />} index />
-            <Route path="/products/:product_id" element={<ProductDetailsView />} />
+            <Route
+              path="/products/:product_id"
+              element={<ProductDetailsView />}
+            />
             <Route path="/documents" element={<DocumentsView />} index />
             <Route path="/settings" element={<SettingsView />} index />
             <Route path="/profile" element={<ProfileView />} index />

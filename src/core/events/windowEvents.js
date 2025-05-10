@@ -19,7 +19,7 @@ function createWindow() {
     titleBarStyle: "hidden",
     backgroundMaterial: "acrylic",
     darkTheme: true,
-     trafficLightPosition: { x: 16, y: 16 },
+    trafficLightPosition: { x: 16, y: 16 },
     webPreferences: {
       contextIsolation: true,
       preload: path.join(__dirname, "preload.js"),
@@ -40,6 +40,8 @@ function createWindow() {
           slashes: true,
         })
   );
+
+  
 
   if (isDev) {
     window.webContents.openDevTools({ mode: "detach" });

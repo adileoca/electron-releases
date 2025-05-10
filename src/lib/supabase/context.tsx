@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
 import { Session } from "@supabase/supabase-js";
 
 import { SupabaseContextType, UserProfile } from "./types";
@@ -47,18 +53,23 @@ export const SupabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     return () => data.subscription.unsubscribe();
   }, []);
 
+  const handleGetSession = useCallback(
+    () => window.electron.setSession(session ?? null),
+    [session]
+  );
+  const handleSetSession = useCallback(
+    (newSession: Session) => setIpcSession(newSession),
+    []
+  );
   useEffect(() => {
-    const handleGetSession = () => window.electron.setSession(session ?? null);
     window.electron.on("get-session", handleGetSession);
-
-    const handleSetSession = (newSession: Session) => setIpcSession(newSession);
     window.electron.on("update-session", handleSetSession);
 
     return () => {
       window.electron.removeListener("get-session", handleGetSession);
       window.electron.removeListener("update-session", handleSetSession);
     };
-  }, [session]);
+  }, [handleGetSession, handleSetSession]);
 
   useEffect(() => {
     if (JSON.stringify(ipcSession) === JSON.stringify(session)) return;

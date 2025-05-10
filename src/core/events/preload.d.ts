@@ -7,6 +7,10 @@ import { send } from "process";
 declare global {
   interface Window {
     electron: {
+      minimize: () => void;
+      maximize: () => void;
+      close: () => void;
+      getPlatform: () => Promise<"darwin" | "win32" | "linux">;
       invoke: (channel: string, data?: any) => Promise<any>;
       openLink: (url) => void;
       uploadFile: (params: {

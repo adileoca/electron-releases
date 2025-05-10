@@ -109,7 +109,7 @@ export const createActions = (state: State, dispatch: Dispatch<Actions>) => ({
 
 export type ContextActions = ReturnType<typeof createActions>;
 
-export const initialState: State = {
+export const initialState: Omit<State, "platform"> = {
   update: { status: null, progress: null },
   navigation: { latestIndex: 0, canGoBack: false, canGoForward: false },
   plugin: { version: null, updateError: null },

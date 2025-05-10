@@ -3,6 +3,7 @@ import { Reducer } from "react";
 
 export type ProviderProps = {
   children: React.ReactNode;
+  platform: "win32" | "darwin" | "linux";
 };
 
 export type UpdateStatusType =
@@ -13,6 +14,7 @@ export type UpdateStatusType =
   | null;
 
 export type State = {
+  platform: "darwin" | "win32" | "linux";
   plugin: {
     version: string | null;
     updateError: string | null;

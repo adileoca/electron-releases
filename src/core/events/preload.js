@@ -18,6 +18,10 @@ contextBridge.exposeInMainWorld("electron", {
 
     return ipcRenderer.invoke("create-shipment", { order_id, session });
   },
+  getPlatform: () => ipcRenderer.invoke("get-platform"),
+  minimize: () => ipcRenderer.send("window-minimize"),
+  maximize: () => ipcRenderer.send("window-maximize"),
+  close: () => ipcRenderer.send("window-close"),
   setSession: (session) => ipcRenderer.send("set-session", session),
   send: (channel, data) => ipcRenderer.send(channel, data),
 
