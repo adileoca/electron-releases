@@ -15,7 +15,7 @@ const ViewHeaderWrapper = ({ children }) => {
         {children}
         {platform === "win32" && (
           <>
-            <div className="flex space-x-4 pr-2">
+            <div className="flex space-x-3 pr-3">
               <button
                 onClick={() => window.electron.minimize()}
                 className=" clickable p-1 pl-0.5 text-white/80 hover:text-white disabled:text-white/40"
