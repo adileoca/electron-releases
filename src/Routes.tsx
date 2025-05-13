@@ -1,5 +1,6 @@
 import { HashRouter as _, Route, Routes } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
+import clsx from "clsx";
 
 import TasksDashboardView from "./views/TasksViews/TasksDashboardView";
 import EmailDetailedView from "./views/emails/details";
@@ -16,7 +17,6 @@ import SessionsView from "./views/sessions";
 import TemplatesView from "./views/templates";
 import ProductsView from "./views/products/table";
 import ProductDetailsView from "./views/products/details";
-import clsx from "clsx";
 import { useGlobalContext } from "./context/global";
 
 const AppRoutes = () => {

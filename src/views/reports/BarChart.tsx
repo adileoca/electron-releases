@@ -17,6 +17,7 @@ import { ro } from "react-day-picker/locale";
 import { DayPicker, getDefaultClassNames } from "react-day-picker";
 import "react-day-picker/style.css";
 import { ChevronUpDownIcon, PlusIcon } from "@heroicons/react/20/solid";
+
 export function MyDatePicker() {
   const [selected, setSelected] = useState<Date>();
 
@@ -296,7 +297,7 @@ const BarChartComponent = () => {
               borderColor={chartConfig["losses"]["color"]}
             />
             <div className="mt-4 flex w-full items-center justify-center">
-              <button className=" p-0.5 rounded-full border border-white/20 text-white/60 hover:text-white hover:border-white/40">
+              <button className=" rounded-full border border-white/20 p-0.5 text-white/60 hover:border-white/40 hover:text-white">
                 <PlusIcon className="size-5" />
               </button>
             </div>
