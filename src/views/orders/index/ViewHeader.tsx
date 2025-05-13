@@ -22,6 +22,7 @@ const ViewHeader = () => {
   const actionRef = useRef<HTMLDivElement | null>(null);
   const {
     state: { selectedOrderIds },
+    actions: {},
   } = useOrdersTableContext();
 
   const { defaultRefStyles } = useAnimateViewBar({
@@ -39,7 +40,7 @@ const ViewHeader = () => {
   //   utilityRef: actionRef,
   //   showUtilityRef: selectedOrderIds.length > 0,
   // });
-
+  const [showFilters, setShowFilters] = useState(false);
   return (
     <div style={{ width: "calc(100% - 192px)" }} className="fixed right-0 z-50">
       <ViewHeaderWrapper>
@@ -56,8 +57,21 @@ const ViewHeader = () => {
                 {/* <ViewHeaderButton
                   Icon={ArrowsUpDownIcon}
                   onClick={() => setShowSearch(true)}
-                />
-                <ViewHeaderButton Icon={FunnelIcon} /> */}
+                /> */}
+                <div className="relative">
+                  <ViewHeaderButton
+                    Icon={FunnelIcon}
+                    onClick={() => setShowFilters((prev) => !prev)}
+                  />
+                  {/* {showFilters && (
+                    <div className="absolute left-0 top-8 z-50 w-[300px] overflow-hidden rounded-lg border border-white/10 bg-[#1A1A1A] shadow-lg">
+                      <div className="flex items-center">
+                        <input></input>
+                        <Button className="mx-2">Cauta</Button>
+                      </div>
+                    </div>
+                  )} */}
+                </div>
                 {/* {selectedOrderIds.length > 0 && (
                   <button className="rounded-lg border border-red-500/90  px-3 py-px font-semibold text-red-500/90 hover:text-red-500 hover:border-red-500">
                     Delete

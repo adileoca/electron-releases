@@ -2468,14 +2468,17 @@ export type Database = {
       }
       user_profile_roles: {
         Row: {
+          created_at: string | null
           user_id: string
           user_role: string
         }
         Insert: {
+          created_at?: string | null
           user_id: string
           user_role: string
         }
         Update: {
+          created_at?: string | null
           user_id?: string
           user_role?: string
         }

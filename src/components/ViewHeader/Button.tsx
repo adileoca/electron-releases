@@ -45,7 +45,7 @@ const ViewHeaderButton: React.FC<Props> = ({
         onClick={onClick}
         className={clsx(
           label ? " py-1 pl-2 pr-2.5" : "p-1",
-          "flex items-center border border-transparent group rounded-lg text-sm space-x-1 hover:bg-white/10 "
+          "clickable group flex items-center space-x-1 rounded-lg border border-transparent text-sm  "
         )}
         onMouseEnter={() => setShow(true)}
         onMouseLeave={() => setShow(false)}

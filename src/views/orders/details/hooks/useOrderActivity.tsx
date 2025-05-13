@@ -8,14 +8,14 @@ import {
   TableLog,
   Supabase,
 } from "@/lib/supabase/database";
-
+import { Order } from "@/lib/supabase/types";
 import MiniTable from "@/components/ui/MiniTable";
 import Button from "@/components/ui/Button";
 
 type OrderTableLogs = TableLog<DbTables["orders"]["Row"]>[];
 type UserProfiles = { [user_id: string]: DbTables["user_profiles"]["Row"] };
 
-export const useOrderActivity = (order: OrderDetailedType) => {
+export const useOrderActivity = (order: Order) => {
   const [activities, setActivities] = useState<ActivityItem[] | null>(null);
   const [userProfiles, setUserProfiles] = useState<UserProfiles>();
   const [callLogs, setCallsLogs] = useState<CallLogsType>();

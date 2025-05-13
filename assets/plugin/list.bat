@@ -2,7 +2,6 @@
 setlocal
 
 REM List installed plugins using Adobe UnifiedPluginInstallerAgent
-
 set "AGENT_DIR=C:\Program Files\Common Files\Adobe\Adobe Desktop Common\RemoteComponents\UPI\UnifiedPluginInstallerAgent"
 set "AGENT_EXE=UnifiedPluginInstallerAgent.exe"
 

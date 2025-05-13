@@ -14,6 +14,7 @@ import OptionsMenu from "@/components/ViewHeader/OptionsMenu";
 import ViewHeaderTitle from "@/components/ViewHeader/Title";
 import ViewHeaderInfo from "@/components/ViewHeader/Info";
 import { OrderDetailedType } from "@/lib/supabase/database";
+
 import { formatDate } from "@/lib/utils/format";
 import ViewHeaderNavigation from "@/components/ViewHeader/Navigation";
 import SelectMenu from "@/components/ViewHeader/SelectMenu";
@@ -23,10 +24,8 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-
-const ViewHeader: React.FC<{ order: OrderDetailedType | undefined }> = ({
-  order,
-}) => {
+import { Order } from "@/lib/supabase/types";
+const ViewHeader: React.FC<{ order?: Order }> = ({ order }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   return (

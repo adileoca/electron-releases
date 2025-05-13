@@ -2,7 +2,7 @@ import { Supabase } from "./database";
 
 export const getOrderById = async (supabase: Supabase, orderId: string) => {
   console.log("getting order by Id...");
-  return await supabase
+  const { data } = await supabase
     .from("orders")
     .select(
       `*,
@@ -35,6 +35,8 @@ export const getOrderById = async (supabase: Supabase, orderId: string) => {
     .eq("id", orderId)
     .limit(1, { referencedTable: "order_items.order_item_totals" })
     .single();
+
+  return { data, error: null };
 };
 
 export const getAllUndeliveredOrders = async (supabase: Supabase) => {
@@ -43,15 +45,12 @@ export const getAllUndeliveredOrders = async (supabase: Supabase) => {
     .select(
       `*,
         status: order_statuses(*),
-        items: order_items(
-          *,
-          configuration: item_configurations(
-            *,
+        items: order_items(*,
+          configuration: item_configurations(*,
             main_media: media!item_configurations_main_media_id_fkey(*),
             bg_media: media!item_configurations_bg_media_id_fkey(*)
           ),
-          assets: item_assets(
-            *,
+          assets: item_assets(*,
             attachments: item_asset_attachments(*, media: media(*)),
             psd: media!item_assets_psd_id_fkey(*),
             thumbnail: media!item_assets_thumbnail_id_fkey(*)
@@ -82,4 +81,38 @@ export const getUserProfile = async (supabase: Supabase, userId: string) => {
   }
 
   return { ...data, roles: data.roles.map(({ role }) => role?.title) };
+};
+
+export const getOrderSummaries = async (
+  supabase: Supabase,
+  params?: {
+    range?: [number, number];
+    search?: string;
+  }
+) => {
+  const query = supabase.from("orders").select(
+    `*,
+    totals:order_totals(*),
+    status:order_statuses(*),
+    payment:order_payments(*),
+    billing_address: addresses!orders_billing_address_id_fkey(*),
+    shipping_address: addresses!orders_shipping_address_id_fkey(*)`
+  );
+
+  if (params?.range) {
+    query.range(params.range[0], params.range[1]);
+  }
+
+  if (params?.search) {
+    query.ilike("display_name", `%${params.search}%`);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error("Error getting orders summaries:", error);
+    throw new Error(error?.message || "Unknown error occurred");
+  }
+
+  return data;
 };

@@ -19,8 +19,9 @@ import MiniTable from "@/components/ui/MiniTable";
 import ItemAssets from "./ItemAssets";
 
 import { useItemActivity } from "../hooks/useItemActivity";
+import { Order } from "@/lib/supabase/types";
 
-type Item = OrderDetailedType["items"][0];
+type Item = Order["items"][0];
 const ItemCard: React.FC<{ item: Item }> = ({ item }) => {
   return (
     <div>
@@ -117,7 +118,7 @@ const OrderItemHeader: React.FC<{ item: Item }> = ({ item }) => {
             ].map((tab, idx) => (
               <Tab
                 key={idx}
-                className="flex items-center space-x-1.5 rounded-[6px] border-transparent px-3.5 py-[3px] text-sm  font-medium text-white/80 hover:bg-white/0 hover:text-white focus-visible:outline-none hover:data-[selected]:text-white/80 hover:data-[selected]:cursor-default data-[selected]:border-b-white/80 data-[selected]:bg-neutral-600 data-[selected]:ring-transparent"
+                className="flex items-center space-x-1.5 rounded-[6px] border-transparent px-3.5 py-[3px] text-sm  font-medium text-white/80 hover:bg-white/0 hover:text-white focus-visible:outline-none data-[selected]:border-b-white/80 data-[selected]:bg-neutral-600 data-[selected]:ring-transparent hover:data-[selected]:cursor-default hover:data-[selected]:text-white/80"
               >
                 {/* {tab.Icon} */}
                 <span>{tab.label}</span>
