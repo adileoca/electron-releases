@@ -35,13 +35,11 @@ const installPlugin = () => {
     message: "Checking if plugin is installed...",
   });
 
-  const execCmd = isWindows
-    ? `"${listScriptPath}"`
-    : `bash "${listScriptPath}"`;
+  const execCmd = isWindows ? listScriptPath : `bash "${listScriptPath}"`;
 
   exec(execCmd, (error, stdout, stderr) => {
     if (error) {
-      const message = `Error executing script: ${error.message}`;
+      const message = `Error executing script: ${error.message}\nSTDERR: ${stderr}\nSTDOUT: ${stdout}`;
       window.webContents.send("plugin-message", { message });
       return;
     }
@@ -76,12 +74,12 @@ const installPlugin = () => {
       });
 
       const execCmd = isWindows
-        ? `"${installScriptPath} ${pluginPath}"`
+        ? `${installScriptPath} ${pluginPath}`
         : `bash "${installScriptPath} ${pluginPath}"`;
 
       exec(execCmd, (error, stdout, stderr) => {
         if (error) {
-          const message = `Error executing script: ${error.message}`;
+          const message = `Error executing script: ${error.message}\nSTDERR: ${stderr}\nSTDOUT: ${stdout}`;
           window.webContents.send("plugin-message", { message });
           return;
         }
