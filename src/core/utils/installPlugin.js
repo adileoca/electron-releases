@@ -1,16 +1,11 @@
 const { dialog } = require("electron");
-
 const { exec } = require("child_process");
 const isDev = require("electron-is-dev");
 const path = require("path");
 const packageJson = require("../../../package.json");
-const { getWindow } = require("../getWindow");
 
-const installPlugin = () => {
-  // if (isDev) {
-  //   return;
-  // }
-  const window = getWindow();
+const installPlugin = ({ force, window }) => {
+  if (isDev) return;
 
   const isWindows = process.platform === "win32";
   const scriptExt = isWindows ? "bat" : "sh";
@@ -20,16 +15,47 @@ const installPlugin = () => {
     : "../../../../assets/plugin";
 
   const listScriptPath = path.join(__dirname, `${pluginDir}/list.${scriptExt}`);
-
   const installScriptPath = path.join(
     __dirname,
     `${pluginDir}/install.${scriptExt}`
   );
-
   const pluginPath = path.join(
     __dirname,
     isDev ? `${pluginDir}/package_PS.ccx` : `${pluginDir}/package_PS.ccx`
   );
+
+  // Helper to run the install script
+  function runInstallScript() {
+    window.webContents.send("plugin-message", {
+      message: "Installing plugin...",
+    });
+
+    const execCmd = isWindows
+      ? `${installScriptPath} ${pluginPath}`
+      : `bash "${installScriptPath} ${pluginPath}"`;
+
+    exec(execCmd, (error, stdout, stderr) => {
+      if (error) {
+        const message = `Error executing script: ${error.message}\nSTDERR: ${stderr}\nSTDOUT: ${stdout}`;
+        window.webContents.send("plugin-message", { message });
+        return;
+      }
+      if (stderr) {
+        const message = `Script stderr: ${stderr}`;
+        window.webContents.send("plugin-message", { message });
+        return;
+      }
+
+      const message = `Script output: ${stdout}`;
+      window.webContents.send("plugin-message", { message });
+      console.log(message);
+    });
+  }
+
+  if (force) {
+    runInstallScript();
+    return;
+  }
 
   window.webContents.send("plugin-message", {
     message: "Checking if plugin is installed...",
@@ -72,27 +98,7 @@ const installPlugin = () => {
         message:
           "Plugin not installed or version mismatch, installing plugin...",
       });
-
-      const execCmd = isWindows
-        ? `${installScriptPath} ${pluginPath}`
-        : `bash "${installScriptPath} ${pluginPath}"`;
-
-      exec(execCmd, (error, stdout, stderr) => {
-        if (error) {
-          const message = `Error executing script: ${error.message}\nSTDERR: ${stderr}\nSTDOUT: ${stdout}`;
-          window.webContents.send("plugin-message", { message });
-          return;
-        }
-        if (stderr) {
-          const message = `Script stderr: ${stderr}`;
-          window.webContents.send("plugin-message", { message });
-          return;
-        }
-
-        const message = `Script output: ${stdout}`;
-        window.webContents.send("plugin-message", { message });
-        console.log(message);
-      });
+      runInstallScript();
     }
   });
 };

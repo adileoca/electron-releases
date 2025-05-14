@@ -2,6 +2,7 @@ import { Supabase } from "./database";
 
 export const getOrderById = async (supabase: Supabase, orderId: string) => {
   console.log("getting order by Id...");
+  // @ts-ignore
   const { data } = await supabase
     .from("orders")
     .select(

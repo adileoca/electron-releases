@@ -2,11 +2,13 @@ const { execFileSync } = require("child_process");
 const path = require("path");
 const pkg = require("../package.json");
 
+const {
+  windowsSign: { credentialId, username, password },
+} = require("./../vars");
+
 const version = pkg.version;
 const exeName = `adipan Setup ${version}.exe`;
 const file = path.join(__dirname, "../dist", exeName);
-
-const { credentialId, username, password } = require("./../vars");
 
 execFileSync(
   "java",

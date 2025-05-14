@@ -1,16 +1,16 @@
 {
   "name": "adipan",
-  "version": "0.3.11",
+  "version": "0.3.12",
   "main": "src/core/main.js",
   "private": true,
-  "pluginVersion": "1.0.7",
+  "pluginVersion": "1.0.8",
   "homepage": "./",
   "repository": {
     "type": "git",
     "url": "https://github.com/adileoca/electron-releases.git"
   },
   "build": {
-    "appId": "com.example.ElectronAutoUpdate",
+    "appId": "com.adipan.app",
     "files": [
       "build/**/*",
       "node_modules/**/*",
@@ -19,6 +19,9 @@
     "extraResources": [
       "assets/plugin/**/*"
     ],
+    "directories": {
+      "buildResources": "assets"
+    },
     "win": {
       "target": [
         {
@@ -27,26 +30,19 @@
             "x64",
             "arm64"
           ]
-        },
-        {
-          "target": "zip",
-          "arch": [
-            "x64",
-            "arm64"
-          ]
         }
       ],
+      "signtoolOptions": {
+        "sign": "./scripts/esign-windows.js"
+      },
       "signAndEditExecutable": false
     },
     "mac": {
       "identity": "Oana-Geanina Leoca (J5L4N4GV89)",
       "hardenedRuntime": true,
+      "gatekeeperAssess": false,
       "entitlements": "assets/entitlements.mac.plist",
       "entitlementsInherit": "assets/entitlements.mac.plist",
-      "gatekeeperAssess": false,
-      "notarize": {
-        "teamId": "J5L4N4GV89"
-      },
       "target": [
         {
           "target": "dmg",
@@ -54,19 +50,10 @@
             "x64",
             "arm64"
           ]
-        },
-        {
-          "target": "zip",
-          "arch": [
-            "x64",
-            "arm64"
-          ]
         }
       ]
     },
-    "directories": {
-      "buildResources": "assets"
-    }
+    "afterSign": "scripts/notarize.js"
   },
   "scripts": {
     "dev": "concurrently -k \"cross-env BROWSER=none npm start\" \"npm:electron\"",
@@ -152,6 +139,7 @@
     "cross-env": "^7.0.3",
     "electron": "^36.2.0",
     "electron-builder": "^24.13.3",
+    "electron-notarize": "^1.2.2",
     "electron-packager": "^17.1.2",
     "electron-reload": "^2.0.0-alpha.1",
     "eslint": "^8.0.0",

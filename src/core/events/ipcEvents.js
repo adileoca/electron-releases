@@ -18,6 +18,7 @@ const { installPlugin } = require("../utils/installPlugin.js");
 const { getWindow } = require("../getWindow.js");
 
 function setupIpcEvents(broadcast) {
+  const mainWindow = getWindow();
   // Set up IPC event handlers
   ipcMain.handle("read-file", handleReadFile);
   ipcMain.handle("upload-file", handleUploadFile);
@@ -31,7 +32,7 @@ function setupIpcEvents(broadcast) {
   // Set up IPC event listeners
   ipcMain.on("install-plugin", (event, data) => {
     console.log("install-plugin fired");
-    installPlugin();
+    installPlugin({ force: true, window: mainWindow });
   });
 
   ipcMain.on("check-updates", (event, data) => {
@@ -42,8 +43,6 @@ function setupIpcEvents(broadcast) {
   ipcMain.on("restart-app", () => {
     autoUpdater.quitAndInstall();
   });
-
-  const mainWindow = getWindow();
 
   ipcMain.on("window-minimize", () => {
     if (mainWindow && !mainWindow.isMinimized()) {

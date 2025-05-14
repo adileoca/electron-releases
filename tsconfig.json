@@ -32,11 +32,6 @@
       "@/constants/*": ["src/constants/*"]
     }
   },
-  "include": [
-    "src/**/*",
-    "public/electron.js",
-    "public/electron.js",
-    "public/electron.js"
-, "sign/esign-windows.js"  ],
+  "include": ["src/**/*", "public/electron.js"],
   "exclude": ["node_modules", "**/node_modules/*"]
 }
