@@ -1,5 +1,6 @@
 import { ContextActions } from "./reducer";
 import { OrderSummaries } from "@/lib/supabase/database";
+import { fetchData } from "./hooks/useFetchData";
 
 export type ProviderProps = {
   children: React.ReactNode;
@@ -13,7 +14,7 @@ export type ContextType =
     }
   | undefined;
 
-export type ContextData = OrderSummaries | null;
+export type ContextData = Awaited<ReturnType<typeof fetchData>> | null;
 
 export type ColProps = {
   position: number;
@@ -22,6 +23,9 @@ export type ColProps = {
   initialWidth: number;
   width: number;
 
+  filter?: FilterConfig;
+
+  dataKey?: string;
   visible?: boolean;
   Component?: React.ReactNode;
   isSticky?: boolean;
@@ -44,7 +48,6 @@ export type RowProps = {
 
 export type Pagination = {
   currentPage: number;
-  totalPages: number;
   resultsPerPage: number;
 };
 
@@ -57,14 +60,24 @@ export type ColId =
   | "order_no"
   | "date_placed";
 
+export type FilterType = {
+  dataKey: string;
+  type: "includes" | "equals" | "not_equals";
+  value: string;
+  enabled: boolean;
+};
+
 export type ContextState = {
   cols: ColPropsMap;
   rows: RowPropsMap[];
   pagination: Pagination;
-  filters: {}[];
+  filters: { [id: string]: FilterType };
+  draftFilters: { [id: string]: FilterType };
   sorting: {}[];
   selectedOrderIds: string[];
   loading: boolean;
+  updating: boolean;
+  shouldRefresh?: boolean;
   error?: string;
 };
 
@@ -84,4 +97,44 @@ export type ContextReducer =
   | {
       type: "setPagination";
       payload: Partial<Pagination>;
+    }
+  | {
+      type: "setFilters";
+      payload: ContextState["filters"];
+    }
+  | {
+      type: "setLoading";
+      payload: boolean;
+    }
+  | {
+      type: "setUpdating";
+      payload: boolean;
+    }
+  | {
+      type: "setShouldRefresh";
+      payload: boolean;
+    }
+  | {
+      type: "addDraftFilter";
+      payload: {
+        id: string;
+        filter: FilterType;
+      };
+    }
+  | {
+      type: "removeDraftFilter";
+      payload: { id: string };
+    }
+  | {
+      type: "mutateDraftFilter";
+      payload: {
+        id: string;
+        filter: Partial<FilterType>;
+      };
     };
+
+export type FilterConfig = {
+  label: string;
+  dataKey: string;
+  options?: { id: string; label: string; color?: string }[];
+};

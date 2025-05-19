@@ -8,7 +8,7 @@ import ViewBody from "./ViewBody";
 
 const PrintsView = () => {
   const prints = useFetchPrints();
-  
+
   useEffect(() => {
     console.log("prints", prints);
   }, [prints]);

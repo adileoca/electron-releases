@@ -19,7 +19,7 @@ const PrintAssets: React.FC<{
           <div key={index} className="flex space-x-5 py-3">
             <div
               style={{ boxShadow: "0 0 0 0.3px black" }}
-              className="relative aspect-square h-16 w-16 overflow-hidden rounded-lg border border-neutral-800 bg-white"
+              className="relative aspect-square h-72 w-72 overflow-hidden rounded-lg border border-neutral-800 bg-white"
             >
               <img
                 src={mediaUrls.get(asset.thumbnail_id)!}
@@ -29,9 +29,6 @@ const PrintAssets: React.FC<{
             </div>
             <div className="flex flex-grow flex-col">
               <div className="flex items-center justify-between">
-                <h1 className="py-1 font-medium text-white/80">
-                  {asset.item?.product?.name}
-                </h1>
                 {isDefective && (
                   <OrderStatusBadge
                     text="Defect, repus in lucru"
@@ -42,7 +39,7 @@ const PrintAssets: React.FC<{
               <div className=" w-full justify-between">
                 <MiniTable
                   data={{
-                    ID: asset.id,
+                    // ID: asset.id,
                     Autor: asset.created_by?.name! || "",
                     Creeat: formatDate(asset.created_at, {
                       locale: "ro-RO",
@@ -52,7 +49,9 @@ const PrintAssets: React.FC<{
                       month: "short",
                     }),
                     Comandǎ: asset.item?.order?.display_name || "",
+                    Produs: asset.item?.product?.name,
                     Dimensiune: formatSize(asset.item?.configuration?.size!),
+                    Defect: "Nu",
                     // "Dimensiuni": `${asset.width_cm} x ${asset.height_cm} cm`,
                   }}
                 />

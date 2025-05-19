@@ -1,18 +1,6 @@
 import clsx from "clsx";
-import { DbEnums } from "@/lib/supabase/database";
 
-const statusConfig: Record<DbEnums["order_status_names"], any> = {
-  placed: { label: "În așteptare", color: "amber" },
-  editing: { label: "În lucru", color: "blue" },
-  feedback: { label: "Previzualizare", color: "indigo" },
-  approved: { label: "Aprobat", color: "green" },
-  printed: { label: "Printat", color: "cyan" },
-  shipped: { label: "Expediat", color: "lime" },
-  delivered: { label: "Livrat", color: "neutral" },
-  packaged: { label: "Împachetat", color: "purple" },
-  sorted: { label: "Sortat", color: "red" },
-  canceled: { label: "Anulat", color: "neutral" },
-};
+import { statusConfig } from "@/const/statusConfig";
 
 const StatusBadge: React.FC<{
   text: string;
@@ -33,7 +21,7 @@ const StatusBadge: React.FC<{
         clr === "purple" ? " border-purple-500 bg-purple-600" : "",
         clr === "neutral" ? " border-neutral-500 bg-neutral-600" : "",
         clr === undefined ? " bg-neutral-600 " : "",
-        " items-center gap-x-1.5 shadow rounded-full border-t px-3.5 py-[3px] text-sm font-medium text-white/90"
+        " items-center gap-x-1.5 rounded-full border-t px-3.5 py-[3px] text-sm font-medium text-white/90 shadow"
       )}
     >
       {label}

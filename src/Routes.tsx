@@ -30,7 +30,7 @@ const AppRoutes = () => {
         "relative z-10  h-screen w-screen"
       )}
     >
-      <div className="z-20 m-2">
+      <div className="z-20">
         <Sidebar />
         <div className="z-50">
           <Routes>

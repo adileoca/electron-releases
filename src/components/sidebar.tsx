@@ -41,17 +41,17 @@ const navigation: {
     visibleByRoles: ["admin", "printing"],
   },
   // { name: "Emails", href: "/emails", icon: EnvelopeIcon },
-  {
-    name: "Produse",
-    href: "/products",
-    icon: ListBulletIcon,
-    visibleByRoles: ["admin"],
-  },
+  // {
+  //   name: "Produse",
+  //   href: "/products",
+  //   icon: ListBulletIcon,
+  //   visibleByRoles: ["admin"],
+  // },
   {
     name: "Rapoarte",
     href: "/reports",
     icon: ChartPieIcon,
-    visibleByRoles: ["admin"],
+    visibleByRoles: ["admin", "financial"],
   },
   {
     name: "Sesiuni",
@@ -130,7 +130,7 @@ const Sidebar: React.FC = () => {
                 location.pathname === "/profile"
                   ? "bg-black/10 dark:bg-white/10 dark:text-white/90"
                   : "text-white/60 hover:bg-black/5 dark:text-white/80 dark:hover:bg-white/5",
-                "group flex w-full items-center gap-x-2 rounded-md p-2 text-sm font-semibold leading-6 focus-visible:outline-none"
+                "group flex w-full items-center gap-x-2 rounded-md p-2 py-3 text-sm font-semibold leading-6 focus-visible:outline-none"
               )}
             >
               <div className="relative h-5 w-5 flex-none overflow-hidden rounded-full">

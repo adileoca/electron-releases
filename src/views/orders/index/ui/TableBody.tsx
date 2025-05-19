@@ -13,7 +13,14 @@ const TableBody = () => {
       {rows.map((row, rowIdx) => {
         let prevKey: string | undefined;
         return (
-          <tr key={rowIdx} className="group items-center">
+          <tr
+            key={rowIdx}
+            className={clsx(
+              rowIdx === rows.length - 1 &&
+                "border-b-[47px] dark:border-b-neutral-900",
+              "group items-center"
+            )}
+          >
             {Object.entries(row)
               .sort(([a], [b]) => cols[a].position - cols[b].position)
               .map(([key, cell], cellIdx) => {

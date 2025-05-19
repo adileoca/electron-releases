@@ -8,19 +8,28 @@
   pointer-events: all;
 }
 
-*::-webkit-scrollbar {
-  height: 10px;
-  width: 0px;    /* Hides vertical scrollbar */
-  background: transparent;
+/* Hide number input spinners for Chrome, Safari, Edge, Opera */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
-*::-webkit-scrollbar-thumb {
+
+/*
+*::-webkit-scrollbar {
+  height: 10px;
+  width: 0px;
+  background: transparent;
+} */
+
+/* *::-webkit-scrollbar-thumb {
   background: rgb(134, 134, 134);
   border-radius: 4px;
-}
-*::-webkit-scrollbar-corner {
+} */
+/* *::-webkit-scrollbar-corner {
   background: transparent;
-}
+} */
 
 
 /* MGc-aYY_J47mvHC */

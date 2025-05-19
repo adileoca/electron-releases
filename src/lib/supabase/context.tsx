@@ -57,10 +57,12 @@ export const SupabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     () => window.electron.setSession(session ?? null),
     [session]
   );
+
   const handleSetSession = useCallback(
     (newSession: Session) => setIpcSession(newSession),
     []
   );
+
   useEffect(() => {
     window.electron.on("get-session", handleGetSession);
     window.electron.on("update-session", handleSetSession);

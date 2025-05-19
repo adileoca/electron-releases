@@ -13,7 +13,7 @@ const OrdersTableProvider: React.FC<ProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const actions = createActions(state, dispatch);
 
-  const data = useData();
+  const data = useData(state, actions);
   useParseCols(state, data, actions);
   useParseRows(state, data, actions);
 

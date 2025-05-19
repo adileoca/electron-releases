@@ -1,9 +1,11 @@
 {
   "name": "adipan",
-  "version": "0.3.12",
+  "version": "0.3.13",
   "main": "src/core/main.js",
   "private": true,
-  "pluginVersion": "1.0.8",
+  "pluginVersion": "1.0.9",
+  "description": "An internal app",
+  "author": "adi pan srl",
   "homepage": "./",
   "repository": {
     "type": "git",
@@ -31,11 +33,7 @@
             "arm64"
           ]
         }
-      ],
-      "signtoolOptions": {
-        "sign": "./scripts/esign-windows.js"
-      },
-      "signAndEditExecutable": false
+      ]
     },
     "mac": {
       "identity": "Oana-Geanina Leoca (J5L4N4GV89)",
@@ -53,7 +51,7 @@
         }
       ]
     },
-    "afterSign": "scripts/notarize.js"
+    "afterSign": "scripts/afterSign.js"
   },
   "scripts": {
     "dev": "concurrently -k \"cross-env BROWSER=none npm start\" \"npm:electron\"",

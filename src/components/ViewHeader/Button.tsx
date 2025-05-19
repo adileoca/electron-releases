@@ -12,6 +12,7 @@ type Props = {
   labelLocation?: "before" | "after";
   IconSize?: number;
   tooltipContent?: string;
+  className?: string;
 };
 
 const ViewHeaderButton: React.FC<Props> = ({
@@ -21,6 +22,7 @@ const ViewHeaderButton: React.FC<Props> = ({
   onClick,
   labelLocation = "before",
   IconSize,
+  className,
 }) => {
   const [show, setShow] = useState(false);
 
@@ -45,7 +47,8 @@ const ViewHeaderButton: React.FC<Props> = ({
         onClick={onClick}
         className={clsx(
           label ? " py-1 pl-2 pr-2.5" : "p-1",
-          "clickable group flex items-center space-x-1 rounded-lg border border-transparent text-sm  "
+          "clickable group flex items-center space-x-1 rounded-lg border border-transparent text-sm  ",
+          className || ""
         )}
         onMouseEnter={() => setShow(true)}
         onMouseLeave={() => setShow(false)}

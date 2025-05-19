@@ -5,11 +5,12 @@ import ViewHeader from "./ViewHeader";
 
 import LoadingBody from "./ui/LoadingBody";
 import TableHeader from "./ui/TableHeader";
+import Pagination from "./ui/Pagination";
 import TableBody from "./ui/TableBody";
 
 const OrdersTable = () => {
   const {
-    state: { loading },
+    state: { loading, updating },
   } = useOrdersTableContext();
 
   return (
@@ -18,10 +19,13 @@ const OrdersTable = () => {
         {loading ? (
           <LoadingBody />
         ) : (
-          <table>
-            <TableHeader />
-            <TableBody />
-          </table>
+          <div>
+            <table>
+              <TableHeader />
+              {!updating ? <TableBody /> : <LoadingBody />}
+            </table>
+            <Pagination />
+          </div>
         )}
       </div>
     </ViewShell>

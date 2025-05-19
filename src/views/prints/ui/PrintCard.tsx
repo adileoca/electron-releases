@@ -116,10 +116,10 @@ const PrintHeader: React.FC<{
   const [clicked, setClicked] = useState(false);
   return (
     <div className="flex pb-3">
-      <div className="relative aspect-square h-16 w-16 border border-neutral-800 overflow-hidden rounded-md bg-neutral-800 ">
+      <div className="relative aspect-square h-16 w-16 overflow-hidden rounded-md border border-neutral-800 bg-neutral-800 ">
         <img
           src={mediaUrls.get(latestVersion.thumbnail_id)}
-          className="z-30 mx-auto mb-3 scale-100 object-contain"
+          className="z-30 mx-auto mb-3 aspect-square scale-100 object-contain"
           alt=""
         />
       </div>

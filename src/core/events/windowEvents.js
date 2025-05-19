@@ -12,9 +12,9 @@ console.log("installPlugin: ", installPlugin);
 function createWindow() {
   let window = new BrowserWindow({
     width: 1200,
-    height: 740,
+    height: 777,
     minWidth: 1200,
-    minHeight: 740,
+    minHeight: 777,
     hasShadow: true,
     frame: false,
     vibrancy: "sidebar",

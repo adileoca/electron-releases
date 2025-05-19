@@ -32,17 +32,6 @@ const ViewBody: React.FC<{ order: Order }> = ({ order }) => {
           <BillingCard order={order} />
         </div>
       </div>
-
-      <div className="p-4">
-        <div className=" flex items-center justify-between space-x-4 border-b border-white/10 pb-2">
-          <h1 className="whitespace-nowrap text-xl font-medium text-white/80">
-            Istoric
-          </h1>
-        </div>
-        <div>
-          {orderActivity && <ActivityFeed activities={orderActivity} />}
-        </div>
-      </div>
       <div className="p-4">
         <div className="mb-4 flex items-center justify-between space-x-4">
           <h1 className="whitespace-nowrap text-xl font-medium text-white/80">
@@ -59,6 +48,17 @@ const ViewBody: React.FC<{ order: Order }> = ({ order }) => {
           {order.items.map((item, idx) => (
             <OrderItem key={idx} item={item} />
           ))}
+        </div>
+      </div>
+
+      <div className="p-4">
+        <div className=" flex items-center justify-between space-x-4 border-b border-white/10 pb-2">
+          <h1 className="whitespace-nowrap text-xl font-medium text-white/80">
+            Istoric
+          </h1>
+        </div>
+        <div>
+          {orderActivity && <ActivityFeed activities={orderActivity} />}
         </div>
       </div>
     </div>

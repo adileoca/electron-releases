@@ -5,7 +5,9 @@ import {
   EllipsisHorizontalIcon,
   FlagIcon,
   BellIcon,
+  EyeIcon,
 } from "@heroicons/react/24/outline";
+
 import ViewHeaderBackButton from "@/components/ViewHeader/BackButton";
 import ViewHeaderWrapper from "@/components/ViewHeader/Wrapper";
 import OrderStatusBadge from "@/components/ui/OrderStatusBadge";
@@ -13,6 +15,7 @@ import ViewHeaderDivider from "@/components/ViewHeader/Divider";
 import OptionsMenu from "@/components/ViewHeader/OptionsMenu";
 import ViewHeaderTitle from "@/components/ViewHeader/Title";
 import ViewHeaderInfo from "@/components/ViewHeader/Info";
+import ViewHeaderButton from "@/components/ViewHeader/Button";
 import { OrderDetailedType } from "@/lib/supabase/database";
 
 import { formatDate } from "@/lib/utils/format";
@@ -25,6 +28,7 @@ import {
   DialogTitle,
 } from "@headlessui/react";
 import { Order } from "@/lib/supabase/types";
+
 const ViewHeader: React.FC<{ order?: Order }> = ({ order }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
@@ -42,6 +46,7 @@ const ViewHeader: React.FC<{ order?: Order }> = ({ order }) => {
             )}
           </div>
         </div>
+
         <div className="mr-2 flex items-center text-base text-white text-opacity-80">
           {/* {order?.last_updated! && (
             <ViewHeaderInfo

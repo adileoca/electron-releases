@@ -11,14 +11,14 @@ const ItemAssets: React.FC<{
     {assets
       .sort(
         (a, b) =>
-          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
       )
       .map((asset, index) => (
         <div key={index} className="flex space-x-5 py-3">
-          <div className="relative aspect-square h-16 w-16 overflow-hidden rounded-lg bg-neutral-200">
+          <div className="relative aspect-square h-72 w-72 overflow-hidden rounded-lg bg-neutral-200">
             <img
               src={assetUrls.get(asset.thumbnail_id)!}
-              className="z-30 mx-auto scale-100"
+              className="z-30 mx-auto scale-100 object-contain aspect-square"
               alt=""
             />
           </div>
