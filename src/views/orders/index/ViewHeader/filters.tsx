@@ -1,5 +1,11 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { PlusIcon, XMarkIcon } from "@heroicons/react/20/solid";
+import {
+  PlusIcon,
+  XMarkIcon,
+  StarIcon,
+  ArchiveBoxIcon,
+  BookmarkSquareIcon,
+} from "@heroicons/react/24/outline";
 import { FunnelIcon } from "@heroicons/react/24/outline";
 import { v4 as uuidv4 } from "uuid";
 import clsx from "clsx";
@@ -18,14 +24,14 @@ import Input from "@/components/ui/Input";
 import { FilterConfig, ContextState } from "../context/types";
 import { useOrdersTableContext } from "../context";
 
-const allowedFilterTypes: {
+const filterOperationConfigs: {
   id: ContextState["filters"][0]["type"];
   label: string;
   info: string;
 }[] = [
+  { id: "includes", label: "~", info: "Asemanator" },
   { id: "equals", label: "=", info: "Egal" },
   { id: "not_equals", label: "!=", info: "Nu este egal" },
-  { id: "includes", label: "~", info: "Asemanator" },
 ];
 
 const ViewHeaderFilters = () => {
@@ -46,7 +52,7 @@ const ViewHeaderFilters = () => {
     return {
       [uuidv4()]: {
         dataKey: filterConfigs[0].dataKey,
-        type: allowedFilterTypes[0].id,
+        type: filterConfigs[0].operations[0],
         value: filterConfigs[0].options ? filterConfigs[0].options[0].id : "",
         enabled: true,
       },
@@ -86,8 +92,8 @@ const ViewHeaderFilters = () => {
         className="absolute left-0 z-50 mt-3.5 flex w-screen max-w-min  transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
       >
         {({ close }) => (
-          <div className="w-[400px] rounded-md border border-neutral-700 bg-neutral-800 p-2">
-            <div className="flex flex-col  space-y-2 pb-2">
+          <div className="w-[400px] rounded-lg border border-t-neutral-500/70 border-neutral-600 bg-neutral-800 ">
+            <div className="flex flex-col  space-y-4  p-3">
               {Object.values(draftFilters).length === 0 && (
                 <div>
                   <h1 className="text font-semibold text-neutral-400">
@@ -104,15 +110,35 @@ const ViewHeaderFilters = () => {
                 );
               })}
             </div>
-            <div className="flex items-center justify-between border-t border-neutral-700 pt-2">
-              <div className="flex items-center space-x-2">
+            <div className="flex items-center justify-between border-t bg-white/5 border-neutral-600  py-2 px-3">
+              <div className="flex items-center space-x-3 divide-x divide-white/10">
                 <button
                   onClick={() => addNewFilter()}
                   className="flex items-center space-x-2 text-neutral-400 transition hover:text-neutral-200"
                 >
                   <PlusIcon className="size-5" />
-                  <span className="text-sm font-semibold">Adaugǎ filtru</span>
+                  {/* <span className="text-sm font-semibold">Adaugǎ filtru</span> */}
                 </button>
+                <div className="flex items-center space-x-4 px-4">
+                  <button
+                    onClick={() => addNewFilter()}
+                    className="flex items-center space-x-2 text-neutral-400 transition hover:text-neutral-200"
+                  >
+                    <StarIcon className="size-5" />
+                  </button>
+                  <button
+                    onClick={() => addNewFilter()}
+                    className="flex items-center space-x-2 text-neutral-400 transition hover:text-neutral-200"
+                  >
+                    <BookmarkSquareIcon className="size-5" />
+                  </button>{" "}
+                  <button
+                    onClick={() => addNewFilter()}
+                    className="flex items-center space-x-2 text-neutral-400 transition hover:text-neutral-200"
+                  >
+                    <ArchiveBoxIcon className="size-5" />
+                  </button>
+                </div>
               </div>
               <div className="flex items-center space-x-2">
                 <Button
@@ -121,9 +147,9 @@ const ViewHeaderFilters = () => {
                     setPagination({ currentPage: 1 });
                     close();
                   }}
-                  className="rounded-md"
+                  className="rounded-md shadow shadow-black/20"
                 >
-                  Aplicǎ filtre
+                  Aplicǎ
                 </Button>
               </div>
             </div>
@@ -145,6 +171,10 @@ const FilterBox: React.FC<{
     actions: { mutateDraftFilter, removeDraftFilter },
   } = useOrdersTableContext();
 
+  const filter = useMemo(() => {
+    return draftFilters[filterId];
+  }, [draftFilters, filterId]);
+
   const columnOptions = useMemo(() => {
     return filterConfigs.map((c) => ({
       id: c.dataKey,
@@ -152,37 +182,40 @@ const FilterBox: React.FC<{
     }));
   }, [filterConfigs]);
 
-  const filter = useMemo(() => {
-    return draftFilters[filterId];
-  }, [draftFilters, filterId]);
-
-  const [selectedType, setSelectedType] = useState(
-    allowedFilterTypes.find((t) => t.id === filter.type)!
-  );
-
   const [selectedColumn, setSelectedColumn] = useState(
     columnOptions.find((c) => c.dataKey === filter.dataKey)!
+  );
+  const operationOptions = useMemo(() => {
+    return selectedColumn.operations.map((operation) => {
+      return filterOperationConfigs.find((c) => c.id === operation)!;
+    });
+  }, [selectedColumn]);
+
+  const [selectedOperation, setSelectedOperation] = useState(
+    operationOptions.find((t) => t.id === filter.type)!
   );
 
   const [value, setValue] = useState(filter.value);
   const [enabled, setEnabled] = useState(filter.enabled);
 
-  // useEffect(() => {
-  //   setValue(selectedColumn.options ? selectedColumn.options[0].id : "");
-  // }, [selectedColumn]);
+  useEffect(() => {
+    if (!selectedColumn.operations.includes(selectedOperation.id)) {
+      setSelectedOperation(operationOptions[0]);
+    }
+  }, [selectedColumn]);
 
   useEffect(() => {
     mutateDraftFilter(filterId, {
       dataKey: selectedColumn.dataKey,
-      type: selectedType.id,
+      type: selectedOperation.id,
       value,
       enabled,
     });
-  }, [selectedColumn, selectedType, value, enabled]);
+  }, [selectedColumn, selectedOperation, value, enabled]);
 
   return (
     <div className="flex w-full flex-1 items-center -space-x-px">
-      <div className="pr-2">
+      <div className="pr-3">
         <Checkbox
           checked={enabled}
           onChange={(v) => setEnabled(v)}
@@ -198,9 +231,9 @@ const FilterBox: React.FC<{
         className={{ button: "rounded-l-md rounded-r-none" }}
       />
       <Select
-        options={allowedFilterTypes}
-        selected={selectedType}
-        setSelected={setSelectedType}
+        options={operationOptions}
+        selected={selectedOperation}
+        setSelected={setSelectedOperation}
         className={{ button: "rounded-none" }}
       />
       {selectedColumn.options ? (
@@ -213,11 +246,11 @@ const FilterBox: React.FC<{
           <Input
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            className="h-7 w-full rounded-l-none rounded-r-md dark:border-neutral-600  dark:bg-neutral-700"
+            className="h-7 w-full rounded-l-none rounded-r-md dark:border-neutral-600 dark:bg-neutral-700"
           />
         </div>
       )}
-      <div className="pl-2">
+      <div className="pl-3">
         <button
           onClick={() => removeDraftFilter(filterId)}
           className="flex items-center text-neutral-500 hover:text-neutral-300"

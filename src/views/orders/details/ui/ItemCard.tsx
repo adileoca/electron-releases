@@ -25,7 +25,7 @@ type Item = Order["items"][0];
 const ItemCard: React.FC<{ item: Item }> = ({ item }) => {
   return (
     <div>
-      <TabGroup defaultIndex={2}>
+      <TabGroup defaultIndex={item.assets.length > 0 ? 2 : 0}>
         <OrderItemHeader item={item} />
         <OrderItemBody item={item} />
       </TabGroup>

@@ -27,15 +27,15 @@ const MiniTable: React.FC<MiniTableProps> = ({ title, data, onClick }) => {
         {Object.entries(data).map(([key, value]) => {
           const [truncate, setTruncate] = useState(true);
           return (
-            <div key={key} className="flex items-center justify-between py-2">
+            <div key={key} className="flex items-top justify-between py-2">
               <span className="whitespace-nowrap pr-10 text-white/60">
                 {key.charAt(0).toUpperCase() + key.slice(1)}
               </span>
               <span
                 onClick={() => setTruncate(!truncate)}
                 className={clsx(
-                  truncate ? "truncate" : "",
-                  " text-nowrap text-right text-white/80"
+                  truncate ? "truncate text-nowrap" : "",
+                  " text-right text-white/80"
                 )}
               >
                 {value}

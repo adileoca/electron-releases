@@ -48,8 +48,10 @@ export const queueScheduledMedia = async (
         });
 
         if (error) {
-          // If token expired, try to refresh and retry once
-          if (error.includes("expired") || error.includes("invalid token")) {
+          if (
+            typeof error === "string" &&
+            (error.includes("expired") || error.includes("invalid token"))
+          ) {
             console.log("Token expired, refreshing and retrying...");
             const { data } = await supabase.auth.refreshSession();
 
@@ -67,7 +69,12 @@ export const queueScheduledMedia = async (
               throw new Error("Failed to refresh token");
             }
           } else {
-            throw new Error(`Failed to upload media with id ${media.id}: ${error}`);
+            // Safely stringify non-string errors for logging/storage
+            throw new Error(
+              `Failed to upload media with id ${media.id}: ${
+                typeof error === "string" ? error : JSON.stringify(error)
+              }`
+            );
           }
         }
 

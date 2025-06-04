@@ -1,55 +1,16 @@
 import { useState, useEffect } from "react";
 
 import { ActivityItem } from "@/components/ui/ActivityFeed";
-import { Print } from "@/lib/supabase/database";
-import { useDatabase } from "@/lib/supabase/context";
+import { Print, DbTables } from "@/lib/supabase/database";
 
-import { DbTables } from "@/lib/supabase/database";
-
-type TableLog<T> = Omit<
-  DbTables["table_logs"]["Row"],
-  "new_record" | "old_record" | "changes"
-> & {
-  new_record: T | null;
-  old_record: T | null;
-  changes: Partial<T>;
-};
-
-type PrintTableLogs = TableLog<DbTables["prints"]["Row"]>[];
 type UserProfiles = { [user_id: string]: DbTables["user_profiles"]["Row"] };
 
 export const usePrintActivity = (print: Print) => {
   const [itemActivity, setItemActivity] = useState<ActivityItem[] | null>(null);
   const [userProfiles, setUserProfiles] = useState<UserProfiles>();
-  const [printLogs, setPrintLogs] = useState<PrintTableLogs>();
-  const { db } = useDatabase();
 
   useEffect(() => {
-    const fetchTableLogs = async (recordIds: string[]) => {
-      const tableLogs = (await db.getTableLogs([print.id])) as PrintTableLogs;
-      console.log("tableLogs", tableLogs);
-      setPrintLogs(tableLogs);
-
-      const userIds = tableLogs.reduce((acc, { new_record, old_record }) => {
-        if (new_record?.locked_by) acc.add(new_record.locked_by);
-        if (old_record?.locked_by) acc.add(old_record.locked_by);
-        return acc;
-      }, new Set<string>());
-      const userProfilesArray = await db.getUserProfile({
-        ids: Array.from(userIds),
-      });
-
-      const userProfiles = userProfilesArray.reduce((acc, user) => {
-        return { ...acc, [user.id]: user };
-      }, {} as UserProfiles);
-      setUserProfiles(userProfiles);
-    };
-
-    fetchTableLogs([print.id]);
-  }, []);
-
-  useEffect(() => {
-    if (!printLogs || !userProfiles) return;
+    if (!userProfiles) return;
 
     let itemActivities: ActivityItem[] = [
       {
@@ -60,40 +21,40 @@ export const usePrintActivity = (print: Print) => {
       },
     ];
 
-    const activities = printLogs.reduce((acc, log) => {
-      if (log.changes.locked !== undefined) {
-        const Content = () => {
-          return (
-            <div className="text-white/80">
-              {log.changes.locked ? (
-                <span>
-                  Fisierul a fost deschis de&nbsp;
-                  <a href="/" className="font-semibold hover:underline">
-                    {userProfiles[log.changes!.locked_by!].name}
-                  </a>
-                </span>
-              ) : (
-                `Fisierul a fost inchis.`
-              )}
-            </div>
-          );
-        };
-        acc.push({
-          date: log.created_at,
-          Content: <Content />,
-          type: "positive",
-          category: "file",
-        });
-      }
-      return acc;
-    }, itemActivities);
+    // const activities = printLogs.reduce((acc, log) => {
+    //   if (log.changes.locked !== undefined) {
+    //     const Content = () => {
+    //       return (
+    //         <div className="text-white/80">
+    //           {log.changes.locked ? (
+    //             <span>
+    //               Fisierul a fost deschis de&nbsp;
+    //               <a href="/" className="font-semibold hover:underline">
+    //                 {userProfiles[log.changes!.locked_by!].name}
+    //               </a>
+    //             </span>
+    //           ) : (
+    //             `Fisierul a fost inchis.`
+    //           )}
+    //         </div>
+    //       );
+    //     };
+    //     acc.push({
+    //       date: log.created_at,
+    //       Content: <Content />,
+    //       type: "positive",
+    //       category: "file",
+    //     });
+    //   }
+    //   return acc;
+    // }, itemActivities);
 
-    activities.sort((a, b) => {
-      return new Date(a.date).getTime() - new Date(b.date).getTime();
-    });
+    // activities.sort((a, b) => {
+    //   return new Date(a.date).getTime() - new Date(b.date).getTime();
+    // });
 
-    setItemActivity(activities);
-  }, [printLogs, userProfiles]);
+    // setItemActivity(activities);
+  }, [userProfiles]);
 
   return itemActivity;
 };

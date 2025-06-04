@@ -1,0 +1,228 @@
+05:20:23.156 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Command: sign
+05:20:23.157 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Client ID: kaXTRACNijSWsFdRKg_KAfD3fqrBlzMbWs6TwWHwAn8
+05:20:23.157 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - OAuth2 URL: https://login.ssl.com/oauth2/token
+05:20:23.157 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - CSC Endpoint: https://cs.ssl.com
+05:20:23.157 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - TSA URL: http://ts.ssl.com
+05:20:23.158 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - TSA Legacy URL: null
+05:20:23.158 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Output directory path: /Users/leocaadi-stefan/Desktop/site/app/dist
+05:20:23.159 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Input file path: /Users/leocaadi-stefan/Desktop/site/app/dist/adipan Setup 0.3.13.exe
+05:20:23.159 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - File type: exe
+05:20:23.159 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Code format type: pe
+05:20:23.898 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Credential ID in input parameter: 0bd81b4d-49cb-4840-8d30-4d0374ff51b5
+05:20:23.898 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Credential ID retrieved from signatures service: 0bd81b4d-49cb-4840-8d30-4d0374ff51b5
+05:20:24.445 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Subject DN: CN=ADI PAN SRL, O=ADI PAN SRL, L=Buzau, C=RO
+05:20:24.445 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Issuer DN: CN=SSL.com Code Signing Intermediate CA RSA R1, O=SSL Corp, L=Houston, ST=Texas, C=US
+05:20:24.451 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Certificate expiry: Wed May 06 00:08:40 EEST 2026
+05:20:28.959 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - malware detected: false
+05:21:08.196 [main] INFO  com.ssl.code.signing.tool.csc.CscApi - sign hash response: {"signatures":["h22pbVsgA7uKWGavjG7Ax1vQsQbhBo2byVb12H1ocrB8s38Q/yVI+YGkpVvoFbJqb+TuM/ga8hIkKzNY88u7vDqsMQOliSosYzBz8EDqYhhi6MdjHJo/YFpia+Whj4KxIJ0rhqpcX0Mkbm2yfl6D/mtwimARgPWB1na3OcmmLiUHzJLYSmDdSHsZkxpeax5rDFoo2KfH5axDh1gBY7dHoCCvFVxNbw5LbRLBvfQ4MmUqT+kmHIvycKx+u2a9EBa0/iLjNFXaSyJutuprAy5NPB+fVDBTE/OkVVQuanpGDRq8ebW2Y5Bc7QoJXMp0G3Zo6Pb8hdh+oDyXRJ1rtvz5hRBGe9EFzNy1QBIPiBqM+3T45YcEQWiU5XLO1LifLOBMND+hMEIn6+2gdutsWhTJNDGj0cJV7auymvH/oG8gEhMtijLK8k6acwuB4b+QTFOAx31078ifYRyl+MsQvz0+QYZctm5gEJKHlWGibq5aShWpYSAigb/pCHWL83gsaM9D"]}
+05:21:08.197 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Signature value: h22pbVsgA7uKWGavjG7Ax1vQsQbhBo2byVb12H1ocrB8s38Q/yVI+YGkpVvoFbJqb+TuM/ga8hIkKzNY88u7vDqsMQOliSosYzBz8EDqYhhi6MdjHJo/YFpia+Whj4KxIJ0rhqpcX0Mkbm2yfl6D/mtwimARgPWB1na3OcmmLiUHzJLYSmDdSHsZkxpeax5rDFoo2KfH5axDh1gBY7dHoCCvFVxNbw5LbRLBvfQ4MmUqT+kmHIvycKx+u2a9EBa0/iLjNFXaSyJutuprAy5NPB+fVDBTE/OkVVQuanpGDRq8ebW2Y5Bc7QoJXMp0G3Zo6Pb8hdh+oDyXRJ1rtvz5hRBGe9EFzNy1QBIPiBqM+3T45YcEQWiU5XLO1LifLOBMND+hMEIn6+2gdutsWhTJNDGj0cJV7auymvH/oG8gEhMtijLK8k6acwuB4b+QTFOAx31078ifYRyl+MsQvz0+QYZctm5gEJKHlWGibq5aShWpYSAigb/pCHWL83gsaM9D
+05:21:08.214 [main] ERROR com.ssl.code.signing.tool.commands.SignCommand - 
+java.io.IOException: Source '/Users/leocaadi-stefan/Desktop/site/app/dist/adipan Setup 0.3.13.exe' and destination '/Users/leocaadi-stefan/Desktop/site/app/dist/adipan Setup 0.3.13.exe' are the same
+	at org.apache.commons.io.FileUtils.copyFile(FileUtils.java:874) ~[sign.jar:?]
+	at org.apache.commons.io.FileUtils.copyFile(FileUtils.java:835) ~[sign.jar:?]
+	at org.apache.commons.io.FileUtils.copyFile(FileUtils.java:802) ~[sign.jar:?]
+	at com.ssl.code.signing.tool.commands.SignCommand.run(SignCommand.java:302) [sign.jar:?]
+	at picocli.CommandLine.executeUserObject(CommandLine.java:1939) [sign.jar:?]
+	at picocli.CommandLine.access$1300(CommandLine.java:145) [sign.jar:?]
+	at picocli.CommandLine$RunLast.executeUserObjectOfLastSubcommandWithSameParent(CommandLine.java:2352) [sign.jar:?]
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2346) [sign.jar:?]
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2311) [sign.jar:?]
+	at picocli.CommandLine$AbstractParseResultHandler.execute(CommandLine.java:2179) [sign.jar:?]
+	at picocli.CommandLine.execute(CommandLine.java:2078) [sign.jar:?]
+	at com.ssl.code.signing.tool.CodeSignTool.main(CodeSignTool.java:39) [sign.jar:?]
+05:21:09.017 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Command: sign
+05:21:09.019 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Client ID: kaXTRACNijSWsFdRKg_KAfD3fqrBlzMbWs6TwWHwAn8
+05:21:09.019 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - OAuth2 URL: https://login.ssl.com/oauth2/token
+05:21:09.019 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - CSC Endpoint: https://cs.ssl.com
+05:21:09.019 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - TSA URL: http://ts.ssl.com
+05:21:09.019 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - TSA Legacy URL: null
+05:21:09.019 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Output directory path: /Users/leocaadi-stefan/Desktop/site/app/dist/win-unpacked
+05:21:09.020 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Input file path: /Users/leocaadi-stefan/Desktop/site/app/dist/win-unpacked/adipan.exe
+05:21:09.020 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - File type: exe
+05:21:09.020 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Code format type: pe
+05:21:09.718 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Credential ID in input parameter: 0bd81b4d-49cb-4840-8d30-4d0374ff51b5
+05:21:09.718 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Credential ID retrieved from signatures service: 0bd81b4d-49cb-4840-8d30-4d0374ff51b5
+05:21:10.255 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Subject DN: CN=ADI PAN SRL, O=ADI PAN SRL, L=Buzau, C=RO
+05:21:10.255 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Issuer DN: CN=SSL.com Code Signing Intermediate CA RSA R1, O=SSL Corp, L=Houston, ST=Texas, C=US
+05:21:10.266 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Certificate expiry: Wed May 06 00:08:40 EEST 2026
+05:21:13.196 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - malware detected: false
+05:53:13.268 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Command: sign
+05:53:13.269 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Client ID: kaXTRACNijSWsFdRKg_KAfD3fqrBlzMbWs6TwWHwAn8
+05:53:13.270 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - OAuth2 URL: https://login.ssl.com/oauth2/token
+05:53:13.270 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - CSC Endpoint: https://cs.ssl.com
+05:53:13.270 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - TSA URL: http://ts.ssl.com
+05:53:13.270 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - TSA Legacy URL: null
+05:53:13.271 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Output directory path: /Users/leocaadi-stefan/Desktop/site/app/dist/signed
+05:53:13.272 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Input file path: /Users/leocaadi-stefan/Desktop/site/app/dist/adipan Setup 0.3.13.exe
+05:53:13.272 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - File type: exe
+05:53:13.272 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Code format type: pe
+05:53:14.030 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Credential ID in input parameter: 0bd81b4d-49cb-4840-8d30-4d0374ff51b5
+05:53:14.030 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Credential ID retrieved from signatures service: 0bd81b4d-49cb-4840-8d30-4d0374ff51b5
+05:53:14.555 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Subject DN: CN=ADI PAN SRL, O=ADI PAN SRL, L=Buzau, C=RO
+05:53:14.556 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Issuer DN: CN=SSL.com Code Signing Intermediate CA RSA R1, O=SSL Corp, L=Houston, ST=Texas, C=US
+05:53:14.561 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Certificate expiry: Wed May 06 00:08:40 EEST 2026
+05:53:18.285 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - malware detected: false
+05:55:38.472 [main] INFO  com.ssl.code.signing.tool.csc.CscApi - sign hash response: {"signatures":["Cl2ReGhGkE7lu3nRxV7bbPqy3RRmI4/EcqxfYjq6KdCedjrsy3EkUrqmmblrzUDaQFiSlbZE901X3MHqPBvlKwype2+w1xUFKCej9FVHDAg9HcsDK59HkLpCYCFF+IeADgeUd4ivHLOed7dbNDRXdl1KQlr12anrcbj2jmyQYdssY5oXePnJMlMBauHqqbnxjiL/hTxYaAMGfMFTRzdddZ5e5smGsVMpJyJ6sTKoJQrlJTo6wHUTbJObIVdaMwUuZX8/+V6O7ulY2yaqbyiWJsKWe9a4+80DcQUJRi3A2mbsj5K8oYFVqH6sUXYZUe367a53/GAwBSHL/TuH77MmlMesBVJTRo2btZJjq9rhEp7WrZ6ex3Ud1QIWut7LynJOkD2NYVV9AkWSpA43ETAnna05u7vvW54z3azQOKCKeJshx1t1DEDf7Ahp3AWNrfnYvGlBkuZsOEeC5iewW5uGnROa/dAk9RL/t5O+y/aDYhZjxCkpkqusWWiFuxV20Xla"]}
+05:55:38.474 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Signature value: Cl2ReGhGkE7lu3nRxV7bbPqy3RRmI4/EcqxfYjq6KdCedjrsy3EkUrqmmblrzUDaQFiSlbZE901X3MHqPBvlKwype2+w1xUFKCej9FVHDAg9HcsDK59HkLpCYCFF+IeADgeUd4ivHLOed7dbNDRXdl1KQlr12anrcbj2jmyQYdssY5oXePnJMlMBauHqqbnxjiL/hTxYaAMGfMFTRzdddZ5e5smGsVMpJyJ6sTKoJQrlJTo6wHUTbJObIVdaMwUuZX8/+V6O7ulY2yaqbyiWJsKWe9a4+80DcQUJRi3A2mbsj5K8oYFVqH6sUXYZUe367a53/GAwBSHL/TuH77MmlMesBVJTRo2btZJjq9rhEp7WrZ6ex3Ud1QIWut7LynJOkD2NYVV9AkWSpA43ETAnna05u7vvW54z3azQOKCKeJshx1t1DEDf7Ahp3AWNrfnYvGlBkuZsOEeC5iewW5uGnROa/dAk9RL/t5O+y/aDYhZjxCkpkqusWWiFuxV20Xla
+05:55:40.963 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Command: sign
+05:55:40.964 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Client ID: kaXTRACNijSWsFdRKg_KAfD3fqrBlzMbWs6TwWHwAn8
+05:55:40.964 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - OAuth2 URL: https://login.ssl.com/oauth2/token
+05:55:40.964 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - CSC Endpoint: https://cs.ssl.com
+05:55:40.964 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - TSA URL: http://ts.ssl.com
+05:55:40.964 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - TSA Legacy URL: null
+05:55:40.965 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Output directory path: /Users/leocaadi-stefan/Desktop/site/app/dist/win-unpacked/signed
+05:55:40.965 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Input file path: /Users/leocaadi-stefan/Desktop/site/app/dist/win-unpacked/adipan.exe
+05:55:40.965 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - File type: exe
+05:55:40.965 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Code format type: pe
+05:55:41.636 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Credential ID in input parameter: 0bd81b4d-49cb-4840-8d30-4d0374ff51b5
+05:55:41.636 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Credential ID retrieved from signatures service: 0bd81b4d-49cb-4840-8d30-4d0374ff51b5
+05:55:42.179 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Subject DN: CN=ADI PAN SRL, O=ADI PAN SRL, L=Buzau, C=RO
+05:55:42.180 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Issuer DN: CN=SSL.com Code Signing Intermediate CA RSA R1, O=SSL Corp, L=Houston, ST=Texas, C=US
+05:55:42.190 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Certificate expiry: Wed May 06 00:08:40 EEST 2026
+05:55:44.821 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - malware detected: false
+05:55:52.091 [main] INFO  com.ssl.code.signing.tool.csc.CscApi - sign hash response: {"signatures":["eADodrxEHHZu22oaNrk3JAMjWZtwr2MdKLURAoU197XSZVFkUnMj0W974a7VzRBbSe2KT4RHITmTv3QXG7lvl1brxyqY5eBf2Ti8KA3+hJbQ+jlO7MUjrY0u8Jj8/Bi0ZwnyUVyJdoj6spK3CGOVPPZw4oC5JbB8Q1dWZLPSGQSkNSeTG40kAUqh9v/+DSDnCJkxrQka/JTuwyLP2mf+T9SZ9hAfsST/IEEJnBMuUV8UDGKi/rLeRPOGgjPrR3hB+h5PCklraJZooRMlOa0MLmPEYr5s1TdqHL77pe5RPEbEqs/zTp3p21TUYc2zjlTwKRWaIZRFGhiKFSxwMuUhCpODkWUyfn76LepLq/KCa2FIb5/0PBbFYssuPtwb6spb14dse8gPF+XJNlLji/YJEQBj2loHcy0dvjSzT8LsJUlTaFcJBctJq8nzoL8tA4/MG3xY/nQPmbgVgFDoJu4/XEP1LZF+cgvE86XMfdKdWPEKcp1gTDQbGigTvwzRp45r"]}
+05:55:52.092 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Signature value: eADodrxEHHZu22oaNrk3JAMjWZtwr2MdKLURAoU197XSZVFkUnMj0W974a7VzRBbSe2KT4RHITmTv3QXG7lvl1brxyqY5eBf2Ti8KA3+hJbQ+jlO7MUjrY0u8Jj8/Bi0ZwnyUVyJdoj6spK3CGOVPPZw4oC5JbB8Q1dWZLPSGQSkNSeTG40kAUqh9v/+DSDnCJkxrQka/JTuwyLP2mf+T9SZ9hAfsST/IEEJnBMuUV8UDGKi/rLeRPOGgjPrR3hB+h5PCklraJZooRMlOa0MLmPEYr5s1TdqHL77pe5RPEbEqs/zTp3p21TUYc2zjlTwKRWaIZRFGhiKFSxwMuUhCpODkWUyfn76LepLq/KCa2FIb5/0PBbFYssuPtwb6spb14dse8gPF+XJNlLji/YJEQBj2loHcy0dvjSzT8LsJUlTaFcJBctJq8nzoL8tA4/MG3xY/nQPmbgVgFDoJu4/XEP1LZF+cgvE86XMfdKdWPEKcp1gTDQbGigTvwzRp45r
+05:56:24.997 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Command: sign
+05:56:24.998 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Client ID: kaXTRACNijSWsFdRKg_KAfD3fqrBlzMbWs6TwWHwAn8
+05:56:24.999 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - OAuth2 URL: https://login.ssl.com/oauth2/token
+05:56:24.999 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - CSC Endpoint: https://cs.ssl.com
+05:56:24.999 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - TSA URL: http://ts.ssl.com
+05:56:24.999 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - TSA Legacy URL: null
+05:56:24.999 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Output directory path: /Users/leocaadi-stefan/Desktop/site/app/dist/signed
+05:56:25.000 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Input file path: /Users/leocaadi-stefan/Desktop/site/app/dist/adipan Setup 0.3.13.exe
+05:56:25.000 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - File type: exe
+05:56:25.000 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Code format type: pe
+05:56:25.715 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Credential ID in input parameter: 0bd81b4d-49cb-4840-8d30-4d0374ff51b5
+05:56:25.715 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Credential ID retrieved from signatures service: 0bd81b4d-49cb-4840-8d30-4d0374ff51b5
+05:56:26.262 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Subject DN: CN=ADI PAN SRL, O=ADI PAN SRL, L=Buzau, C=RO
+05:56:26.263 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Issuer DN: CN=SSL.com Code Signing Intermediate CA RSA R1, O=SSL Corp, L=Houston, ST=Texas, C=US
+05:56:26.276 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Certificate expiry: Wed May 06 00:08:40 EEST 2026
+05:56:29.263 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - malware detected: false
+05:56:49.333 [main] INFO  com.ssl.code.signing.tool.csc.CscApi - sign hash response: {"signatures":["Cl2ReGhGkE7lu3nRxV7bbPqy3RRmI4/EcqxfYjq6KdCedjrsy3EkUrqmmblrzUDaQFiSlbZE901X3MHqPBvlKwype2+w1xUFKCej9FVHDAg9HcsDK59HkLpCYCFF+IeADgeUd4ivHLOed7dbNDRXdl1KQlr12anrcbj2jmyQYdssY5oXePnJMlMBauHqqbnxjiL/hTxYaAMGfMFTRzdddZ5e5smGsVMpJyJ6sTKoJQrlJTo6wHUTbJObIVdaMwUuZX8/+V6O7ulY2yaqbyiWJsKWe9a4+80DcQUJRi3A2mbsj5K8oYFVqH6sUXYZUe367a53/GAwBSHL/TuH77MmlMesBVJTRo2btZJjq9rhEp7WrZ6ex3Ud1QIWut7LynJOkD2NYVV9AkWSpA43ETAnna05u7vvW54z3azQOKCKeJshx1t1DEDf7Ahp3AWNrfnYvGlBkuZsOEeC5iewW5uGnROa/dAk9RL/t5O+y/aDYhZjxCkpkqusWWiFuxV20Xla"]}
+05:56:49.334 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Signature value: Cl2ReGhGkE7lu3nRxV7bbPqy3RRmI4/EcqxfYjq6KdCedjrsy3EkUrqmmblrzUDaQFiSlbZE901X3MHqPBvlKwype2+w1xUFKCej9FVHDAg9HcsDK59HkLpCYCFF+IeADgeUd4ivHLOed7dbNDRXdl1KQlr12anrcbj2jmyQYdssY5oXePnJMlMBauHqqbnxjiL/hTxYaAMGfMFTRzdddZ5e5smGsVMpJyJ6sTKoJQrlJTo6wHUTbJObIVdaMwUuZX8/+V6O7ulY2yaqbyiWJsKWe9a4+80DcQUJRi3A2mbsj5K8oYFVqH6sUXYZUe367a53/GAwBSHL/TuH77MmlMesBVJTRo2btZJjq9rhEp7WrZ6ex3Ud1QIWut7LynJOkD2NYVV9AkWSpA43ETAnna05u7vvW54z3azQOKCKeJshx1t1DEDf7Ahp3AWNrfnYvGlBkuZsOEeC5iewW5uGnROa/dAk9RL/t5O+y/aDYhZjxCkpkqusWWiFuxV20Xla
+05:56:51.736 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Command: sign
+05:56:51.738 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Client ID: kaXTRACNijSWsFdRKg_KAfD3fqrBlzMbWs6TwWHwAn8
+05:56:51.738 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - OAuth2 URL: https://login.ssl.com/oauth2/token
+05:56:51.738 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - CSC Endpoint: https://cs.ssl.com
+05:56:51.738 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - TSA URL: http://ts.ssl.com
+05:56:51.738 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - TSA Legacy URL: null
+05:56:51.738 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Output directory path: /Users/leocaadi-stefan/Desktop/site/app/dist/win-arm64-unpacked/signed
+05:56:51.739 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Input file path: /Users/leocaadi-stefan/Desktop/site/app/dist/win-arm64-unpacked/adipan.exe
+05:56:51.739 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - File type: exe
+05:56:51.739 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Code format type: pe
+05:56:52.469 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Credential ID in input parameter: 0bd81b4d-49cb-4840-8d30-4d0374ff51b5
+05:56:52.469 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Credential ID retrieved from signatures service: 0bd81b4d-49cb-4840-8d30-4d0374ff51b5
+05:56:53.012 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Subject DN: CN=ADI PAN SRL, O=ADI PAN SRL, L=Buzau, C=RO
+05:56:53.013 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Issuer DN: CN=SSL.com Code Signing Intermediate CA RSA R1, O=SSL Corp, L=Houston, ST=Texas, C=US
+05:56:53.026 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Certificate expiry: Wed May 06 00:08:40 EEST 2026
+05:56:55.988 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - malware detected: false
+05:57:07.048 [main] INFO  com.ssl.code.signing.tool.csc.CscApi - sign hash response: {"signatures":["OWrhy40FMy8iVZRDkoAzsBvbhPgqQ7u/023dhIbtGCjBPjy2ozdNCUy4Sj3t8QxCglODkz07IvnDJ9J8uFR6dKKLlUfaMlXwzGEcjRf2QtiI1UzeQoWqM7FR4dxEoiFT2eLLaC7gTQAPNrJKVrHQycD+OmZZGMApX+Fv7pI4K5Q82ZMLVne6slme22sgbIcVRt4F2oyXsfhpoTQxWgQcZQ+UE5Rxa4GzIgLVHuLeW4Wb+ptn+d5rluCXh4v0y5aUICrLmesR+lkLLbVhHc2bNLfBI4AcCBSlkxhBLwgB2G3qWt4CsFWBpnNb4ztjG1pmerGZCCU116P09C8mTq1z9Bcl9h5or7aoVQCyj7saymXzNzwR4Xe+12oYW3ypvYvuIvlnp+DMrEfVi3c6lQW1bngwfFzr5hLIyxKKhvgcHW+2yuyVRBolczaFgRXsluTVTE0ubIxh1l7PRQahIhHb7IF0xaUqXVd++AZiW5lOi2vTdTQu6it1P26blukToJdf"]}
+05:57:07.049 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Signature value: OWrhy40FMy8iVZRDkoAzsBvbhPgqQ7u/023dhIbtGCjBPjy2ozdNCUy4Sj3t8QxCglODkz07IvnDJ9J8uFR6dKKLlUfaMlXwzGEcjRf2QtiI1UzeQoWqM7FR4dxEoiFT2eLLaC7gTQAPNrJKVrHQycD+OmZZGMApX+Fv7pI4K5Q82ZMLVne6slme22sgbIcVRt4F2oyXsfhpoTQxWgQcZQ+UE5Rxa4GzIgLVHuLeW4Wb+ptn+d5rluCXh4v0y5aUICrLmesR+lkLLbVhHc2bNLfBI4AcCBSlkxhBLwgB2G3qWt4CsFWBpnNb4ztjG1pmerGZCCU116P09C8mTq1z9Bcl9h5or7aoVQCyj7saymXzNzwR4Xe+12oYW3ypvYvuIvlnp+DMrEfVi3c6lQW1bngwfFzr5hLIyxKKhvgcHW+2yuyVRBolczaFgRXsluTVTE0ubIxh1l7PRQahIhHb7IF0xaUqXVd++AZiW5lOi2vTdTQu6it1P26blukToJdf
+06:18:14.681 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Command: sign
+06:18:14.683 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Client ID: kaXTRACNijSWsFdRKg_KAfD3fqrBlzMbWs6TwWHwAn8
+06:18:14.683 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - OAuth2 URL: https://login.ssl.com/oauth2/token
+06:18:14.683 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - CSC Endpoint: https://cs.ssl.com
+06:18:14.683 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - TSA URL: http://ts.ssl.com
+06:18:14.684 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - TSA Legacy URL: null
+06:18:14.684 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Output directory path: /Users/leocaadi-stefan/Desktop/site/app/dist/signed
+06:18:14.685 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Input file path: /Users/leocaadi-stefan/Desktop/site/app/dist/adipan Setup 0.3.13.exe
+06:18:14.685 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - File type: exe
+06:18:14.685 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Code format type: pe
+06:18:15.437 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Credential ID in input parameter: 0bd81b4d-49cb-4840-8d30-4d0374ff51b5
+06:18:15.438 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Credential ID retrieved from signatures service: 0bd81b4d-49cb-4840-8d30-4d0374ff51b5
+06:18:15.988 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Subject DN: CN=ADI PAN SRL, O=ADI PAN SRL, L=Buzau, C=RO
+06:18:15.989 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Issuer DN: CN=SSL.com Code Signing Intermediate CA RSA R1, O=SSL Corp, L=Houston, ST=Texas, C=US
+06:18:15.996 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Certificate expiry: Wed May 06 00:08:40 EEST 2026
+06:18:20.703 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - malware detected: false
+06:19:11.257 [main] INFO  com.ssl.code.signing.tool.csc.CscApi - sign hash response: {"signatures":["nFaD/uI+/bfWBMPuHDsX8sjJFiN9+6cr5fUNpi0qkljFSem/wbPdNgSJ7ODZu7bIzrGs8drFXMDVfwrYeaE2UwHbsRqEohUbZLs4osHZizdR2hQ1O7WBt7xHOtZ6br3YzIX8MmLJqw0zkeCS5C5XFsoXoOir2inrjq0PeVMg3c/H7SyYgW5t3DyJ5ZBKFBHi4R0M4G2ujhVAeq0uxwDvFiL9o9EK8H2zZvIsTTD1XwNlPyMAW+cwbv3rzLRTyCYTY+CMR1/IvgXloWr/8q5v8W/BlBc0Gpp07M3WXhvnPpXJE+w29QlpZH2VGv6hvhwlz+Vsco30UYw+X/36eICfZO8QjeUBc93OoetQalY16PjVZYhjw68HKuEzHKQ0JvnizRSLA3tpM5YOodsAZ41CJGubzoCjZCtrMVSwZo4DFpgGj3NSccSlNmBA4L1nsRr+VdGygN30s6srEYdKx318lrfKIIB8CEhFJHeS2rBx/sYB2X0HpDgjH8moXPaGIYne"]}
+06:19:11.258 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Signature value: nFaD/uI+/bfWBMPuHDsX8sjJFiN9+6cr5fUNpi0qkljFSem/wbPdNgSJ7ODZu7bIzrGs8drFXMDVfwrYeaE2UwHbsRqEohUbZLs4osHZizdR2hQ1O7WBt7xHOtZ6br3YzIX8MmLJqw0zkeCS5C5XFsoXoOir2inrjq0PeVMg3c/H7SyYgW5t3DyJ5ZBKFBHi4R0M4G2ujhVAeq0uxwDvFiL9o9EK8H2zZvIsTTD1XwNlPyMAW+cwbv3rzLRTyCYTY+CMR1/IvgXloWr/8q5v8W/BlBc0Gpp07M3WXhvnPpXJE+w29QlpZH2VGv6hvhwlz+Vsco30UYw+X/36eICfZO8QjeUBc93OoetQalY16PjVZYhjw68HKuEzHKQ0JvnizRSLA3tpM5YOodsAZ41CJGubzoCjZCtrMVSwZo4DFpgGj3NSccSlNmBA4L1nsRr+VdGygN30s6srEYdKx318lrfKIIB8CEhFJHeS2rBx/sYB2X0HpDgjH8moXPaGIYne
+06:19:14.342 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Command: sign
+06:19:14.343 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Client ID: kaXTRACNijSWsFdRKg_KAfD3fqrBlzMbWs6TwWHwAn8
+06:19:14.344 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - OAuth2 URL: https://login.ssl.com/oauth2/token
+06:19:14.344 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - CSC Endpoint: https://cs.ssl.com
+06:19:14.344 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - TSA URL: http://ts.ssl.com
+06:19:14.344 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - TSA Legacy URL: null
+06:19:14.344 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Output directory path: /Users/leocaadi-stefan/Desktop/site/app/dist/win-unpacked/signed
+06:19:14.345 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Input file path: /Users/leocaadi-stefan/Desktop/site/app/dist/win-unpacked/adipan.exe
+06:19:14.345 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - File type: exe
+06:19:14.345 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Code format type: pe
+06:19:15.052 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Credential ID in input parameter: 0bd81b4d-49cb-4840-8d30-4d0374ff51b5
+06:19:15.052 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Credential ID retrieved from signatures service: 0bd81b4d-49cb-4840-8d30-4d0374ff51b5
+06:19:15.586 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Subject DN: CN=ADI PAN SRL, O=ADI PAN SRL, L=Buzau, C=RO
+06:19:15.587 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Issuer DN: CN=SSL.com Code Signing Intermediate CA RSA R1, O=SSL Corp, L=Houston, ST=Texas, C=US
+06:19:15.600 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Certificate expiry: Wed May 06 00:08:40 EEST 2026
+06:19:18.322 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - malware detected: false
+06:19:28.255 [main] INFO  com.ssl.code.signing.tool.csc.CscApi - sign hash response: {"signatures":["eADodrxEHHZu22oaNrk3JAMjWZtwr2MdKLURAoU197XSZVFkUnMj0W974a7VzRBbSe2KT4RHITmTv3QXG7lvl1brxyqY5eBf2Ti8KA3+hJbQ+jlO7MUjrY0u8Jj8/Bi0ZwnyUVyJdoj6spK3CGOVPPZw4oC5JbB8Q1dWZLPSGQSkNSeTG40kAUqh9v/+DSDnCJkxrQka/JTuwyLP2mf+T9SZ9hAfsST/IEEJnBMuUV8UDGKi/rLeRPOGgjPrR3hB+h5PCklraJZooRMlOa0MLmPEYr5s1TdqHL77pe5RPEbEqs/zTp3p21TUYc2zjlTwKRWaIZRFGhiKFSxwMuUhCpODkWUyfn76LepLq/KCa2FIb5/0PBbFYssuPtwb6spb14dse8gPF+XJNlLji/YJEQBj2loHcy0dvjSzT8LsJUlTaFcJBctJq8nzoL8tA4/MG3xY/nQPmbgVgFDoJu4/XEP1LZF+cgvE86XMfdKdWPEKcp1gTDQbGigTvwzRp45r"]}
+06:19:28.256 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Signature value: eADodrxEHHZu22oaNrk3JAMjWZtwr2MdKLURAoU197XSZVFkUnMj0W974a7VzRBbSe2KT4RHITmTv3QXG7lvl1brxyqY5eBf2Ti8KA3+hJbQ+jlO7MUjrY0u8Jj8/Bi0ZwnyUVyJdoj6spK3CGOVPPZw4oC5JbB8Q1dWZLPSGQSkNSeTG40kAUqh9v/+DSDnCJkxrQka/JTuwyLP2mf+T9SZ9hAfsST/IEEJnBMuUV8UDGKi/rLeRPOGgjPrR3hB+h5PCklraJZooRMlOa0MLmPEYr5s1TdqHL77pe5RPEbEqs/zTp3p21TUYc2zjlTwKRWaIZRFGhiKFSxwMuUhCpODkWUyfn76LepLq/KCa2FIb5/0PBbFYssuPtwb6spb14dse8gPF+XJNlLji/YJEQBj2loHcy0dvjSzT8LsJUlTaFcJBctJq8nzoL8tA4/MG3xY/nQPmbgVgFDoJu4/XEP1LZF+cgvE86XMfdKdWPEKcp1gTDQbGigTvwzRp45r
+06:31:40.013 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Command: sign
+06:31:40.015 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Client ID: kaXTRACNijSWsFdRKg_KAfD3fqrBlzMbWs6TwWHwAn8
+06:31:40.015 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - OAuth2 URL: https://login.ssl.com/oauth2/token
+06:31:40.015 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - CSC Endpoint: https://cs.ssl.com
+06:31:40.015 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - TSA URL: http://ts.ssl.com
+06:31:40.015 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - TSA Legacy URL: null
+06:31:40.015 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Output directory path: /Users/leocaadi-stefan/Desktop/site/app/dist/signed
+06:31:40.016 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Input file path: /Users/leocaadi-stefan/Desktop/site/app/dist/adipan Setup 0.3.13.exe
+06:31:40.016 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - File type: exe
+06:31:40.016 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Code format type: pe
+06:31:40.757 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Credential ID in input parameter: 0bd81b4d-49cb-4840-8d30-4d0374ff51b5
+06:31:40.757 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Credential ID retrieved from signatures service: 0bd81b4d-49cb-4840-8d30-4d0374ff51b5
+06:31:41.308 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Subject DN: CN=ADI PAN SRL, O=ADI PAN SRL, L=Buzau, C=RO
+06:31:41.308 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Issuer DN: CN=SSL.com Code Signing Intermediate CA RSA R1, O=SSL Corp, L=Houston, ST=Texas, C=US
+06:31:41.314 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Certificate expiry: Wed May 06 00:08:40 EEST 2026
+06:31:46.165 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - malware detected: false
+06:32:26.810 [main] INFO  com.ssl.code.signing.tool.csc.CscApi - sign hash response: {"signatures":["nFaD/uI+/bfWBMPuHDsX8sjJFiN9+6cr5fUNpi0qkljFSem/wbPdNgSJ7ODZu7bIzrGs8drFXMDVfwrYeaE2UwHbsRqEohUbZLs4osHZizdR2hQ1O7WBt7xHOtZ6br3YzIX8MmLJqw0zkeCS5C5XFsoXoOir2inrjq0PeVMg3c/H7SyYgW5t3DyJ5ZBKFBHi4R0M4G2ujhVAeq0uxwDvFiL9o9EK8H2zZvIsTTD1XwNlPyMAW+cwbv3rzLRTyCYTY+CMR1/IvgXloWr/8q5v8W/BlBc0Gpp07M3WXhvnPpXJE+w29QlpZH2VGv6hvhwlz+Vsco30UYw+X/36eICfZO8QjeUBc93OoetQalY16PjVZYhjw68HKuEzHKQ0JvnizRSLA3tpM5YOodsAZ41CJGubzoCjZCtrMVSwZo4DFpgGj3NSccSlNmBA4L1nsRr+VdGygN30s6srEYdKx318lrfKIIB8CEhFJHeS2rBx/sYB2X0HpDgjH8moXPaGIYne"]}
+06:32:26.812 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Signature value: nFaD/uI+/bfWBMPuHDsX8sjJFiN9+6cr5fUNpi0qkljFSem/wbPdNgSJ7ODZu7bIzrGs8drFXMDVfwrYeaE2UwHbsRqEohUbZLs4osHZizdR2hQ1O7WBt7xHOtZ6br3YzIX8MmLJqw0zkeCS5C5XFsoXoOir2inrjq0PeVMg3c/H7SyYgW5t3DyJ5ZBKFBHi4R0M4G2ujhVAeq0uxwDvFiL9o9EK8H2zZvIsTTD1XwNlPyMAW+cwbv3rzLRTyCYTY+CMR1/IvgXloWr/8q5v8W/BlBc0Gpp07M3WXhvnPpXJE+w29QlpZH2VGv6hvhwlz+Vsco30UYw+X/36eICfZO8QjeUBc93OoetQalY16PjVZYhjw68HKuEzHKQ0JvnizRSLA3tpM5YOodsAZ41CJGubzoCjZCtrMVSwZo4DFpgGj3NSccSlNmBA4L1nsRr+VdGygN30s6srEYdKx318lrfKIIB8CEhFJHeS2rBx/sYB2X0HpDgjH8moXPaGIYne
+06:32:29.877 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Command: sign
+06:32:29.878 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Client ID: kaXTRACNijSWsFdRKg_KAfD3fqrBlzMbWs6TwWHwAn8
+06:32:29.878 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - OAuth2 URL: https://login.ssl.com/oauth2/token
+06:32:29.879 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - CSC Endpoint: https://cs.ssl.com
+06:32:29.879 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - TSA URL: http://ts.ssl.com
+06:32:29.879 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - TSA Legacy URL: null
+06:32:29.879 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Output directory path: /Users/leocaadi-stefan/Desktop/site/app/dist/win-unpacked/signed
+06:32:29.880 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Input file path: /Users/leocaadi-stefan/Desktop/site/app/dist/win-unpacked/adipan.exe
+06:32:29.880 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - File type: exe
+06:32:29.880 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Code format type: pe
+06:32:30.642 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Credential ID in input parameter: 0bd81b4d-49cb-4840-8d30-4d0374ff51b5
+06:32:30.642 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Credential ID retrieved from signatures service: 0bd81b4d-49cb-4840-8d30-4d0374ff51b5
+06:32:31.187 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Subject DN: CN=ADI PAN SRL, O=ADI PAN SRL, L=Buzau, C=RO
+06:32:31.188 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Issuer DN: CN=SSL.com Code Signing Intermediate CA RSA R1, O=SSL Corp, L=Houston, ST=Texas, C=US
+06:32:31.201 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Certificate expiry: Wed May 06 00:08:40 EEST 2026
+06:32:33.983 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - malware detected: false
+06:32:44.223 [main] INFO  com.ssl.code.signing.tool.csc.CscApi - sign hash response: {"signatures":["eADodrxEHHZu22oaNrk3JAMjWZtwr2MdKLURAoU197XSZVFkUnMj0W974a7VzRBbSe2KT4RHITmTv3QXG7lvl1brxyqY5eBf2Ti8KA3+hJbQ+jlO7MUjrY0u8Jj8/Bi0ZwnyUVyJdoj6spK3CGOVPPZw4oC5JbB8Q1dWZLPSGQSkNSeTG40kAUqh9v/+DSDnCJkxrQka/JTuwyLP2mf+T9SZ9hAfsST/IEEJnBMuUV8UDGKi/rLeRPOGgjPrR3hB+h5PCklraJZooRMlOa0MLmPEYr5s1TdqHL77pe5RPEbEqs/zTp3p21TUYc2zjlTwKRWaIZRFGhiKFSxwMuUhCpODkWUyfn76LepLq/KCa2FIb5/0PBbFYssuPtwb6spb14dse8gPF+XJNlLji/YJEQBj2loHcy0dvjSzT8LsJUlTaFcJBctJq8nzoL8tA4/MG3xY/nQPmbgVgFDoJu4/XEP1LZF+cgvE86XMfdKdWPEKcp1gTDQbGigTvwzRp45r"]}
+06:32:44.224 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Signature value: eADodrxEHHZu22oaNrk3JAMjWZtwr2MdKLURAoU197XSZVFkUnMj0W974a7VzRBbSe2KT4RHITmTv3QXG7lvl1brxyqY5eBf2Ti8KA3+hJbQ+jlO7MUjrY0u8Jj8/Bi0ZwnyUVyJdoj6spK3CGOVPPZw4oC5JbB8Q1dWZLPSGQSkNSeTG40kAUqh9v/+DSDnCJkxrQka/JTuwyLP2mf+T9SZ9hAfsST/IEEJnBMuUV8UDGKi/rLeRPOGgjPrR3hB+h5PCklraJZooRMlOa0MLmPEYr5s1TdqHL77pe5RPEbEqs/zTp3p21TUYc2zjlTwKRWaIZRFGhiKFSxwMuUhCpODkWUyfn76LepLq/KCa2FIb5/0PBbFYssuPtwb6spb14dse8gPF+XJNlLji/YJEQBj2loHcy0dvjSzT8LsJUlTaFcJBctJq8nzoL8tA4/MG3xY/nQPmbgVgFDoJu4/XEP1LZF+cgvE86XMfdKdWPEKcp1gTDQbGigTvwzRp45r
+06:33:15.011 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Command: sign
+06:33:15.013 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Client ID: kaXTRACNijSWsFdRKg_KAfD3fqrBlzMbWs6TwWHwAn8
+06:33:15.013 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - OAuth2 URL: https://login.ssl.com/oauth2/token
+06:33:15.013 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - CSC Endpoint: https://cs.ssl.com
+06:33:15.013 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - TSA URL: http://ts.ssl.com
+06:33:15.013 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - TSA Legacy URL: null
+06:33:15.013 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Output directory path: /Users/leocaadi-stefan/Desktop/site/app/dist/signed
+06:33:15.014 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Input file path: /Users/leocaadi-stefan/Desktop/site/app/dist/adipan Setup 0.3.13.exe
+06:33:15.014 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - File type: exe
+06:33:15.014 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Code format type: pe
+06:33:15.714 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Credential ID in input parameter: 0bd81b4d-49cb-4840-8d30-4d0374ff51b5
+06:33:15.714 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Credential ID retrieved from signatures service: 0bd81b4d-49cb-4840-8d30-4d0374ff51b5
+06:33:16.258 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Subject DN: CN=ADI PAN SRL, O=ADI PAN SRL, L=Buzau, C=RO
+06:33:16.259 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Issuer DN: CN=SSL.com Code Signing Intermediate CA RSA R1, O=SSL Corp, L=Houston, ST=Texas, C=US
+06:33:16.269 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Certificate expiry: Wed May 06 00:08:40 EEST 2026
+06:33:20.474 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - malware detected: false
+06:33:44.232 [main] INFO  com.ssl.code.signing.tool.csc.CscApi - sign hash response: {"signatures":["nFaD/uI+/bfWBMPuHDsX8sjJFiN9+6cr5fUNpi0qkljFSem/wbPdNgSJ7ODZu7bIzrGs8drFXMDVfwrYeaE2UwHbsRqEohUbZLs4osHZizdR2hQ1O7WBt7xHOtZ6br3YzIX8MmLJqw0zkeCS5C5XFsoXoOir2inrjq0PeVMg3c/H7SyYgW5t3DyJ5ZBKFBHi4R0M4G2ujhVAeq0uxwDvFiL9o9EK8H2zZvIsTTD1XwNlPyMAW+cwbv3rzLRTyCYTY+CMR1/IvgXloWr/8q5v8W/BlBc0Gpp07M3WXhvnPpXJE+w29QlpZH2VGv6hvhwlz+Vsco30UYw+X/36eICfZO8QjeUBc93OoetQalY16PjVZYhjw68HKuEzHKQ0JvnizRSLA3tpM5YOodsAZ41CJGubzoCjZCtrMVSwZo4DFpgGj3NSccSlNmBA4L1nsRr+VdGygN30s6srEYdKx318lrfKIIB8CEhFJHeS2rBx/sYB2X0HpDgjH8moXPaGIYne"]}
+06:33:44.233 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Signature value: nFaD/uI+/bfWBMPuHDsX8sjJFiN9+6cr5fUNpi0qkljFSem/wbPdNgSJ7ODZu7bIzrGs8drFXMDVfwrYeaE2UwHbsRqEohUbZLs4osHZizdR2hQ1O7WBt7xHOtZ6br3YzIX8MmLJqw0zkeCS5C5XFsoXoOir2inrjq0PeVMg3c/H7SyYgW5t3DyJ5ZBKFBHi4R0M4G2ujhVAeq0uxwDvFiL9o9EK8H2zZvIsTTD1XwNlPyMAW+cwbv3rzLRTyCYTY+CMR1/IvgXloWr/8q5v8W/BlBc0Gpp07M3WXhvnPpXJE+w29QlpZH2VGv6hvhwlz+Vsco30UYw+X/36eICfZO8QjeUBc93OoetQalY16PjVZYhjw68HKuEzHKQ0JvnizRSLA3tpM5YOodsAZ41CJGubzoCjZCtrMVSwZo4DFpgGj3NSccSlNmBA4L1nsRr+VdGygN30s6srEYdKx318lrfKIIB8CEhFJHeS2rBx/sYB2X0HpDgjH8moXPaGIYne
+06:33:47.439 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Command: sign
+06:33:47.440 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Client ID: kaXTRACNijSWsFdRKg_KAfD3fqrBlzMbWs6TwWHwAn8
+06:33:47.440 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - OAuth2 URL: https://login.ssl.com/oauth2/token
+06:33:47.441 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - CSC Endpoint: https://cs.ssl.com
+06:33:47.441 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - TSA URL: http://ts.ssl.com
+06:33:47.441 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - TSA Legacy URL: null
+06:33:47.441 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Output directory path: /Users/leocaadi-stefan/Desktop/site/app/dist/win-arm64-unpacked/signed
+06:33:47.442 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Input file path: /Users/leocaadi-stefan/Desktop/site/app/dist/win-arm64-unpacked/adipan.exe
+06:33:47.442 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - File type: exe
+06:33:47.442 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Code format type: pe
+06:33:48.219 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Credential ID in input parameter: 0bd81b4d-49cb-4840-8d30-4d0374ff51b5
+06:33:48.219 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Credential ID retrieved from signatures service: 0bd81b4d-49cb-4840-8d30-4d0374ff51b5
+06:33:48.764 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Subject DN: CN=ADI PAN SRL, O=ADI PAN SRL, L=Buzau, C=RO
+06:33:48.764 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Issuer DN: CN=SSL.com Code Signing Intermediate CA RSA R1, O=SSL Corp, L=Houston, ST=Texas, C=US
+06:33:48.771 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Certificate expiry: Wed May 06 00:08:40 EEST 2026
+06:33:51.328 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - malware detected: false
+06:34:11.358 [main] INFO  com.ssl.code.signing.tool.csc.CscApi - sign hash response: {"signatures":["OWrhy40FMy8iVZRDkoAzsBvbhPgqQ7u/023dhIbtGCjBPjy2ozdNCUy4Sj3t8QxCglODkz07IvnDJ9J8uFR6dKKLlUfaMlXwzGEcjRf2QtiI1UzeQoWqM7FR4dxEoiFT2eLLaC7gTQAPNrJKVrHQycD+OmZZGMApX+Fv7pI4K5Q82ZMLVne6slme22sgbIcVRt4F2oyXsfhpoTQxWgQcZQ+UE5Rxa4GzIgLVHuLeW4Wb+ptn+d5rluCXh4v0y5aUICrLmesR+lkLLbVhHc2bNLfBI4AcCBSlkxhBLwgB2G3qWt4CsFWBpnNb4ztjG1pmerGZCCU116P09C8mTq1z9Bcl9h5or7aoVQCyj7saymXzNzwR4Xe+12oYW3ypvYvuIvlnp+DMrEfVi3c6lQW1bngwfFzr5hLIyxKKhvgcHW+2yuyVRBolczaFgRXsluTVTE0ubIxh1l7PRQahIhHb7IF0xaUqXVd++AZiW5lOi2vTdTQu6it1P26blukToJdf"]}
+06:34:11.359 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Signature value: OWrhy40FMy8iVZRDkoAzsBvbhPgqQ7u/023dhIbtGCjBPjy2ozdNCUy4Sj3t8QxCglODkz07IvnDJ9J8uFR6dKKLlUfaMlXwzGEcjRf2QtiI1UzeQoWqM7FR4dxEoiFT2eLLaC7gTQAPNrJKVrHQycD+OmZZGMApX+Fv7pI4K5Q82ZMLVne6slme22sgbIcVRt4F2oyXsfhpoTQxWgQcZQ+UE5Rxa4GzIgLVHuLeW4Wb+ptn+d5rluCXh4v0y5aUICrLmesR+lkLLbVhHc2bNLfBI4AcCBSlkxhBLwgB2G3qWt4CsFWBpnNb4ztjG1pmerGZCCU116P09C8mTq1z9Bcl9h5or7aoVQCyj7saymXzNzwR4Xe+12oYW3ypvYvuIvlnp+DMrEfVi3c6lQW1bngwfFzr5hLIyxKKhvgcHW+2yuyVRBolczaFgRXsluTVTE0ubIxh1l7PRQahIhHb7IF0xaUqXVd++AZiW5lOi2vTdTQu6it1P26blukToJdf

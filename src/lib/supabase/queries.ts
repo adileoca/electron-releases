@@ -21,7 +21,8 @@ export const getOrderById = async (supabase: Supabase, orderId: string) => {
           assets: item_assets(*,
             psd: media!item_assets_psd_id_fkey(*),
             thumbnail: media!item_assets_thumbnail_id_fkey(*),
-            user: user_profiles(*)
+            user: user_profiles(*),
+            print: print_item_assets(*)
           ),
           product: products(*,
             images:product_images(url)

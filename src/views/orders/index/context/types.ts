@@ -60,9 +60,10 @@ export type ColId =
   | "order_no"
   | "date_placed";
 
+export type FilterOperations = "includes" | "equals" | "not_equals";
 export type FilterType = {
   dataKey: string;
-  type: "includes" | "equals" | "not_equals";
+  type: FilterOperations;
   value: string;
   enabled: boolean;
 };
@@ -136,5 +137,6 @@ export type ContextReducer =
 export type FilterConfig = {
   label: string;
   dataKey: string;
+  operations: FilterOperations[];
   options?: { id: string; label: string; color?: string }[];
 };

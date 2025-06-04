@@ -1,9 +1,9 @@
 {
   "name": "adipan",
-  "version": "0.3.13",
+  "version": "0.3.14",
   "main": "src/core/main.js",
   "private": true,
-  "pluginVersion": "1.0.9",
+  "pluginVersion": "1.1.0",
   "description": "An internal app",
   "author": "adi pan srl",
   "homepage": "./",

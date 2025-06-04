@@ -2,9 +2,10 @@ import { OrderDetailedType } from "@/lib/supabase/database";
 import { formatDate } from "@/lib/utils/format";
 import MiniTable from "../../../../components/ui/MiniTable";
 import Button from "@/components/ui/Button";
+import { Order } from "@/lib/supabase/types";
 
 const ItemAssets: React.FC<{
-  assets: OrderDetailedType["items"][0]["assets"];
+  assets: Order["items"][0]["assets"];
   assetUrls: Map<string, string>;
 }> = ({ assets, assetUrls }) => (
   <div className=" divide-y divide-white/15">
@@ -15,10 +16,10 @@ const ItemAssets: React.FC<{
       )
       .map((asset, index) => (
         <div key={index} className="flex space-x-5 py-3">
-          <div className="relative aspect-square h-72 w-72 overflow-hidden rounded-lg bg-neutral-200">
+          <div className="relative aspect-square h-72 w-72 flex-shrink-0 overflow-hidden rounded-lg bg-neutral-200">
             <img
               src={assetUrls.get(asset.thumbnail_id)!}
-              className="z-30 mx-auto scale-100 object-contain aspect-square"
+              className="z-30 mx-auto aspect-square scale-100 object-contain"
               alt=""
             />
           </div>
@@ -44,6 +45,7 @@ const ItemAssets: React.FC<{
                   Trimis: asset.sent ? "Yes" : "No",
                   Vazut: asset.seen ? "Yes" : "No",
                   Aprobat: asset.approved ? "Yes" : "No",
+                  Printat: asset.print.length > 0 ? "Da" : "Nu",
                   Autor: asset.user!.name!,
                   Data: formatDate(asset.thumbnail?.created_at!, {
                     relative: true,

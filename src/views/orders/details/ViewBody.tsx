@@ -35,7 +35,7 @@ const ViewBody: React.FC<{ order: Order }> = ({ order }) => {
       <div className="p-4">
         <div className="mb-4 flex items-center justify-between space-x-4">
           <h1 className="whitespace-nowrap text-xl font-medium text-white/80">
-            Produse
+            Produse ({order.items.length} ceramici)
           </h1>
           {noOfAdhesives ? (
             <OrderStatusBadge

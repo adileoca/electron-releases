@@ -2,6 +2,7 @@ const { notarize } = require("electron-notarize");
 const { execFileSync } = require("child_process");
 const path = require("path");
 const pkg = require("../package.json");
+const fs = require("fs");
 
 const {
   macNotarize: { appleId, appleIdAppPassword, teamId },
@@ -30,23 +31,59 @@ exports.default = async function notarizing(context) {
   }
 
   if (electronPlatformName === "win32") {
-    const version = pkg.version;
-    const exeName = `${appName} Setup ${version}.exe`;
-    const file = path.join(__dirname, "../dist", exeName);
-    execFileSync(
-      "java",
-      [
-        "-jar",
-        path.resolve(__dirname, "eSigner.jar"),
-        "sign",
-        `-credential_id=${credentialId}`,
-        `-username=${username}`,
-        `-password=${password}`,
-        `-input_file_path=${file}`,
-        `-output_dir_path=${path.dirname(file)}`,
-        "-timestamp_url=http://timestamp.digicert.com",
-      ],
-      { stdio: "inherit" }
-    );
+    // Sign the unpacked executable
+    if (appOutDir.endsWith("unpacked")) {
+      const unpackedExePath = path.join(appOutDir, `${appName}.exe`);
+      const signedUnpackedDir = path.join(appOutDir, "signed");
+      if (!fs.existsSync(signedUnpackedDir)) fs.mkdirSync(signedUnpackedDir);
+
+      execFileSync(
+        "java",
+        [
+          "-jar",
+          path.resolve(__dirname, "CodeSignTool/jar/sign.jar"),
+          "sign",
+          `-credential_id=${credentialId}`,
+          `-username=${username}`,
+          `-password=${password}`,
+          `-input_file_path=${unpackedExePath}`,
+          `-output_dir_path=${signedUnpackedDir}`,
+        ],
+        { stdio: "inherit", cwd: path.resolve(__dirname, "CodeSignTool") }
+      );
+
+      const signedUnpackedExePath = path.join(
+        signedUnpackedDir,
+        `${appName}.exe`
+      );
+      fs.renameSync(signedUnpackedExePath, unpackedExePath);
+    } else {
+      // Sign the installer
+      const version = pkg.version;
+      const exeName = `${appName} Setup ${version}.exe`;
+
+      const installerPath = path.join(__dirname, "../dist", exeName);
+      const signedDir = path.join(path.dirname(installerPath), "signed");
+      if (!fs.existsSync(signedDir)) fs.mkdirSync(signedDir);
+
+      execFileSync(
+        "java",
+        [
+          "-jar",
+          path.resolve(__dirname, "CodeSignTool/jar/sign.jar"),
+          "sign",
+          `-credential_id=${credentialId}`,
+          `-username=${username}`,
+          `-password=${password}`,
+          `-input_file_path=${installerPath}`,
+          `-output_dir_path=${signedDir}`,
+        ],
+        { stdio: "inherit", cwd: path.resolve(__dirname, "CodeSignTool") }
+      );
+
+      // Move and rename signed installer
+      const signedInstallerPath = path.join(signedDir, exeName);
+      fs.renameSync(signedInstallerPath, installerPath);
+    }
   }
 };

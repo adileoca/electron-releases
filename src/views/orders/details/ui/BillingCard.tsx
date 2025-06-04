@@ -28,9 +28,11 @@ const BillingCard: React.FC<{ order: OrderDetailedType }> = ({ order }) => {
         title="Plată"
         data={{
           status: capitalizeFirstLetter(order.payment?.status!),
-          method: capitalizeFirstLetter(
-            JSON.parse(order.payment?.details! as string).type! || "-"
-          ),
+          method: order.payment?.details
+            ? capitalizeFirstLetter(
+                JSON.parse(order.payment?.details as string)?.type!
+              )
+            : "-",
         }}
       />
     </InfoCard>

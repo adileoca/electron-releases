@@ -135,6 +135,7 @@ const PrintHeader: React.FC<{
             />
           </div>
         </div>
+        
         <div
           className={clsx(clicked ? "" : "", "flex items-end justify-between")}
         >

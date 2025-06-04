@@ -197,20 +197,11 @@ export const ordersTableColumns: ContextState["cols"] = {
     isSticky: true,
     Component: <CheckboxInput checked={false} onChange={() => {}} />,
   },
-  name: {
-    label: "Nume",
-    position: 2,
-    filter: {
-      label: "Nume",
-      dataKey: "name",
-    },
-    minConstraints: [207, 48] as [number, number],
-    initialWidth: 207,
-    width: 207,
-  },
+
   order_no: {
     label: "Nr. comandǎ",
     filter: {
+      operations: ["includes", "equals"],
       label: "Nr. comandǎ",
       dataKey: "display_name",
     },
@@ -219,6 +210,18 @@ export const ordersTableColumns: ContextState["cols"] = {
     isSticky: true,
     position: 1,
     width: 140,
+  },
+  name: {
+    label: "Nume",
+    position: 2,
+    filter: {
+      operations: ["equals", "includes"],
+      label: "Nume",
+      dataKey: "name",
+    },
+    minConstraints: [207, 48] as [number, number],
+    initialWidth: 207,
+    width: 207,
   },
   date_placed: {
     label: "Datǎ plasare",
@@ -231,6 +234,7 @@ export const ordersTableColumns: ContextState["cols"] = {
     label: "Stare",
     position: 3,
     filter: {
+      operations: ["equals", "not_equals"],
       label: "Stare",
       dataKey: "status.name",
       options: Object.entries(orderStatusesConfig).map(([key, value]) => ({

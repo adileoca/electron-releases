@@ -32,10 +32,12 @@ export const queueScheduledMediaGroups = async (
   queue: PQueue
 ) => {
   const pendingUploadsGroups = await getPendingScheduledMediaGroups(db);
-  // console.log("pendingUploadsGroups", pendingUploadsGroups);
+  console.log("pendingUploadsGroups", pendingUploadsGroups);
 
   pendingUploadsGroups.forEach((group) => {
-    // todo: add error handling and logging
+    // todo: add error handling and logging,
+    // item media assets might be inserted multiple times
+    // (maybe restrict to fetch only user's uploads)
     const promise = async () => {
       try {
         await db.update.scheduledUploadsGroup(group.id, {

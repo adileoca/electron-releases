@@ -1,0 +1,128 @@
+r03:52:43.964 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Command: sign
+03:52:43.966 [main] ERROR com.ssl.code.signing.tool.commands.SignCommand -
+java.io.FileNotFoundException: ./conf/code_sign_tool.properties (No such file or directory)
+	at java.io.FileInputStream.open0(Native Method) ~[?:?]
+	at java.io.FileInputStream.open(FileInputStream.java:219) ~[?:?]
+	at java.io.FileInputStream.<init>(FileInputStream.java:157) ~[?:?]
+	at java.io.FileInputStream.<init>(FileInputStream.java:112) ~[?:?]
+	at com.ssl.code.signing.tool.commands.SignCommand.run(SignCommand.java:129) [eSigner.jar:?]
+	at picocli.CommandLine.executeUserObject(CommandLine.java:1939) [eSigner.jar:?]
+	at picocli.CommandLine.access$1300(CommandLine.java:145) [eSigner.jar:?]
+	at picocli.CommandLine$RunLast.executeUserObjectOfLastSubcommandWithSameParent(CommandLine.java:2352) [eSigner.jar:?]
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2346) [eSigner.jar:?]
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2311) [eSigner.jar:?]
+	at picocli.CommandLine$AbstractParseResultHandler.execute(CommandLine.java:2179) [eSigner.jar:?]
+	at picocli.CommandLine.execute(CommandLine.java:2078) [eSigner.jar:?]
+	at com.ssl.code.signing.tool.CodeSignTool.main(CodeSignTool.java:39) [eSigner.jar:?]
+03:52:44.848 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Command: sign
+03:52:44.849 [main] ERROR com.ssl.code.signing.tool.commands.SignCommand -
+java.io.FileNotFoundException: ./conf/code_sign_tool.properties (No such file or directory)
+	at java.io.FileInputStream.open0(Native Method) ~[?:?]
+	at java.io.FileInputStream.open(FileInputStream.java:219) ~[?:?]
+	at java.io.FileInputStream.<init>(FileInputStream.java:157) ~[?:?]
+	at java.io.FileInputStream.<init>(FileInputStream.java:112) ~[?:?]
+	at com.ssl.code.signing.tool.commands.SignCommand.run(SignCommand.java:129) [eSigner.jar:?]
+	at picocli.CommandLine.executeUserObject(CommandLine.java:1939) [eSigner.jar:?]
+	at picocli.CommandLine.access$1300(CommandLine.java:145) [eSigner.jar:?]
+	at picocli.CommandLine$RunLast.executeUserObjectOfLastSubcommandWithSameParent(CommandLine.java:2352) [eSigner.jar:?]
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2346) [eSigner.jar:?]
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2311) [eSigner.jar:?]
+	at picocli.CommandLine$AbstractParseResultHandler.execute(CommandLine.java:2179) [eSigner.jar:?]
+	at picocli.CommandLine.execute(CommandLine.java:2078) [eSigner.jar:?]
+	at com.ssl.code.signing.tool.CodeSignTool.main(CodeSignTool.java:39) [eSigner.jar:?]
+03:53:27.250 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Command: sign
+03:53:27.252 [main] ERROR com.ssl.code.signing.tool.commands.SignCommand -
+java.io.FileNotFoundException: ./conf/code_sign_tool.properties (No such file or directory)
+	at java.io.FileInputStream.open0(Native Method) ~[?:?]
+	at java.io.FileInputStream.open(FileInputStream.java:219) ~[?:?]
+	at java.io.FileInputStream.<init>(FileInputStream.java:157) ~[?:?]
+	at java.io.FileInputStream.<init>(FileInputStream.java:112) ~[?:?]
+	at com.ssl.code.signing.tool.commands.SignCommand.run(SignCommand.java:129) [eSigner.jar:?]
+	at picocli.CommandLine.executeUserObject(CommandLine.java:1939) [eSigner.jar:?]
+	at picocli.CommandLine.access$1300(CommandLine.java:145) [eSigner.jar:?]
+	at picocli.CommandLine$RunLast.executeUserObjectOfLastSubcommandWithSameParent(CommandLine.java:2352) [eSigner.jar:?]
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2346) [eSigner.jar:?]
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2311) [eSigner.jar:?]
+	at picocli.CommandLine$AbstractParseResultHandler.execute(CommandLine.java:2179) [eSigner.jar:?]
+	at picocli.CommandLine.execute(CommandLine.java:2078) [eSigner.jar:?]
+	at com.ssl.code.signing.tool.CodeSignTool.main(CodeSignTool.java:39) [eSigner.jar:?]
+03:53:28.091 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Command: sign
+03:53:28.092 [main] ERROR com.ssl.code.signing.tool.commands.SignCommand -
+java.io.FileNotFoundException: ./conf/code_sign_tool.properties (No such file or directory)
+	at java.io.FileInputStream.open0(Native Method) ~[?:?]
+	at java.io.FileInputStream.open(FileInputStream.java:219) ~[?:?]
+	at java.io.FileInputStream.<init>(FileInputStream.java:157) ~[?:?]
+	at java.io.FileInputStream.<init>(FileInputStream.java:112) ~[?:?]
+	at com.ssl.code.signing.tool.commands.SignCommand.run(SignCommand.java:129) [eSigner.jar:?]
+	at picocli.CommandLine.executeUserObject(CommandLine.java:1939) [eSigner.jar:?]
+	at picocli.CommandLine.access$1300(CommandLine.java:145) [eSigner.jar:?]
+	at picocli.CommandLine$RunLast.executeUserObjectOfLastSubcommandWithSameParent(CommandLine.java:2352) [eSigner.jar:?]
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2346) [eSigner.jar:?]
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2311) [eSigner.jar:?]
+	at picocli.CommandLine$AbstractParseResultHandler.execute(CommandLine.java:2179) [eSigner.jar:?]
+	at picocli.CommandLine.execute(CommandLine.java:2078) [eSigner.jar:?]
+	at com.ssl.code.signing.tool.CodeSignTool.main(CodeSignTool.java:39) [eSigner.jar:?]
+05:11:48.300 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Command: sign
+05:11:48.302 [main] ERROR com.ssl.code.signing.tool.commands.SignCommand -
+java.io.FileNotFoundException: ./conf/code_sign_tool.properties (No such file or directory)
+	at java.io.FileInputStream.open0(Native Method) ~[?:?]
+	at java.io.FileInputStream.open(FileInputStream.java:219) ~[?:?]
+	at java.io.FileInputStream.<init>(FileInputStream.java:157) ~[?:?]
+	at java.io.FileInputStream.<init>(FileInputStream.java:112) ~[?:?]
+	at com.ssl.code.signing.tool.commands.SignCommand.run(SignCommand.java:129) [sign.jar:?]
+	at picocli.CommandLine.executeUserObject(CommandLine.java:1939) [sign.jar:?]
+	at picocli.CommandLine.access$1300(CommandLine.java:145) [sign.jar:?]
+	at picocli.CommandLine$RunLast.executeUserObjectOfLastSubcommandWithSameParent(CommandLine.java:2352) [sign.jar:?]
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2346) [sign.jar:?]
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2311) [sign.jar:?]
+	at picocli.CommandLine$AbstractParseResultHandler.execute(CommandLine.java:2179) [sign.jar:?]
+	at picocli.CommandLine.execute(CommandLine.java:2078) [sign.jar:?]
+	at com.ssl.code.signing.tool.CodeSignTool.main(CodeSignTool.java:39) [sign.jar:?]
+05:11:49.535 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Command: sign
+05:11:49.538 [main] ERROR com.ssl.code.signing.tool.commands.SignCommand -
+java.io.FileNotFoundException: ./conf/code_sign_tool.properties (No such file or directory)
+	at java.io.FileInputStream.open0(Native Method) ~[?:?]
+	at java.io.FileInputStream.open(FileInputStream.java:219) ~[?:?]
+	at java.io.FileInputStream.<init>(FileInputStream.java:157) ~[?:?]
+	at java.io.FileInputStream.<init>(FileInputStream.java:112) ~[?:?]
+	at com.ssl.code.signing.tool.commands.SignCommand.run(SignCommand.java:129) [sign.jar:?]
+	at picocli.CommandLine.executeUserObject(CommandLine.java:1939) [sign.jar:?]
+	at picocli.CommandLine.access$1300(CommandLine.java:145) [sign.jar:?]
+	at picocli.CommandLine$RunLast.executeUserObjectOfLastSubcommandWithSameParent(CommandLine.java:2352) [sign.jar:?]
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2346) [sign.jar:?]
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2311) [sign.jar:?]
+	at picocli.CommandLine$AbstractParseResultHandler.execute(CommandLine.java:2179) [sign.jar:?]
+	at picocli.CommandLine.execute(CommandLine.java:2078) [sign.jar:?]
+	at com.ssl.code.signing.tool.CodeSignTool.main(CodeSignTool.java:39) [sign.jar:?]
+05:12:19.684 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Command: sign
+05:12:19.685 [main] ERROR com.ssl.code.signing.tool.commands.SignCommand -
+java.io.FileNotFoundException: ./conf/code_sign_tool.properties (No such file or directory)
+	at java.io.FileInputStream.open0(Native Method) ~[?:?]
+	at java.io.FileInputStream.open(FileInputStream.java:219) ~[?:?]
+	at java.io.FileInputStream.<init>(FileInputStream.java:157) ~[?:?]
+	at java.io.FileInputStream.<init>(FileInputStream.java:112) ~[?:?]
+	at com.ssl.code.signing.tool.commands.SignCommand.run(SignCommand.java:129) [sign.jar:?]
+	at picocli.CommandLine.executeUserObject(CommandLine.java:1939) [sign.jar:?]
+	at picocli.CommandLine.access$1300(CommandLine.java:145) [sign.jar:?]
+	at picocli.CommandLine$RunLast.executeUserObjectOfLastSubcommandWithSameParent(CommandLine.java:2352) [sign.jar:?]
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2346) [sign.jar:?]
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2311) [sign.jar:?]
+	at picocli.CommandLine$AbstractParseResultHandler.execute(CommandLine.java:2179) [sign.jar:?]
+	at picocli.CommandLine.execute(CommandLine.java:2078) [sign.jar:?]
+	at com.ssl.code.signing.tool.CodeSignTool.main(CodeSignTool.java:39) [sign.jar:?]
+05:12:20.476 [main] INFO  com.ssl.code.signing.tool.commands.SignCommand - Command: sign
+05:12:20.478 [main] ERROR com.ssl.code.signing.tool.commands.SignCommand -
+java.io.FileNotFoundException: ./conf/code_sign_tool.properties (No such file or directory)
+	at java.io.FileInputStream.open0(Native Method) ~[?:?]
+	at java.io.FileInputStream.open(FileInputStream.java:219) ~[?:?]
+	at java.io.FileInputStream.<init>(FileInputStream.java:157) ~[?:?]
+	at java.io.FileInputStream.<init>(FileInputStream.java:112) ~[?:?]
+	at com.ssl.code.signing.tool.commands.SignCommand.run(SignCommand.java:129) [sign.jar:?]
+	at picocli.CommandLine.executeUserObject(CommandLine.java:1939) [sign.jar:?]
+	at picocli.CommandLine.access$1300(CommandLine.java:145) [sign.jar:?]
+	at picocli.CommandLine$RunLast.executeUserObjectOfLastSubcommandWithSameParent(CommandLine.java:2352) [sign.jar:?]
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2346) [sign.jar:?]
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2311) [sign.jar:?]
+	at picocli.CommandLine$AbstractParseResultHandler.execute(CommandLine.java:2179) [sign.jar:?]
+	at picocli.CommandLine.execute(CommandLine.java:2078) [sign.jar:?]
+	at com.ssl.code.signing.tool.CodeSignTool.main(CodeSignTool.java:39) [sign.jar:?]
