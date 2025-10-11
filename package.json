@@ -1,6 +1,6 @@
 {
   "name": "adipan",
-  "version": "0.3.14",
+  "version": "0.3.15",
   "main": "src/core/main.js",
   "private": true,
   "pluginVersion": "1.1.0",

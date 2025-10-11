@@ -1,10 +1,10 @@
 import InfoCard from "./InfoCard";
 
 import { capitalizeFirstLetter } from "@/lib/utils/format";
-import { OrderDetailedType } from "@/lib/supabase/database";
 import MiniTable from "@/components/ui/MiniTable";
+import { Order } from "@/lib/supabase/types";
 
-const BillingCard: React.FC<{ order: OrderDetailedType }> = ({ order }) => {
+const BillingCard: React.FC<{ order: Order }> = ({ order }) => {
   return (
     <InfoCard
       title="Billing Information"

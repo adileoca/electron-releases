@@ -70,7 +70,76 @@ function setupIpcEvents(broadcast) {
 
   ipcMain.handle("get-platform", () => platform());
 
-  ipcMain.handle("create-shipment", async (event, { order_id, session }) => {
+  ipcMain.handle("api-request", async (_, config = {}) => {
+    try {
+      const {
+        method = "GET",
+        url,
+        data,
+        params,
+        headers = {},
+        baseURL = "http://localhost:3000",
+        timeout,
+        session: authSession,
+        sessionHeader = "sb-vrdaoudvtphptybaljqq-auth-token",
+      } = config;
+
+      if (!url) {
+        throw new Error("URL is required for api-request");
+      }
+
+      const requestHeaders = { ...headers };
+
+      if (authSession) {
+        const sessionJson = JSON.stringify(authSession);
+        const base64Session = Buffer.from(sessionJson).toString("base64");
+        requestHeaders[sessionHeader] = `base64-${base64Session}`;
+      }
+
+      const isAbsoluteUrl = /^https?:\/\//i.test(url);
+      const axiosConfig = {
+        method,
+        data,
+        params,
+        headers: requestHeaders,
+        timeout,
+      };
+
+      if (isAbsoluteUrl) {
+        axiosConfig.url = url;
+      } else {
+        axiosConfig.baseURL = baseURL;
+        axiosConfig.url = url;
+      }
+
+      const response = await axios(axiosConfig);
+
+      return {
+        data: response.data,
+        status: response.status,
+        headers: response.headers,
+        error: null,
+      };
+    } catch (error) {
+      if (error.response) {
+        return {
+          data: error.response.data,
+          status: error.response.status,
+          headers: error.response.headers,
+          error: error.message,
+        };
+      }
+
+      return {
+        data: null,
+        status: null,
+        headers: null,
+        error: error.message,
+      };
+    }
+  });
+
+  ipcMain.handle("create-shipment", async (_, { order_id, session }) => {
     try {
       console.log("creating shipment in ipc...", { order_id, session });
       const sessionJson = JSON.stringify(session);
@@ -78,7 +147,7 @@ function setupIpcEvents(broadcast) {
       const encodedSession = `base64-${base64Session}`;
 
       const response = await axios.post(
-        "https://adipan.eu/api/ups/create-shipping",
+        "http://localhost:3000/api/shipment/create",
         { orderId: order_id },
         { headers: { "sb-vrdaoudvtphptybaljqq-auth-token": encodedSession } }
       );

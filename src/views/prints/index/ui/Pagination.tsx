@@ -2,13 +2,9 @@ import { useMemo } from "react";
 import clsx from "clsx";
 
 import ShortToggle from "@/components/ui/ShortToggle";
-import { useOrdersTableContext } from "../context";
+import { usePrintsDisplayContext } from "../context";
 import Input from "@/components/ui/Input";
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  ArrowPathIcon,
-} from "@heroicons/react/20/solid";
+import { ArrowLeftIcon, ArrowRightIcon, ArrowPathIcon } from "@heroicons/react/20/solid";
 import PaginationPerPageMenu from "@/components/ui/PaginationPerPageMenu";
 
 const Pagination = () => {
@@ -16,25 +12,23 @@ const Pagination = () => {
     data,
     state: { pagination, updating },
     actions: { setPagination, setShouldRefresh },
-  } = useOrdersTableContext();
+  } = usePrintsDisplayContext();
 
   const totalPages = useMemo(() => {
     if (!data || !data.count) return 1;
     return Math.ceil(data.count / pagination.resultsPerPage);
   }, [data, pagination.resultsPerPage]);
-
   const perPageOptions = useMemo(() => {
-    const defaults = [25, 50, 100];
+    const defaults = [24, 48, 96];
     const optionSet = new Set([...defaults, pagination.resultsPerPage]);
     return Array.from(optionSet)
       .sort((a, b) => a - b)
       .map((value) => ({ value }));
   }, [pagination.resultsPerPage]);
-
   return (
     <div
       style={{ width: "calc(100% - 200px)" }}
-      className="fixed bottom-2 right-2 px-px py-px"
+      className="fixed bottom-2 right-2 z-[100] px-px py-px"
     >
       <div className="flex h-12 items-center justify-between overflow-visible rounded-b-[7px] border-t border-neutral-700 bg-neutral-900/90 px-3 py-2 backdrop-blur-xl">
         <div className="flex items-center space-x-5">
@@ -76,7 +70,6 @@ const Pagination = () => {
               din {totalPages}
             </span>
           </div>
-
           <button
             onClick={() => {
               if (pagination.currentPage < totalPages) {

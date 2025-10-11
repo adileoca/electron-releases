@@ -70,6 +70,21 @@ export const getAllUndeliveredOrders = async (supabase: Supabase) => {
   return data;
 };
 
+export const getPrintById = async (supabase: Supabase, printId: string) => {
+  const { data, error } = await supabase
+    .from("prints")
+    .select("*")
+    .eq("id", printId)
+    .single();
+
+  if (error || !data) {
+    console.error("error", error);
+    throw new Error(error.message);
+  }
+
+  return data;
+};
+
 export const getUserProfile = async (supabase: Supabase, userId: string) => {
   const { data, error } = await supabase
     .from("user_profiles")

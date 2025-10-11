@@ -1,14 +1,23 @@
+import { Session } from "@supabase/supabase-js";
+import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 
+import { blobToUint8Array } from "../utils/convert";
 import Database from "./database";
 
-import { blobToUint8Array } from "../utils/convert";
-import { v4 as uuidv4 } from "uuid";
-import { Session } from "@supabase/supabase-js";
+const DEFAULT_SIGNED_URL_TTL = 7 * 24 * 60 * 60; // 7 days
+const SIGNED_URL_REFRESH_BUFFER_MS = 60 * 1000; // refresh 1 minute before expiry
+
+export type MediaUrlResult = {
+  url: string;
+  isObjectUrl: boolean;
+};
 
 class MediaManager {
   private db: Database;
   private session: Session;
+  private urlCache: Map<string, { url: string; expiresAt?: number }> =
+    new Map();
 
   constructor(db: Database, session: Session) {
     this.db = db;
@@ -48,10 +57,57 @@ class MediaManager {
     }
   }
 
-  async upload(
-    file: any,
-    config: UploadConfig
-  ): Promise<string> {
+  async getUrl(
+    media: { id: string; bucket_name: string; path: string },
+    options?: { expiresIn?: number }
+  ): Promise<MediaUrlResult | null> {
+    const cacheKey = media.id ?? `${media.bucket_name}:${media.path}`;
+    const cachedEntry = this.urlCache.get(cacheKey);
+
+    if (cachedEntry) {
+      if (!cachedEntry.expiresAt || cachedEntry.expiresAt > Date.now()) {
+        return {
+          url: cachedEntry.url,
+          isObjectUrl: false,
+        };
+      }
+
+      this.urlCache.delete(cacheKey);
+    }
+
+    const cachedFile = await getCachedFile(media.id!);
+
+    if (cachedFile) {
+      const blob = new Blob([cachedFile]);
+      return {
+        url: URL.createObjectURL(blob),
+        isObjectUrl: true,
+      };
+    }
+
+    const signedUrl = await this.db.get.media.signedUrl({
+      bucketName: media.bucket_name!,
+      path: media.path!,
+      expiresIn: options?.expiresIn ?? DEFAULT_SIGNED_URL_TTL,
+    });
+
+    if (!signedUrl) {
+      return null;
+    }
+
+    const result = {
+      url: signedUrl,
+      isObjectUrl: false,
+    };
+
+    const ttlSeconds = options?.expiresIn ?? DEFAULT_SIGNED_URL_TTL;
+    const expiresAt =
+      Date.now() + ttlSeconds * 1000 - SIGNED_URL_REFRESH_BUFFER_MS;
+    this.setUrlCache(cacheKey, result, expiresAt);
+    return result;
+  }
+
+  async upload(file: any, config: UploadConfig): Promise<string> {
     try {
       const filename = config.id ? config.id : uuidv4();
 
@@ -89,6 +145,17 @@ class MediaManager {
       throw error;
     }
   }
+
+  private setUrlCache(key: string, result: MediaUrlResult, expiresAt: number) {
+    if (result.isObjectUrl) {
+      return;
+    }
+
+    this.urlCache.set(key, {
+      url: result.url,
+      expiresAt: Math.max(expiresAt, Date.now()),
+    });
+  }
 }
 
 export default MediaManager;
@@ -110,12 +177,13 @@ export const getCachedFile = async (
   } catch (error: any) {
     // Check if the error is an Axios error with a response
     if (axios.isAxiosError(error) && error.response) {
-      console.log(`caca couldn't find file with name "${filename}" in cache`);
+      console.log(` couldn't find file with name "${filename}" in cache`);
       return null;
     }
     // For other errors, you can handle them accordingly
-    console.error("Error getCachedFile:", error);
-    throw error;
+    // console.error("Error getCachedFile:", error);
+    // throw error;
+    return null;
   }
 };
 

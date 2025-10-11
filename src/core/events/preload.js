@@ -13,6 +13,7 @@ contextBridge.exposeInMainWorld("electron", {
       bucketPath,
     });
   },
+  apiRequest: (config) => ipcRenderer.invoke("api-request", config),
   createShipment: ({ order_id, session }) => {
     console.log("invoking shipment...", { order_id, session });
 

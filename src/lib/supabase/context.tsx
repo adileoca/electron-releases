@@ -4,6 +4,7 @@ import {
   useEffect,
   useState,
   useCallback,
+  useMemo,
 } from "react";
 import { Session } from "@supabase/supabase-js";
 
@@ -138,8 +139,11 @@ export const useDatabase = () => {
   if (!context) {
     throw new Error("useDatabase must be used within a SupabaseProvider");
   }
-  const db = new Database(context.supabase);
-  const mediaManager = new MediaManager(db, context.session as Session);
+  const db = useMemo(() => new Database(context.supabase), [context.supabase]);
+  const mediaManager = useMemo(
+    () => new MediaManager(db, context.session as Session),
+    [db, context.session]
+  );
   return { ...context, db, mediaManager };
 };
 

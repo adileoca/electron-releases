@@ -47,23 +47,18 @@ const navigation: {
   //   icon: ListBulletIcon,
   //   visibleByRoles: ["admin"],
   // },
-  {
-    name: "Rapoarte",
-    href: "/reports",
-    icon: ChartPieIcon,
-    visibleByRoles: ["admin", "financial"],
-  },
-  {
-    name: "Sesiuni",
-    href: "/sessions",
-    icon: BuildingStorefrontIcon,
-    visibleByRoles: ["admin"],
-  },
+  // {
+  //   name: "Rapoarte",
+  //   href: "/reports",
+  //   icon: ChartPieIcon,
+  //   visibleByRoles: ["admin", "financial"],
+  // },
+
   // { name: "Documente", href: "/documents", icon: DocumentTextIcon },
   {
     name: "Sabloane",
     href: "/templates",
-    icon: Cog8ToothIcon,
+    icon: ArchiveBoxIcon,
     visibleByRoles: ["admin"],
   },
   { name: "Setǎri", href: "/settings", icon: Cog8ToothIcon },

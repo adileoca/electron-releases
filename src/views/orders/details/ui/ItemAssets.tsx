@@ -3,6 +3,7 @@ import { formatDate } from "@/lib/utils/format";
 import MiniTable from "../../../../components/ui/MiniTable";
 import Button from "@/components/ui/Button";
 import { Order } from "@/lib/supabase/types";
+import { Link } from "react-router-dom";
 
 const ItemAssets: React.FC<{
   assets: Order["items"][0]["assets"];
@@ -24,7 +25,7 @@ const ItemAssets: React.FC<{
             />
           </div>
           <div className="flex flex-grow flex-col justify-between">
-            <div className="flex w-full items-center justify-between">
+            <div className="mb-3 flex w-full items-center justify-between">
               <h1 className="font-medium text-white/80">{asset.id}</h1>
               <div>
                 <Button
@@ -42,10 +43,23 @@ const ItemAssets: React.FC<{
             <div className=" w-full justify-between">
               <MiniTable
                 data={{
-                  Trimis: asset.sent ? "Yes" : "No",
-                  Vazut: asset.seen ? "Yes" : "No",
-                  Aprobat: asset.approved ? "Yes" : "No",
+                  Trimis: asset.sent ? "Da" : "Nu",
+                  Vazut: asset.seen ? "Da" : "Nu",
+                  Aprobat: asset.approved ? "Da" : "Nu",
                   Printat: asset.print.length > 0 ? "Da" : "Nu",
+                  Print:
+                    asset.print.length > 0 ? (
+                      <Link
+                        className="block w-full max-w-full truncate text-blue-400 hover:underline"
+                        to={`/prints/${asset.print[0].print_id}`}
+                        title={asset.print[0].print_id}
+                      >
+                        {asset.print[0].print_id}
+                      </Link>
+                    ) : (
+                      "-"
+                    ),
+
                   Autor: asset.user!.name!,
                   Data: formatDate(asset.thumbnail?.created_at!, {
                     relative: true,

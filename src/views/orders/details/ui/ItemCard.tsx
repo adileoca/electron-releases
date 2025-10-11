@@ -2,14 +2,11 @@ import { useEffect, useMemo } from "react";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { Route } from "lucide-react";
 import {
-  MagnifyingGlassIcon,
-  SparklesIcon,
   IdentificationIcon,
   RectangleGroupIcon,
 } from "@heroicons/react/24/outline";
 
 import { parseConfigurationDetails } from "@/lib/utils/parse";
-import { OrderDetailedType } from "@/lib/supabase/database";
 import { CurrencyFormatter } from "@/lib/utils/format";
 import { useMedia } from "@/lib/supabase/useMedia";
 import { formatSize } from "@/lib/utils/format";
@@ -50,7 +47,7 @@ const OrderItemBody: React.FC<{ item: Item }> = ({ item }) => {
   }, []);
 
   return (
-    <TabPanels>
+    <TabPanels >
       <TabPanel className="border-t border-white/10  ">
         {item.configuration && (
           <MiniTable

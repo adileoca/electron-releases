@@ -8,7 +8,7 @@ import OrderDetailsView from "./views/orders/details";
 import DashboardView from "./views/dashboard";
 import OrdersView from "./views/orders/index";
 import EmailsView from "./views/emails/index";
-import PrintsView from "./views/prints";
+import PrintsView from "./views/prints/index";
 import ReportsView from "./views/reports";
 import DocumentsView from "./views/documents";
 import SettingsView from "./views/settings";
@@ -18,6 +18,7 @@ import TemplatesView from "./views/templates";
 import ProductsView from "./views/products/table";
 import ProductDetailsView from "./views/products/details";
 import { useGlobalContext } from "./context/global";
+import PrintDetailsView from "./views/prints/details";
 
 const AppRoutes = () => {
   const {
@@ -45,6 +46,9 @@ const AppRoutes = () => {
             />
 
             <Route path="/prints" element={<PrintsView />} index />
+
+            <Route path="/prints/:print_id" element={<PrintDetailsView />} />
+
             <Route path="/sessions" element={<SessionsView />} index />
             <Route path="/reports" element={<ReportsView />} index />
             <Route path="/products" element={<ProductsView />} index />

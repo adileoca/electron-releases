@@ -18,6 +18,22 @@ declare global {
         bucketPath: string;
         accessToken: string;
       }) => Promise<{ error: string | null }>;
+      apiRequest: (config: {
+        method?: string;
+        url: string;
+        data?: any;
+        params?: Record<string, any>;
+        headers?: Record<string, string>;
+        baseURL?: string;
+        timeout?: number;
+        session?: Session | null;
+        sessionHeader?: string;
+      }) => Promise<{
+        data: any;
+        status: number | null;
+        headers: Record<string, any> | null;
+        error: string | null;
+      }>;
       setSession: (session: Session | null) => void;
       send: (channel: string, data?: any) => void;
       on: (channel: string, callback: (...args: any[]) => void) => void;

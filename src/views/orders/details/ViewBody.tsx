@@ -12,7 +12,6 @@ import OrderItem from "./ui/ItemCard";
 import UserInfo from "./ui/UserInfo";
 
 const ViewBody: React.FC<{ order: Order }> = ({ order }) => {
-  const currency = new CurrencyFormatter(order.totals?.currency!);
   const orderActivity = useOrderActivity(order);
 
   useEffect(() => {
@@ -23,6 +22,7 @@ const ViewBody: React.FC<{ order: Order }> = ({ order }) => {
     if (item.configuration?.wants_adhesive === "2") acc++;
     return acc;
   }, 0);
+
   return (
     <div className="mx-auto space-y-8">
       <div className="p-4 ">

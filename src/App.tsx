@@ -42,10 +42,11 @@ const App = () => {
 export default App;
 
 const Routes = () => {
-  const initSyncDone = useSyncData();
+  // const initSyncDone = useSyncData();
   useIpcListeners();
 
-  if (!initSyncDone) {
+  // if (!initSyncDone) {
+  if (false) {
     return (
       <div className="flex h-screen w-full flex-col items-center justify-center bg-neutral-900">
         <img

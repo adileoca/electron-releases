@@ -1,12 +1,11 @@
-import { useMemo, useCallback } from "react";
+import { useMemo } from "react";
 
 import { MediaInfo, useMedia } from "@/lib/supabase/useMedia";
-import { useFetchData } from "@/hooks/useFetchData";
 import { useDatabase } from "@/lib/supabase/context";
 import { Print } from "@/lib/supabase/database";
 
 export const useAssetsData = (print: Print) => {
-  const { db, mediaManager } = useDatabase();
+  const { mediaManager } = useDatabase();
 
   // const itemAssets = useFetchData(
   //   db.getItemAssets({
@@ -48,12 +47,15 @@ export const useAssetsData = (print: Print) => {
     }
   }, [print]);
 
-  const mediaUrls = useMedia(assetsData, {
-    // alwaysFetch: true,
-    fetchFunction: useCallback(async (media: MediaInfo) => {
-      return mediaManager.get(media, { as: "blob" }) as Promise<Blob>;
-    }, []),
-  });
+  const mediaOptions = useMemo(
+    () => ({
+      fetchFunction: async (media: MediaInfo) => mediaManager.getUrl(media),
+      additionalDeps: [mediaManager],
+    }),
+    [mediaManager]
+  );
+
+  const mediaUrls = useMedia(assetsData, mediaOptions);
 
   return { mediaUrls };
 };
