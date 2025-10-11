@@ -1,4 +1,13 @@
-import React, { useContext, useReducer, createContext, useEffect } from "react";
+import React, {
+  useContext,
+  useReducer,
+  createContext,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
+
+import { logDebug, logInfo } from "@/lib/logging";
 
 import { ContextType, ProviderProps, ReducerType } from "./types";
 import { reducer, createActions, initialState } from "./reducer";
@@ -14,11 +23,30 @@ export const GlobalProvider: React.FC<ProviderProps> = ({
     ...initialState,
     platform,
   });
-  const actions = createActions(state, dispatch);
+  const actions = useMemo(() => createActions(dispatch), [dispatch]);
+  const loggedInitRef = useRef(false);
 
   useEffect(() => {
-    console.log("global state", state);
-  }, []);
+    if (!state) return;
+    if (!loggedInitRef.current) {
+      loggedInitRef.current = true;
+      logInfo("global-context-init", {
+        platform: state.platform,
+        updateStatus: state.update.status,
+      });
+    }
+
+    logDebug("global-state-change", {
+      updateStatus: state.update.status,
+      updateProgress: state.update.progress,
+      pluginVersion: state.plugin.version,
+      navigation: {
+        latestIndex: state.navigation.latestIndex,
+        canGoBack: state.navigation.canGoBack,
+        canGoForward: state.navigation.canGoForward,
+      },
+    });
+  }, [state]);
 
   return (
     <GlobalContext.Provider value={{ state, actions }}>

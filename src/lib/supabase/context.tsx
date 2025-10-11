@@ -5,6 +5,7 @@ import {
   useState,
   useCallback,
   useMemo,
+  useRef,
 } from "react";
 import { Session } from "@supabase/supabase-js";
 
@@ -28,10 +29,16 @@ export const SupabaseProvider: React.FC<{ children: React.ReactNode }> = ({
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [session, setSession] = useState<Session | null | undefined>();
   const [lastActivity, setLastActivity] = useState(Date.now());
+  const sessionRef = useRef<Session | null | undefined>(null);
+
+  useEffect(() => {
+    sessionRef.current = session;
+  }, [session]);
 
   const updateSession = (session: Session | null) => {
     window.electron.setSession(session);
     setSession(session);
+    sessionRef.current = session;
   };
 
   useEffect(() => {
@@ -54,10 +61,9 @@ export const SupabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     return () => data.subscription.unsubscribe();
   }, []);
 
-  const handleGetSession = useCallback(
-    () => window.electron.setSession(session ?? null),
-    [session]
-  );
+  const handleGetSession = useCallback(() => {
+    window.electron.setSession(sessionRef.current ?? null);
+  }, []);
 
   const handleSetSession = useCallback(
     (newSession: Session) => setIpcSession(newSession),
@@ -65,6 +71,10 @@ export const SupabaseProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   useEffect(() => {
+    if ("setMaxListeners" in window.electron) {
+      (window.electron as unknown as { setMaxListeners?: (n: number) => void })
+        .setMaxListeners?.(20);
+    }
     window.electron.on("get-session", handleGetSession);
     window.electron.on("update-session", handleSetSession);
 

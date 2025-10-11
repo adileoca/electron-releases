@@ -2,7 +2,9 @@ const path = require("path");
 const fs = require("fs");
 
 const { storageDir: cacheDir } = require("../../storage.js");
-const { ipcRenderer } = require("electron");
+const { createLogger } = require("../../utils/logging.js");
+
+const logger = createLogger("ipc-handler-read-file");
 
 /**
  * IPC handler for reading a file.
@@ -24,9 +26,11 @@ const handleReadFile = async (event, { filename, channel }) => {
     }
 
     const filePath = path.join(cacheDir, filename);
+    logger.info("start", { filename, filePath });
 
     // Check if the file exists
     if (!fs.existsSync(filePath)) {
+      logger.warn("missing", { filename });
       throw new Error(`File not found: ${filename}`);
     }
 
@@ -38,20 +42,20 @@ const handleReadFile = async (event, { filename, channel }) => {
     let index = 0;
 
     readStream.on("error", (error) => {
-      console.error(`Error reading file: ${error.message}`);
+      logger.error("stream-error", error);
       event.sender.send(channel, { error: error.message });
     });
 
     for await (const chunk of readStream) {
-      console.log("sending chunk");
+      logger.debug("chunk", { index, size: chunk.length });
       event.sender.send(channel, { chunk, index });
       index++;
     }
 
-    console.log("done sending chunks");
+    logger.info("complete", { chunks: index });
     event.sender.send(channel, { done: true, index });
   } catch (error) {
-    console.error("Error reading file:", error.message);
+    logger.error("error", error);
     // Send a generic error message to the renderer
     throw new Error("Failed to read the file.", error);
   }

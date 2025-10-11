@@ -2,6 +2,9 @@ const fs = require("fs");
 const path = require("path");
 
 const { storageDir: cacheDir } = require("../../storage.js");
+const { createLogger } = require("../../utils/logging.js");
+
+const logger = createLogger("ipc-handler-cache-file");
 
 /**
  * IPC handler for caching a file.
@@ -11,10 +14,12 @@ const { storageDir: cacheDir } = require("../../storage.js");
  */
 const handleCacheFile = async (_, { filename, content }) => {
   try {
+    logger.info("start", { filename, size: content?.length });
     const filePath = path.join(cacheDir, filename);
     await fs.promises.writeFile(filePath, content);
+    logger.info("success", { filename });
   } catch (err) {
-    console.error("Error caching file:", err);
+    logger.error("error", err);
   }
 };
 

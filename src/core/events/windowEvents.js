@@ -7,9 +7,11 @@ const { platform } = require("os");
 const path = require("path");
 const url = require("url");
 const { installPlugin } = require("./../utils/installPlugin.js");
+const { log } = require("../logger");
 console.log("installPlugin: ", installPlugin);
 
 function createWindow() {
+  log.info("Creating main BrowserWindow");
   let window = new BrowserWindow({
     width: 1200,
     height: 777,
@@ -52,6 +54,29 @@ function createWindow() {
     //     "A new version of the application is available. It will be downloaded in the background.",
     // });
   }
+
+  window.webContents.on(
+    "console-message",
+    (event, level, message, line, sourceId) => {
+      const levelMap = {
+        0: "info",
+        1: "warn",
+        2: "error",
+        3: "info",
+        4: "debug",
+      };
+
+      const logLevel = levelMap[level] || "info";
+      const location = sourceId ? `${sourceId}:${line}` : "renderer";
+      const formattedMessage = `[${location}] ${message}`;
+
+      if (typeof log[logLevel] === "function") {
+        log[logLevel](formattedMessage);
+      } else {
+        log.info(formattedMessage);
+      }
+    }
+  );
 
   window.once("ready-to-show", () => {
     autoUpdater.checkForUpdatesAndNotify();

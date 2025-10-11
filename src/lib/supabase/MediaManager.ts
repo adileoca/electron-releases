@@ -4,9 +4,12 @@ import axios from "axios";
 
 import { blobToUint8Array } from "../utils/convert";
 import Database from "./database";
+import { logDebug, logWarn } from "@/lib/logging";
+import { getCachedFilenames } from "@/lib/utils/ipc";
 
 const DEFAULT_SIGNED_URL_TTL = 7 * 24 * 60 * 60; // 7 days
 const SIGNED_URL_REFRESH_BUFFER_MS = 60 * 1000; // refresh 1 minute before expiry
+const MISSING_CACHE_TTL = 12 * 60 * 60 * 1000; // 12 hours
 
 export type MediaUrlResult = {
   url: string;
@@ -18,6 +21,9 @@ class MediaManager {
   private session: Session;
   private urlCache: Map<string, { url: string; expiresAt?: number }> =
     new Map();
+  private missingCache: Map<string, number> = new Map();
+  private cachedFilenames: Set<string> | null = null;
+  private cacheIndexPromise?: Promise<void>;
 
   constructor(db: Database, session: Session) {
     this.db = db;
@@ -28,7 +34,21 @@ class MediaManager {
     media: { id: string; bucket_name: string; path: string },
     options?: { as?: "blob" | "uint8Array" }
   ) {
-    const cachedFile = await getCachedFile(media.id!);
+    await this.ensureCacheIndex();
+    const cacheKey = media.id ?? `${media.bucket_name}:${media.path}`;
+    const missingExpiresAt = this.missingCache.get(cacheKey);
+    const isKnownMissing = !!missingExpiresAt && missingExpiresAt > Date.now();
+    const isIndexed = this.cachedFilenames?.has(cacheKey) ?? false;
+
+    let cacheResult: CacheFetchResult;
+    if (!isKnownMissing && isIndexed) {
+      cacheResult = await getCachedFile(media.id!);
+    } else {
+      cacheResult = { data: null, reason: "not-found" };
+      logDebug("media-skip-local-cache", { cacheKey });
+    }
+
+    const cachedFile = cacheResult.data;
 
     if (cachedFile) {
       // console.log("Found in cache, returning cached file", media);
@@ -37,7 +57,18 @@ class MediaManager {
       }
       return cachedFile;
     } else {
-      console.log("could't find in cache, Getting media using db", media);
+      if (cacheResult.reason === "not-found") {
+        this.missingCache.set(cacheKey, Date.now() + MISSING_CACHE_TTL);
+        logDebug("media-cache-miss-blob", {
+          id: media.id,
+          bucket: media.bucket_name,
+        });
+      } else if (cacheResult.reason === "error") {
+        logWarn("media-cache-error-blob", {
+          id: media.id,
+          bucket: media.bucket_name,
+        });
+      }
       const file = await this.db.get.media.file({
         bucketName: media?.bucket_name!,
         path: media?.path!,
@@ -49,10 +80,11 @@ class MediaManager {
       }
 
       if (options?.as === "blob") {
-        console.log("returning blob");
+        this.missingCache.delete(cacheKey);
         return file;
       }
 
+      this.missingCache.delete(cacheKey);
       return file ? blobToUint8Array(file) : null;
     }
   }
@@ -61,6 +93,7 @@ class MediaManager {
     media: { id: string; bucket_name: string; path: string },
     options?: { expiresIn?: number }
   ): Promise<MediaUrlResult | null> {
+    await this.ensureCacheIndex();
     const cacheKey = media.id ?? `${media.bucket_name}:${media.path}`;
     const cachedEntry = this.urlCache.get(cacheKey);
 
@@ -75,7 +108,27 @@ class MediaManager {
       this.urlCache.delete(cacheKey);
     }
 
-    const cachedFile = await getCachedFile(media.id!);
+    const missingExpiresAt = this.missingCache.get(cacheKey);
+    const isKnownMissing = !!missingExpiresAt && missingExpiresAt > Date.now();
+    const isIndexed = this.cachedFilenames?.has(cacheKey) ?? false;
+
+    let cachedFile: Uint8Array | null = null;
+    let cacheMissReason: "known-missing" | "not-found" | "error" | null = null;
+
+    if (!isKnownMissing && isIndexed) {
+      const cacheResult = await getCachedFile(media.id!);
+      cachedFile = cacheResult.data;
+      if (!cachedFile) {
+        if (cacheResult.reason === "not-found") {
+          this.missingCache.set(cacheKey, Date.now() + MISSING_CACHE_TTL);
+          cacheMissReason = "not-found";
+        } else if (cacheResult.reason === "error") {
+          cacheMissReason = "error";
+        }
+      }
+    } else {
+      cacheMissReason = "known-missing";
+    }
 
     if (cachedFile) {
       const blob = new Blob([cachedFile]);
@@ -104,6 +157,15 @@ class MediaManager {
     const expiresAt =
       Date.now() + ttlSeconds * 1000 - SIGNED_URL_REFRESH_BUFFER_MS;
     this.setUrlCache(cacheKey, result, expiresAt);
+    this.missingCache.delete(cacheKey);
+
+    if (cacheMissReason && cacheMissReason !== "known-missing") {
+      logDebug("media-cache-miss", {
+        cacheKey,
+        reason: cacheMissReason,
+      });
+    }
+
     return result;
   }
 
@@ -156,15 +218,45 @@ class MediaManager {
       expiresAt: Math.max(expiresAt, Date.now()),
     });
   }
+
+  private async ensureCacheIndex() {
+    if (this.cachedFilenames) return;
+    if (this.cacheIndexPromise) {
+      await this.cacheIndexPromise;
+      return;
+    }
+
+    this.cacheIndexPromise = getCachedFilenames()
+      .then((filenames) => {
+        this.cachedFilenames = new Set(filenames);
+        logDebug("media-cache-index-loaded", {
+          count: filenames.length,
+        });
+      })
+      .catch((error) => {
+        logWarn("media-cache-index-error", { error: String(error) });
+        this.cachedFilenames = new Set();
+      })
+      .finally(() => {
+        this.cacheIndexPromise = undefined;
+      });
+
+    await this.cacheIndexPromise;
+  }
 }
 
 export default MediaManager;
 
+type CacheFetchResult = {
+  data: Uint8Array | null;
+  reason?: "not-found" | "error";
+};
+
 export const getCachedFile = async (
   filename: string
-): Promise<Uint8Array | null> => {
+): Promise<CacheFetchResult> => {
   try {
-    console.log("making request...");
+    logDebug("media-cache-request", { filename });
     const response = await axios.post(
       "http://localhost:4500/media",
       { filename },
@@ -173,17 +265,25 @@ export const getCachedFile = async (
     // Convert the ArrayBuffer to Uint8Array
     const uint8Array = new Uint8Array(response.data);
     // Return the Uint8Array for further processing
-    return uint8Array;
+    return { data: uint8Array };
   } catch (error: any) {
     // Check if the error is an Axios error with a response
     if (axios.isAxiosError(error) && error.response) {
-      console.log(` couldn't find file with name "${filename}" in cache`);
-      return null;
+      if (error.response.status === 404) {
+        logDebug("media-cache-not-found", { filename });
+        return { data: null, reason: "not-found" };
+      }
+      logWarn("media-cache-error", {
+        filename,
+        status: error.response.status,
+      });
+      return { data: null, reason: "error" };
     }
     // For other errors, you can handle them accordingly
     // console.error("Error getCachedFile:", error);
     // throw error;
-    return null;
+    logWarn("media-cache-unknown-error", { filename });
+    return { data: null, reason: "error" };
   }
 };
 

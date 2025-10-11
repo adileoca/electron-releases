@@ -2,6 +2,9 @@ const path = require("path");
 const fs = require("fs");
 const { dialog } = require("electron");
 const { storageDir: cacheDir } = require("../../storage.js");
+const { createLogger } = require("../../utils/logging.js");
+
+const logger = createLogger("ipc-handler-download-file");
 
 /**
  * IPC handler for downloading a file from the cache to user's system.
@@ -24,9 +27,11 @@ const handleDownloadFile = async (event, { filename, suggestedName }) => {
     }
 
     const sourcePath = path.join(cacheDir, filename);
+    logger.info("start", { filename, suggestedName });
 
     // Check if the file exists
     if (!fs.existsSync(sourcePath)) {
+      logger.warn("missing", { filename });
       return { success: false, error: `File not found: ${filename}` };
     }
 
@@ -37,19 +42,21 @@ const handleDownloadFile = async (event, { filename, suggestedName }) => {
     const { canceled, filePath } = await dialog.showSaveDialog({
       defaultPath: defaultPath,
       buttonLabel: "Save",
-      properties: ["createDirectory", "showOverwriteConfirmation"]
+      properties: ["createDirectory", "showOverwriteConfirmation"],
     });
 
     if (canceled || !filePath) {
+      logger.info("cancelled", { filename });
       return { success: false, error: "Download canceled" };
     }
 
     // Copy the file to the destination
     fs.copyFileSync(sourcePath, filePath);
 
+    logger.info("success", { filename, destination: filePath });
     return { success: true, filePath };
   } catch (error) {
-    console.error("Error downloading file:", error);
+    logger.error("error", error);
     return { success: false, error: error.message };
   }
 };

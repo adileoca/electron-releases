@@ -1,17 +1,17 @@
-const { app, BrowserWindow, ipcMain, dialog, session } = require("electron");
-const { exec } = require("child_process");
-const path = require("path");
-
-const { installPlugin } = require("./utils/installPlugin");
+const { app, BrowserWindow } = require("electron");
+const { setupLogging, log } = require("./logger");
+const { logFile } = setupLogging();
 const { setupIpcEvents } = require("./events/ipcEvents");
 const createWindow = require("./events/windowEvents");
 const setupServer = require("./server/index");
+log.info(`Writing Electron logs to ${logFile}`);
 
 // ! make sure to apply changes to electron.js as well
 app.whenReady().then(() => {
   createWindow();
   setupIpcEvents();
   setupServer();
+  log.info("Main process initialised");
 });
 
 app.on("window-all-closed", () => {

@@ -16,9 +16,14 @@ const { handleDownloadFile } = require("./handlers/download-file.js");
 const { platform } = require("os");
 const { installPlugin } = require("../utils/installPlugin.js");
 const { getWindow } = require("../getWindow.js");
+const { createLogger } = require("../utils/logging.js");
 
 function setupIpcEvents(broadcast) {
   const mainWindow = getWindow();
+  const logger = createLogger("ipc-main", {
+    windowId: mainWindow?.id,
+  });
+  const ipcLogger = logger.child("ipc");
   // Set up IPC event handlers
   ipcMain.handle("read-file", handleReadFile);
   ipcMain.handle("upload-file", handleUploadFile);
@@ -31,21 +36,29 @@ function setupIpcEvents(broadcast) {
 
   // Set up IPC event listeners
   ipcMain.on("install-plugin", (event, data) => {
-    console.log("install-plugin fired");
+    ipcLogger.info("install-plugin", {
+      windowId: mainWindow?.id,
+      requestId: data?.requestId,
+    });
     installPlugin({ force: true, window: mainWindow });
   });
 
   ipcMain.on("check-updates", (event, data) => {
-    console.log("checking for updates");
+    ipcLogger.info("check-updates", {
+      autoInstallOnAppQuit: autoUpdater.autoInstallOnAppQuit,
+      requestId: data?.requestId,
+    });
     autoUpdater.checkForUpdatesAndNotify();
   });
 
   ipcMain.on("restart-app", () => {
+    ipcLogger.warn("restart-app");
     autoUpdater.quitAndInstall();
   });
 
   ipcMain.on("window-minimize", () => {
     if (mainWindow && !mainWindow.isMinimized()) {
+      ipcLogger.debug("window-minimize", { windowId: mainWindow.id });
       mainWindow.minimize();
     }
   });
@@ -54,14 +67,17 @@ function setupIpcEvents(broadcast) {
     if (!mainWindow) return;
 
     if (mainWindow.isMaximized()) {
+      ipcLogger.debug("window-unmaximize", { windowId: mainWindow.id });
       mainWindow.unmaximize();
     } else {
+      ipcLogger.debug("window-maximize", { windowId: mainWindow.id });
       mainWindow.maximize();
     }
   });
 
   ipcMain.on("window-close", () => {
     if (mainWindow) {
+      ipcLogger.warn("window-close", { windowId: mainWindow.id });
       mainWindow.close();
     }
   });
@@ -71,6 +87,7 @@ function setupIpcEvents(broadcast) {
   ipcMain.handle("get-platform", () => platform());
 
   ipcMain.handle("api-request", async (_, config = {}) => {
+    const requestLogger = ipcLogger.child("api-request");
     try {
       const {
         method = "GET",
@@ -112,7 +129,19 @@ function setupIpcEvents(broadcast) {
         axiosConfig.url = url;
       }
 
+      requestLogger.info("send", {
+        method,
+        url: isAbsoluteUrl ? url : `${baseURL}${url}`,
+        hasData: Boolean(data),
+        hasParams: Boolean(params),
+      });
+
       const response = await axios(axiosConfig);
+
+      requestLogger.debug("success", {
+        status: response.status,
+        headerCount: Object.keys(response.headers || {}).length,
+      });
 
       return {
         data: response.data,
@@ -122,6 +151,10 @@ function setupIpcEvents(broadcast) {
       };
     } catch (error) {
       if (error.response) {
+        requestLogger.warn("error-response", {
+          status: error.response.status,
+          url,
+        });
         return {
           data: error.response.data,
           status: error.response.status,
@@ -130,6 +163,7 @@ function setupIpcEvents(broadcast) {
         };
       }
 
+      requestLogger.error("error-network", error);
       return {
         data: null,
         status: null,
@@ -140,8 +174,9 @@ function setupIpcEvents(broadcast) {
   });
 
   ipcMain.handle("create-shipment", async (_, { order_id, session }) => {
+    const shipmentLogger = ipcLogger.child("create-shipment", { order_id });
     try {
-      console.log("creating shipment in ipc...", { order_id, session });
+      shipmentLogger.info("start");
       const sessionJson = JSON.stringify(session);
       const base64Session = Buffer.from(sessionJson).toString("base64");
       const encodedSession = `base64-${base64Session}`;
@@ -151,15 +186,19 @@ function setupIpcEvents(broadcast) {
         { orderId: order_id },
         { headers: { "sb-vrdaoudvtphptybaljqq-auth-token": encodedSession } }
       );
-      console.log("shipment response", response.data.data);
+      shipmentLogger.info("success", {
+        responseStatus: response.status,
+      });
       return { url: response.data.data.url, error: null };
     } catch (err) {
+      shipmentLogger.error("error", err);
       return { error: err.message, url: null };
     }
   });
 
   ipcMain.on("print-label", async (event, url) => {
-    console.log("print-label fired");
+    const printLogger = ipcLogger.child("print-label", { url });
+    printLogger.info("start");
     const printWindow = new BrowserWindow({
       show: true,
       webPreferences: {
@@ -171,7 +210,7 @@ function setupIpcEvents(broadcast) {
 
     // Open print dialog when content is loaded
     printWindow.webContents.on("did-finish-load", () => {
-      console.log("print content loaded successfully");
+      printLogger.debug("content-loaded");
       printWindow.show();
       printWindow.focus();
 
@@ -188,10 +227,11 @@ function setupIpcEvents(broadcast) {
             pageSize: "A4", // Explicitly set page size
           },
           (success, reason) => {
-            console.log(
-              `Print ${success ? "successful" : "failed"}`,
-              reason || ""
-            );
+            if (success) {
+              printLogger.info("print-success");
+            } else {
+              printLogger.warn("print-failed", { reason });
+            }
             printWindow.close();
           }
         );
@@ -202,7 +242,10 @@ function setupIpcEvents(broadcast) {
     printWindow.webContents.on(
       "did-fail-load",
       (event, errorCode, errorDescription) => {
-        console.error("Failed to load content:", errorCode, errorDescription);
+        printLogger.error("load-failed", {
+          errorCode,
+          errorDescription,
+        });
         printWindow.close();
       }
     );

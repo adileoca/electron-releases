@@ -49,7 +49,7 @@ export const reducer: Reducer<State, Actions> = (state, action) => {
   }
 };
 
-export const createActions = (state: State, dispatch: Dispatch<Actions>) => ({
+export const createActions = (dispatch: Dispatch<Actions>) => ({
   update: {
     setStatus: (status: UpdateStatusType) => {
       dispatch({
@@ -63,10 +63,10 @@ export const createActions = (state: State, dispatch: Dispatch<Actions>) => ({
         payload: progress,
       });
     },
-    setError: (progress: any) => {
+    setError: (error: any) => {
       dispatch({
-        type: "setUpdateProgress",
-        payload: progress,
+        type: "setUpdateError",
+        payload: error,
       });
     },
   },

@@ -6,6 +6,11 @@ import { useDatabase } from "@/lib/supabase/context";
 import { Print } from "@/lib/supabase/database";
 import { formatDate } from "@/lib/utils/format";
 import MiniTable from "@/components/ui/MiniTable";
+import { QueryCache, createCacheKey } from "@/lib/cache/QueryCache";
+import { MediaUrlResult } from "@/lib/supabase/MediaManager";
+import { logDebug, logError } from "@/lib/logging";
+
+const thumbnailUrlCache = new QueryCache(Number.POSITIVE_INFINITY);
 
 const PrintCard: React.FC<{
   print: Print;
@@ -25,47 +30,81 @@ const PrintCard: React.FC<{
       return;
     }
 
-    let isMounted = true;
-    let objectUrlToRevoke: string | null = null;
+    const cacheKey = createCacheKey("print-thumbnail", {
+      id: latestVersion.thumbnail_id,
+      bucket: latestVersion.thumbnail?.bucket_name,
+      path: latestVersion.thumbnail?.path,
+    });
 
-    const fetchImage = async () => {
-      const result = await mediaManager.getUrl(
-        {
-          id: latestVersion.thumbnail_id!,
-          bucket_name: latestVersion.thumbnail?.bucket_name!,
-          path: latestVersion.thumbnail?.path!,
-        },
-        { expiresIn: 60 * 60 }
-      );
+    const cached = thumbnailUrlCache.get<MediaUrlResult>(cacheKey);
+    if (cached?.data) {
+      setSrc(cached.data.url);
+      logDebug("print-thumb-cache-hit", {
+        printId: print.id,
+        thumbnailId: latestVersion.thumbnail_id,
+      });
+      return;
+    }
 
-      if (!result) return;
+    let cancelled = false;
 
-      if (!isMounted) {
-        if (result.isObjectUrl && result.url.startsWith("blob:")) {
-          URL.revokeObjectURL(result.url);
+    thumbnailUrlCache
+      .fetch(cacheKey, async () => {
+        logDebug("print-thumb-fetch-start", {
+          printId: print.id,
+          thumbnailId: latestVersion.thumbnail_id,
+        });
+
+        const result = await mediaManager.getUrl(
+          {
+            id: latestVersion.thumbnail_id!,
+            bucket_name: latestVersion.thumbnail?.bucket_name!,
+            path: latestVersion.thumbnail?.path!,
+          },
+          { expiresIn: 60 * 60 }
+        );
+
+        if (!result) {
+          logError("print-thumb-fetch-missing", {
+            printId: print.id,
+            thumbnailId: latestVersion.thumbnail_id,
+          });
+          throw new Error("Failed to load print thumbnail");
         }
-        return;
-      }
 
-      setSrc(result.url);
-      if (result.isObjectUrl && result.url.startsWith("blob:")) {
-        objectUrlToRevoke = result.url;
-      }
-    };
+        logDebug("print-thumb-fetch-success", {
+          printId: print.id,
+          thumbnailId: latestVersion.thumbnail_id,
+        });
 
-    fetchImage();
+        return result;
+      })
+      .then((result) => {
+        if (!cancelled && result) {
+          setSrc(result.url);
+        }
+      })
+      .catch((error) => {
+        if (!cancelled) {
+          setSrc(null);
+        }
+        thumbnailUrlCache.invalidate(cacheKey);
+        logError("print-thumb-fetch-error", {
+          printId: print.id,
+          thumbnailId: latestVersion.thumbnail_id,
+          message: String(error),
+        });
+      });
 
     return () => {
-      isMounted = false;
-      if (objectUrlToRevoke) {
-        URL.revokeObjectURL(objectUrlToRevoke);
-      }
+      cancelled = true;
     };
   }, [
     latestVersion?.thumbnail_id,
     latestVersion?.thumbnail?.bucket_name,
     latestVersion?.thumbnail?.path,
     mediaManager,
+    print.id,
   ]);
 
   return (
