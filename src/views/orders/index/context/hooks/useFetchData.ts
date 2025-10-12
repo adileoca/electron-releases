@@ -117,7 +117,12 @@ export const useData = (
     } else {
       logDebug("orders-cache-miss", { key: cacheKey });
       setUpdatingSafe(true);
-      applyData(cacheKey, null);
+      const previousData = dataRef.current;
+      if (previousData) {
+        applyData(cacheKey, { ...previousData, results: [] });
+      } else {
+        applyData(cacheKey, null);
+      }
     }
 
     if (!cached || cached.stale) {

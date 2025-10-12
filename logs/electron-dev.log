@@ -12659,3 +12659,652 @@ Visit https://reactjs.org/link/error-boundaries to learn more about error bounda
 2025-10-12 17:58:56.917 [warn]  [http://localhost:3005/static/js/bundle.js:161846] table state [object Object]
 2025-10-12 17:58:56.918 [warn]  [http://localhost:3005/static/js/bundle.js:161849] table data [object Object]
 2025-10-12 17:58:56.938 [warn]  [http://localhost:3005/static/js/bundle.js:161846] table state [object Object]
+2025-10-12 17:59:15.762 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T14:59:15.716Z] [orders-live-tick] [object Object]
+2025-10-12 17:59:15.797 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T14:59:15.797Z] [orders-refresh-start] [object Object]
+2025-10-12 17:59:15.798 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T14:59:15.798Z] [orders-db-fetch] [object Object]
+2025-10-12 17:59:15.798 [warn]  [http://localhost:3005/static/js/bundle.js:161846] table state [object Object]
+2025-10-12 17:59:15.813 [warn]  [http://localhost:3005/static/js/bundle.js:161846] table state [object Object]
+2025-10-12 17:59:16.696 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T14:59:16.656Z] [orders-local-cache-write] [object Object]
+2025-10-12 17:59:16.697 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T14:59:16.657Z] [orders-refresh-success] [object Object]
+2025-10-12 17:59:16.742 [warn]  [http://localhost:3005/static/js/bundle.js:161846] table state [object Object]
+2025-10-12 17:59:16.743 [warn]  [http://localhost:3005/static/js/bundle.js:161849] table data [object Object]
+2025-10-12 17:59:16.765 [warn]  [http://localhost:3005/static/js/bundle.js:161846] table state [object Object]
+2025-10-12 17:59:35.744 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T14:59:35.716Z] [orders-live-tick] [object Object]
+2025-10-12 17:59:35.780 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T14:59:35.779Z] [orders-refresh-start] [object Object]
+2025-10-12 17:59:35.780 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T14:59:35.780Z] [orders-db-fetch] [object Object]
+2025-10-12 17:59:35.781 [warn]  [http://localhost:3005/static/js/bundle.js:161846] table state [object Object]
+2025-10-12 17:59:35.798 [warn]  [http://localhost:3005/static/js/bundle.js:161846] table state [object Object]
+2025-10-12 17:59:36.752 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T14:59:36.699Z] [orders-local-cache-write] [object Object]
+2025-10-12 17:59:36.752 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T14:59:36.700Z] [orders-refresh-success] [object Object]
+2025-10-12 17:59:36.771 [warn]  [http://localhost:3005/static/js/bundle.js:161846] table state [object Object]
+2025-10-12 17:59:36.771 [warn]  [http://localhost:3005/static/js/bundle.js:161849] table data [object Object]
+2025-10-12 17:59:36.793 [warn]  [http://localhost:3005/static/js/bundle.js:161846] table state [object Object]
+2025-10-12 17:59:50.697 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T14:59:50.696Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 17:59:50.697 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T14:59:50.697Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 17:59:50.697 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T14:59:50.697Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 17:59:50.697 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T14:59:50.697Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 17:59:50.698 [warn]  [http://localhost:3005/static/js/bundle.js:148912] session update
+2025-10-12 17:59:52.213 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T14:59:52.213Z] [orders-live-stop] [object Object]
+2025-10-12 17:59:52.221 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T14:59:52.221Z] [orders-local-cache-hit] [object Object]
+2025-10-12 17:59:52.222 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T14:59:52.221Z] [orders-cache-hit] [object Object]
+2025-10-12 17:59:52.222 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T14:59:52.221Z] [orders-live-start] [object Object]
+2025-10-12 17:59:52.222 [warn]  [http://localhost:3005/static/js/bundle.js:161846] table state [object Object]
+2025-10-12 17:59:52.248 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T14:59:52.248Z] [orders-refresh-start] [object Object]
+2025-10-12 17:59:52.249 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T14:59:52.248Z] [orders-db-fetch] [object Object]
+2025-10-12 17:59:52.252 [warn]  [http://localhost:3005/static/js/bundle.js:161846] table state [object Object]
+2025-10-12 17:59:52.252 [warn]  [http://localhost:3005/static/js/bundle.js:161849] table data [object Object]
+2025-10-12 17:59:52.269 [warn]  [http://localhost:3005/static/js/bundle.js:161846] table state [object Object]
+2025-10-12 17:59:53.159 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T14:59:53.120Z] [orders-local-cache-write] [object Object]
+2025-10-12 17:59:53.160 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T14:59:53.121Z] [orders-refresh-success] [object Object]
+2025-10-12 17:59:53.162 [warn]  [http://localhost:3005/static/js/bundle.js:161846] table state [object Object]
+2025-10-12 17:59:53.162 [warn]  [http://localhost:3005/static/js/bundle.js:161849] table data [object Object]
+2025-10-12 17:59:53.196 [warn]  [http://localhost:3005/static/js/bundle.js:161846] table state [object Object]
+2025-10-12 17:59:58.689 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T14:59:58.689Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 17:59:58.690 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T14:59:58.689Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 17:59:58.690 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T14:59:58.689Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 17:59:58.690 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T14:59:58.689Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 17:59:58.690 [warn]  [http://localhost:3005/static/js/bundle.js:148912] session update
+2025-10-12 18:00:00.354 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:00:00.353Z] [orders-live-stop] [object Object]
+2025-10-12 18:00:00.358 [warn]  [http://localhost:3005/static/js/bundle.js:149744] history current index 22
+2025-10-12 18:00:00.358 [warn]  [http://localhost:3005/static/js/bundle.js:149745] history latest index 21
+2025-10-12 18:00:00.358 [warn]  [http://localhost:3005/static/js/bundle.js:149747] history setting new latest index 22
+2025-10-12 18:00:00.359 [warn]  [http://localhost:3005/static/js/bundle.js:149744] history current index 22
+2025-10-12 18:00:00.359 [warn]  [http://localhost:3005/static/js/bundle.js:149745] history latest index 21
+2025-10-12 18:00:00.359 [warn]  [http://localhost:3005/static/js/bundle.js:149747] history setting new latest index 22
+2025-10-12 18:00:00.363 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:00:00.363Z] [global-state-change] [object Object]
+2025-10-12 18:00:01.006 [warn]  [http://localhost:3005/static/js/bundle.js:149744] history current index 23
+2025-10-12 18:00:01.007 [warn]  [http://localhost:3005/static/js/bundle.js:149745] history latest index 22
+2025-10-12 18:00:01.008 [warn]  [http://localhost:3005/static/js/bundle.js:149747] history setting new latest index 23
+2025-10-12 18:00:01.016 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:00:01.016Z] [orders-local-cache-hit] [object Object]
+2025-10-12 18:00:01.017 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:00:01.016Z] [orders-cache-hit] [object Object]
+2025-10-12 18:00:01.017 [warn]  [http://localhost:3005/static/js/bundle.js:161846] table state [object Object]
+2025-10-12 18:00:01.017 [warn]  [http://localhost:3005/static/js/bundle.js:161849] table data null
+2025-10-12 18:00:01.017 [warn]  [http://localhost:3005/static/js/bundle.js:149744] history current index 23
+2025-10-12 18:00:01.017 [warn]  [http://localhost:3005/static/js/bundle.js:149745] history latest index 22
+2025-10-12 18:00:01.018 [warn]  [http://localhost:3005/static/js/bundle.js:149747] history setting new latest index 23
+2025-10-12 18:00:01.018 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:00:01.017Z] [orders-cache-hit] [object Object]
+2025-10-12 18:00:01.018 [warn]  [http://localhost:3005/static/js/bundle.js:161846] table state [object Object]
+2025-10-12 18:00:01.018 [warn]  [http://localhost:3005/static/js/bundle.js:161849] table data null
+2025-10-12 18:00:01.022 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:00:01.022Z] [orders-refresh-start] [object Object]
+2025-10-12 18:00:01.022 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:00:01.022Z] [orders-db-fetch] [object Object]
+2025-10-12 18:00:01.027 [warn]  [http://localhost:3005/static/js/bundle.js:161846] table state [object Object]
+2025-10-12 18:00:01.027 [warn]  [http://localhost:3005/static/js/bundle.js:161849] table data [object Object]
+2025-10-12 18:00:01.027 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:00:01.027Z] [global-state-change] [object Object]
+2025-10-12 18:00:01.056 [warn]  [http://localhost:3005/static/js/bundle.js:161846] table state [object Object]
+2025-10-12 18:00:02.900 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:00:02.872Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:00:02.900 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:00:02.872Z] [orders-refresh-success] [object Object]
+2025-10-12 18:00:02.901 [warn]  [http://localhost:3005/static/js/bundle.js:161846] table state [object Object]
+2025-10-12 18:00:02.901 [warn]  [http://localhost:3005/static/js/bundle.js:161849] table data [object Object]
+2025-10-12 18:00:02.920 [warn]  [http://localhost:3005/static/js/bundle.js:161846] table state [object Object]
+2025-10-12 18:01:59.583 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:01:59.583Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:01:59.584 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:01:59.583Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:01:59.584 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:01:59.583Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:01:59.584 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:01:59.583Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:01:59.584 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:01:59.583Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:01:59.585 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:01:59.583Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:01:59.585 [warn]  [http://localhost:3005/static/js/bundle.js:148912] session update
+2025-10-12 18:02:02.920 [warn]  [http://localhost:3005/static/js/bundle.js:149744] history current index 23
+2025-10-12 18:02:02.921 [warn]  [http://localhost:3005/static/js/bundle.js:149745] history latest index 23
+2025-10-12 18:02:02.921 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:02:02.921Z] [orders-cache-hit] [object Object]
+2025-10-12 18:02:02.921 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:02:02.921Z] [orders-fetch-start] [object Object]
+2025-10-12 18:02:02.921 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:02:02.921Z] [orders-db-fetch] [object Object]
+2025-10-12 18:02:02.921 [warn]  [http://localhost:3005/static/js/bundle.js:161846] table state [object Object]
+2025-10-12 18:02:02.921 [warn]  [http://localhost:3005/static/js/bundle.js:161849] table data [object Object]
+2025-10-12 18:02:02.922 [warn]  [http://localhost:3005/static/js/bundle.js:149744] history current index 23
+2025-10-12 18:02:02.922 [warn]  [http://localhost:3005/static/js/bundle.js:149745] history latest index 23
+2025-10-12 18:02:02.966 [warn]  [http://localhost:3005/static/js/bundle.js:161846] table state [object Object]
+2025-10-12 18:02:02.966 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:02:02.966Z] [global-state-change] [object Object]
+2025-10-12 18:02:03.865 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:02:03.814Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:02:03.865 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:02:03.814Z] [orders-fetch-success] [object Object]
+2025-10-12 18:02:03.910 [warn]  [http://localhost:3005/static/js/bundle.js:161846] table state [object Object]
+2025-10-12 18:02:03.910 [warn]  [http://localhost:3005/static/js/bundle.js:161849] table data [object Object]
+2025-10-12 18:02:03.934 [warn]  [http://localhost:3005/static/js/bundle.js:161846] table state [object Object]
+2025-10-12 18:02:32.782 [warn]  [http://localhost:3005/static/js/bundle.js:149744] history current index 23
+2025-10-12 18:02:32.783 [warn]  [http://localhost:3005/static/js/bundle.js:149745] history latest index 23
+2025-10-12 18:02:32.783 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:02:32.782Z] [orders-cache-hit] [object Object]
+2025-10-12 18:02:32.783 [warn]  [http://localhost:3005/static/js/bundle.js:161846] table state [object Object]
+2025-10-12 18:02:32.783 [warn]  [http://localhost:3005/static/js/bundle.js:161849] table data [object Object]
+2025-10-12 18:02:32.783 [warn]  [http://localhost:3005/static/js/bundle.js:149744] history current index 23
+2025-10-12 18:02:32.783 [warn]  [http://localhost:3005/static/js/bundle.js:149745] history latest index 23
+2025-10-12 18:02:32.827 [warn]  [http://localhost:3005/static/js/bundle.js:161846] table state [object Object]
+2025-10-12 18:02:32.828 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:02:32.827Z] [global-state-change] [object Object]
+2025-10-12 18:03:39.669 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:39.669Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:39.674 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:39.670Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:39.674 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:39.670Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:39.675 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:39.670Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:39.675 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:39.670Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:39.675 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:39.670Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:39.675 [warn]  [http://localhost:3005/static/js/bundle.js:148912] session update
+2025-10-12 18:03:41.359 [warn]  [http://localhost:3005/static/js/bundle.js:103616] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold
+2025-10-12 18:03:41.393 [error] [node:electron/js2c/sandbox_bundle:2] %cElectron Security Warning (Insecure Content-Security-Policy) font-weight: bold; This renderer process has either no Content Security
+  Policy set or a policy with "unsafe-eval" enabled. This exposes users of
+  this app to unnecessary security risks.
+
+For more information and help, consult
+https://electronjs.org/docs/tutorial/security.
+This warning will not show up
+once the app is packaged.
+2025-10-12 18:03:41.397 [warn]  [http://localhost:3005/static/js/bundle.js:148912] session update
+2025-10-12 18:03:41.397 [warn]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:41.397Z] [global-context-init] [object Object]
+2025-10-12 18:03:41.397 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:41.397Z] [global-state-change] [object Object]
+2025-10-12 18:03:41.397 [warn]  [http://localhost:3005/static/js/bundle.js:148912] session update
+2025-10-12 18:03:41.397 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:41.397Z] [global-state-change] [object Object]
+2025-10-12 18:03:41.411 [warn]  [http://localhost:3005/static/js/bundle.js:149744] history current index 23
+2025-10-12 18:03:41.412 [warn]  [http://localhost:3005/static/js/bundle.js:149745] history latest index 0
+2025-10-12 18:03:41.412 [warn]  [http://localhost:3005/static/js/bundle.js:149747] history setting new latest index 23
+2025-10-12 18:03:41.419 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:41.419Z] [orders-local-cache-hit] [object Object]
+2025-10-12 18:03:41.419 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:41.419Z] [orders-cache-hit] [object Object]
+2025-10-12 18:03:41.419 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:03:41.420 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data null
+2025-10-12 18:03:41.420 [error] [http://localhost:3005/static/js/bundle.js:110904] ⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+2025-10-12 18:03:41.420 [error] [http://localhost:3005/static/js/bundle.js:110904] ⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+2025-10-12 18:03:41.420 [warn]  [http://localhost:3005/static/js/bundle.js:148912] session update
+2025-10-12 18:03:41.420 [warn]  [http://localhost:3005/static/js/bundle.js:149744] history current index 23
+2025-10-12 18:03:41.421 [warn]  [http://localhost:3005/static/js/bundle.js:149745] history latest index 0
+2025-10-12 18:03:41.421 [warn]  [http://localhost:3005/static/js/bundle.js:149747] history setting new latest index 23
+2025-10-12 18:03:41.421 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:41.421Z] [orders-cache-hit] [object Object]
+2025-10-12 18:03:41.421 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:03:41.421 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data null
+2025-10-12 18:03:41.428 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:41.428Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:41.428 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:41.428Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:41.434 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:41.433Z] [orders-refresh-start] [object Object]
+2025-10-12 18:03:41.435 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:41.433Z] [orders-db-fetch] [object Object]
+2025-10-12 18:03:41.438 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:03:41.438 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:03:41.438 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:41.438Z] [global-state-change] [object Object]
+2025-10-12 18:03:41.488 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:03:41.546 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:41.546Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:41.546 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:41.546Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:41.547 [warn]  [http://localhost:3005/static/js/bundle.js:148912] session update
+2025-10-12 18:03:41.576 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:41.575Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:41.576 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:41.576Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:41.580 [warn]  [http://localhost:3005/static/js/bundle.js:148912] session update
+2025-10-12 18:03:41.594 [warn]  [http://localhost:3005/static/js/bundle.js:148912] session update
+2025-10-12 18:03:41.594 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:41.594Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:41.594 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:41.594Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:42.199 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:42.199Z] [orders-db-error] [object Object]
+2025-10-12 18:03:42.199 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:42.199Z] [orders-refresh-error] [object Object]
+2025-10-12 18:03:42.299 [warn]  [http://localhost:3005/static/js/bundle.js:103616] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold
+2025-10-12 18:03:42.354 [error] [node:electron/js2c/sandbox_bundle:2] %cElectron Security Warning (Insecure Content-Security-Policy) font-weight: bold; This renderer process has either no Content Security
+  Policy set or a policy with "unsafe-eval" enabled. This exposes users of
+  this app to unnecessary security risks.
+
+For more information and help, consult
+https://electronjs.org/docs/tutorial/security.
+This warning will not show up
+once the app is packaged.
+2025-10-12 18:03:42.358 [warn]  [http://localhost:3005/static/js/bundle.js:148912] session update
+2025-10-12 18:03:42.358 [warn]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:42.358Z] [global-context-init] [object Object]
+2025-10-12 18:03:42.358 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:42.358Z] [global-state-change] [object Object]
+2025-10-12 18:03:42.359 [warn]  [http://localhost:3005/static/js/bundle.js:148912] session update
+2025-10-12 18:03:42.359 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:42.359Z] [global-state-change] [object Object]
+2025-10-12 18:03:42.372 [warn]  [http://localhost:3005/static/js/bundle.js:149744] history current index 23
+2025-10-12 18:03:42.372 [warn]  [http://localhost:3005/static/js/bundle.js:149745] history latest index 0
+2025-10-12 18:03:42.372 [warn]  [http://localhost:3005/static/js/bundle.js:149747] history setting new latest index 23
+2025-10-12 18:03:42.378 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:42.378Z] [orders-local-cache-hit] [object Object]
+2025-10-12 18:03:42.378 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:42.378Z] [orders-cache-hit] [object Object]
+2025-10-12 18:03:42.378 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:03:42.378 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data null
+2025-10-12 18:03:42.378 [error] [http://localhost:3005/static/js/bundle.js:110904] ⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+2025-10-12 18:03:42.378 [error] [http://localhost:3005/static/js/bundle.js:110904] ⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+2025-10-12 18:03:42.378 [warn]  [http://localhost:3005/static/js/bundle.js:148912] session update
+2025-10-12 18:03:42.379 [warn]  [http://localhost:3005/static/js/bundle.js:149744] history current index 23
+2025-10-12 18:03:42.379 [warn]  [http://localhost:3005/static/js/bundle.js:149745] history latest index 0
+2025-10-12 18:03:42.379 [warn]  [http://localhost:3005/static/js/bundle.js:149747] history setting new latest index 23
+2025-10-12 18:03:42.379 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:42.379Z] [orders-cache-hit] [object Object]
+2025-10-12 18:03:42.379 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:03:42.379 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data null
+2025-10-12 18:03:42.385 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:42.385Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:42.385 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:42.385Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:42.390 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:42.389Z] [orders-refresh-start] [object Object]
+2025-10-12 18:03:42.390 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:42.390Z] [orders-db-fetch] [object Object]
+2025-10-12 18:03:42.393 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:03:42.394 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:03:42.394 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:42.393Z] [global-state-change] [object Object]
+2025-10-12 18:03:42.436 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:03:42.488 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:42.487Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:42.488 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:42.488Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:42.489 [warn]  [http://localhost:3005/static/js/bundle.js:148912] session update
+2025-10-12 18:03:42.505 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:42.505Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:42.506 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:42.505Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:42.506 [warn]  [http://localhost:3005/static/js/bundle.js:148912] session update
+2025-10-12 18:03:42.528 [warn]  [http://localhost:3005/static/js/bundle.js:148912] session update
+2025-10-12 18:03:42.529 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:42.529Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:42.529 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:42.529Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:43.354 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:43.304Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:03:43.354 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:43.305Z] [orders-refresh-success] [object Object]
+2025-10-12 18:03:43.355 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:03:43.355 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:03:43.355 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:03:48.719 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:48.719Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:48.720 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:48.719Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:48.720 [warn]  [http://localhost:3005/static/js/bundle.js:148912] session update
+2025-10-12 18:03:52.673 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:52.673Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:52.673 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:52.673Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:52.674 [warn]  [http://localhost:3005/static/js/bundle.js:148912] session update
+2025-10-12 18:03:55.608 [warn]  [http://localhost:3005/static/js/bundle.js:103616] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold
+2025-10-12 18:03:55.634 [error] [node:electron/js2c/sandbox_bundle:2] %cElectron Security Warning (Insecure Content-Security-Policy) font-weight: bold; This renderer process has either no Content Security
+  Policy set or a policy with "unsafe-eval" enabled. This exposes users of
+  this app to unnecessary security risks.
+
+For more information and help, consult
+https://electronjs.org/docs/tutorial/security.
+This warning will not show up
+once the app is packaged.
+2025-10-12 18:03:55.638 [warn]  [http://localhost:3005/static/js/bundle.js:148912] session update
+2025-10-12 18:03:55.638 [warn]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:55.638Z] [global-context-init] [object Object]
+2025-10-12 18:03:55.638 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:55.638Z] [global-state-change] [object Object]
+2025-10-12 18:03:55.638 [warn]  [http://localhost:3005/static/js/bundle.js:148912] session update
+2025-10-12 18:03:55.638 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:55.638Z] [global-state-change] [object Object]
+2025-10-12 18:03:55.650 [warn]  [http://localhost:3005/static/js/bundle.js:149744] history current index 23
+2025-10-12 18:03:55.650 [warn]  [http://localhost:3005/static/js/bundle.js:149745] history latest index 0
+2025-10-12 18:03:55.650 [warn]  [http://localhost:3005/static/js/bundle.js:149747] history setting new latest index 23
+2025-10-12 18:03:55.656 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:55.656Z] [orders-local-cache-hit] [object Object]
+2025-10-12 18:03:55.656 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:55.656Z] [orders-cache-hit] [object Object]
+2025-10-12 18:03:55.656 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:03:55.656 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data null
+2025-10-12 18:03:55.659 [error] [http://localhost:3005/static/js/bundle.js:110904] ⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+2025-10-12 18:03:55.660 [error] [http://localhost:3005/static/js/bundle.js:110904] ⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+2025-10-12 18:03:55.660 [warn]  [http://localhost:3005/static/js/bundle.js:148912] session update
+2025-10-12 18:03:55.660 [warn]  [http://localhost:3005/static/js/bundle.js:149744] history current index 23
+2025-10-12 18:03:55.660 [warn]  [http://localhost:3005/static/js/bundle.js:149745] history latest index 0
+2025-10-12 18:03:55.660 [warn]  [http://localhost:3005/static/js/bundle.js:149747] history setting new latest index 23
+2025-10-12 18:03:55.660 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:55.657Z] [orders-cache-hit] [object Object]
+2025-10-12 18:03:55.660 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:03:55.660 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data null
+2025-10-12 18:03:55.664 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:55.664Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:55.664 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:55.664Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:55.669 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:55.669Z] [orders-refresh-start] [object Object]
+2025-10-12 18:03:55.670 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:55.670Z] [orders-db-fetch] [object Object]
+2025-10-12 18:03:55.673 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:03:55.673 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:03:55.673 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:55.673Z] [global-state-change] [object Object]
+2025-10-12 18:03:55.709 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:03:55.759 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:55.758Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:55.759 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:55.759Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:55.760 [warn]  [http://localhost:3005/static/js/bundle.js:148912] session update
+2025-10-12 18:03:55.776 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:55.776Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:55.776 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:55.776Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:55.777 [warn]  [http://localhost:3005/static/js/bundle.js:148912] session update
+2025-10-12 18:03:55.790 [warn]  [http://localhost:3005/static/js/bundle.js:148912] session update
+2025-10-12 18:03:55.790 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:55.790Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:55.790 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:55.790Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:03:56.704 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:56.676Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:03:56.705 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:03:56.677Z] [orders-refresh-success] [object Object]
+2025-10-12 18:03:56.705 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:03:56.705 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:03:56.736 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:00.906 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:00.905Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:04:00.906 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:00.906Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:04:00.906 [warn]  [http://localhost:3005/static/js/bundle.js:148912] session update
+2025-10-12 18:04:10.804 [warn]  [http://localhost:3005/static/js/bundle.js:149744] history current index 23
+2025-10-12 18:04:10.805 [warn]  [http://localhost:3005/static/js/bundle.js:149745] history latest index 23
+2025-10-12 18:04:10.805 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:10.804Z] [orders-cache-hit] [object Object]
+2025-10-12 18:04:10.805 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:10.805 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:04:10.805 [warn]  [http://localhost:3005/static/js/bundle.js:149744] history current index 23
+2025-10-12 18:04:10.806 [warn]  [http://localhost:3005/static/js/bundle.js:149745] history latest index 23
+2025-10-12 18:04:10.848 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:10.848 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:10.848Z] [global-state-change] [object Object]
+2025-10-12 18:04:17.265 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:17.265Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:04:17.266 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:17.265Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:04:17.267 [warn]  [http://localhost:3005/static/js/bundle.js:148912] session update
+2025-10-12 18:04:19.774 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:19.773Z] [orders-local-cache-hit] [object Object]
+2025-10-12 18:04:19.774 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:19.774Z] [orders-cache-hit] [object Object]
+2025-10-12 18:04:19.774 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:19.795 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:19.795Z] [orders-refresh-start] [object Object]
+2025-10-12 18:04:19.795 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:19.795Z] [orders-db-fetch] [object Object]
+2025-10-12 18:04:19.798 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:19.798 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:04:19.814 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:20.605 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:20.576Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:04:20.606 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:20.576Z] [orders-refresh-success] [object Object]
+2025-10-12 18:04:20.606 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:20.606 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:04:20.613 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:21.113 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:21.113Z] [orders-local-cache-hit] [object Object]
+2025-10-12 18:04:21.114 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:21.113Z] [orders-cache-hit] [object Object]
+2025-10-12 18:04:21.114 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:21.132 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:21.130Z] [orders-refresh-start] [object Object]
+2025-10-12 18:04:21.132 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:21.130Z] [orders-db-fetch] [object Object]
+2025-10-12 18:04:21.134 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:21.134 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:04:21.162 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:21.274 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:21.274Z] [orders-cache-miss] [object Object]
+2025-10-12 18:04:21.274 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:21.274Z] [orders-fetch-start] [object Object]
+2025-10-12 18:04:21.274 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:21.274Z] [orders-refresh-start] [object Object]
+2025-10-12 18:04:21.275 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:21.274Z] [orders-db-fetch] [object Object]
+2025-10-12 18:04:21.275 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:21.288 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:04:21.289 [info]  [http://localhost:3005/static/js/bundle.js:77929] Warning: validateDOMNesting(...): %s cannot appear as a child of <%s>.%s%s%s <div> table   
+    at div
+    at LoadingBody
+    at table
+    at div
+    at div
+    at div
+    at div
+    at ViewShell (http://localhost:3005/static/js/bundle.js:150387:3)
+    at OrdersTable (http://localhost:3005/static/js/bundle.js:160276:70)
+    at OrdersTableProvider (http://localhost:3005/static/js/bundle.js:161858:3)
+    at OrdersView
+    at RenderedRoute (http://localhost:3005/static/js/bundle.js:110487:5)
+    at Routes (http://localhost:3005/static/js/bundle.js:111221:5)
+    at div
+    at div
+    at div
+    at AppRoutes (http://localhost:3005/static/js/bundle.js:149070:73)
+    at Routes (http://localhost:3005/static/js/bundle.js:148960:69)
+    at Router (http://localhost:3005/static/js/bundle.js:111155:15)
+    at HashRouter (http://localhost:3005/static/js/bundle.js:109096:5)
+    at App (http://localhost:3005/static/js/bundle.js:148910:73)
+    at SupabaseProvider (http://localhost:3005/static/js/bundle.js:154505:3)
+    at GlobalProvider (http://localhost:3005/static/js/bundle.js:153029:3)
+2025-10-12 18:04:21.296 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:21.471 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:21.471Z] [orders-local-cache-hit] [object Object]
+2025-10-12 18:04:21.472 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:21.471Z] [orders-cache-hit] [object Object]
+2025-10-12 18:04:21.472 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:21.472Z] [orders-refresh-start] [object Object]
+2025-10-12 18:04:21.473 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:21.472Z] [orders-db-fetch] [object Object]
+2025-10-12 18:04:21.473 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:21.479 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:21.480 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:04:21.524 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:21.552 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:21.552Z] [orders-local-cache-hit] [object Object]
+2025-10-12 18:04:21.552 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:21.552Z] [orders-cache-hit] [object Object]
+2025-10-12 18:04:21.553 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:21.552Z] [orders-refresh-start] [object Object]
+2025-10-12 18:04:21.553 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:21.552Z] [orders-db-fetch] [object Object]
+2025-10-12 18:04:21.553 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:21.582 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:21.583 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:04:21.610 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:21.997 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:21.948Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:04:21.998 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:21.948Z] [orders-refresh-stale] [object Object]
+2025-10-12 18:04:22.085 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:22.085Z] [orders-local-cache-hit] [object Object]
+2025-10-12 18:04:22.086 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:22.085Z] [orders-cache-hit] [object Object]
+2025-10-12 18:04:22.086 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:22.085Z] [orders-refresh-start] [object Object]
+2025-10-12 18:04:22.086 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:22.085Z] [orders-db-fetch] [object Object]
+2025-10-12 18:04:22.086 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:22.102 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:22.103 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:04:22.135 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:22.233 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:22.233Z] [orders-cache-miss] [object Object]
+2025-10-12 18:04:22.234 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:22.233Z] [orders-fetch-start] [object Object]
+2025-10-12 18:04:22.234 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:22.233Z] [orders-refresh-start] [object Object]
+2025-10-12 18:04:22.234 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:22.233Z] [orders-db-fetch] [object Object]
+2025-10-12 18:04:22.234 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:22.247 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:04:22.254 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:22.749 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:22.717Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:04:22.749 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:22.718Z] [orders-refresh-stale] [object Object]
+2025-10-12 18:04:22.749 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:22.725Z] [orders-cache-miss] [object Object]
+2025-10-12 18:04:22.749 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:22.725Z] [orders-fetch-start] [object Object]
+2025-10-12 18:04:22.750 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:22.725Z] [orders-refresh-start] [object Object]
+2025-10-12 18:04:22.750 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:22.725Z] [orders-db-fetch] [object Object]
+2025-10-12 18:04:22.750 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:22.784 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:22.753Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:04:22.785 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:22.753Z] [orders-refresh-stale] [object Object]
+2025-10-12 18:04:22.785 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:04:22.785 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:22.850 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:22.823Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:04:22.851 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:22.823Z] [orders-refresh-success] [object Object]
+2025-10-12 18:04:22.852 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:22.852 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:04:22.898 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:23.560 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:23.537Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:04:23.561 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:23.537Z] [orders-refresh-success] [object Object]
+2025-10-12 18:04:23.561 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:04:23.581 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:23.697 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:23.696Z] [orders-local-cache-hit] [object Object]
+2025-10-12 18:04:23.697 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:23.697Z] [orders-cache-hit] [object Object]
+2025-10-12 18:04:23.697 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:23.716 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:23.709Z] [orders-refresh-start] [object Object]
+2025-10-12 18:04:23.716 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:23.709Z] [orders-db-fetch] [object Object]
+2025-10-12 18:04:23.717 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:23.717 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:04:23.740 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:24.131 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:24.131Z] [orders-local-cache-hit] [object Object]
+2025-10-12 18:04:24.132 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:24.131Z] [orders-cache-hit] [object Object]
+2025-10-12 18:04:24.132 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:24.131Z] [orders-refresh-start] [object Object]
+2025-10-12 18:04:24.132 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:24.132Z] [orders-db-fetch] [object Object]
+2025-10-12 18:04:24.132 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:24.151 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:24.152 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:04:24.181 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:24.260 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:24.237Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:04:24.260 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:24.237Z] [orders-refresh-success] [object Object]
+2025-10-12 18:04:24.260 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:24.260 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:04:24.271 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:24.271Z] [orders-cache-hit] [object Object]
+2025-10-12 18:04:24.272 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:24.302 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:24.299Z] [orders-cache-hit] [object Object]
+2025-10-12 18:04:24.302 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:24.592 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:24.567Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:04:24.593 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:24.568Z] [orders-refresh-stale] [object Object]
+2025-10-12 18:04:25.007 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:24.982Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:04:25.008 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:24.982Z] [orders-refresh-success] [object Object]
+2025-10-12 18:04:25.008 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:04:25.027 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:25.684 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:25.684Z] [orders-local-cache-hit] [object Object]
+2025-10-12 18:04:25.684 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:25.684Z] [orders-cache-hit] [object Object]
+2025-10-12 18:04:25.684 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:25.734 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:25.716Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:04:25.735 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:25.716Z] [orders-refresh-stale] [object Object]
+2025-10-12 18:04:25.735 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:25.716Z] [orders-refresh-start] [object Object]
+2025-10-12 18:04:25.735 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:25.716Z] [orders-db-fetch] [object Object]
+2025-10-12 18:04:25.735 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:25.735 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:04:25.746 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:26.218 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:26.217Z] [orders-local-cache-hit] [object Object]
+2025-10-12 18:04:26.218 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:26.218Z] [orders-cache-hit] [object Object]
+2025-10-12 18:04:26.219 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:26.218Z] [orders-refresh-start] [object Object]
+2025-10-12 18:04:26.219 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:26.218Z] [orders-db-fetch] [object Object]
+2025-10-12 18:04:26.219 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:26.239 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:26.240 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:04:26.272 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:26.543 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:26.516Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:04:26.543 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:26.516Z] [orders-refresh-stale] [object Object]
+2025-10-12 18:04:26.600 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:26.599Z] [orders-local-cache-hit] [object Object]
+2025-10-12 18:04:26.600 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:26.600Z] [orders-cache-hit] [object Object]
+2025-10-12 18:04:26.600 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:26.600Z] [orders-refresh-start] [object Object]
+2025-10-12 18:04:26.601 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:26.600Z] [orders-db-fetch] [object Object]
+2025-10-12 18:04:26.601 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:26.617 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:26.618 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:04:26.645 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:27.057 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:27.026Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:04:27.058 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:27.026Z] [orders-refresh-stale] [object Object]
+2025-10-12 18:04:27.300 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:27.299Z] [orders-local-cache-hit] [object Object]
+2025-10-12 18:04:27.300 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:27.300Z] [orders-cache-hit] [object Object]
+2025-10-12 18:04:27.301 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:27.300Z] [orders-refresh-start] [object Object]
+2025-10-12 18:04:27.301 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:27.300Z] [orders-db-fetch] [object Object]
+2025-10-12 18:04:27.301 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:27.320 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:27.321 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:04:27.356 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:27.435 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:27.408Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:04:27.435 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:27.408Z] [orders-refresh-stale] [object Object]
+2025-10-12 18:04:27.439 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:27.438Z] [orders-local-cache-hit] [object Object]
+2025-10-12 18:04:27.439 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:27.439Z] [orders-cache-hit] [object Object]
+2025-10-12 18:04:27.439 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:27.439Z] [orders-refresh-start] [object Object]
+2025-10-12 18:04:27.439 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:27.439Z] [orders-db-fetch] [object Object]
+2025-10-12 18:04:27.439 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:27.469 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:27.469 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:04:27.498 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:28.055 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:28.054Z] [orders-local-cache-hit] [object Object]
+2025-10-12 18:04:28.055 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:28.055Z] [orders-cache-hit] [object Object]
+2025-10-12 18:04:28.056 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:28.055Z] [orders-refresh-start] [object Object]
+2025-10-12 18:04:28.056 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:28.055Z] [orders-db-fetch] [object Object]
+2025-10-12 18:04:28.056 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:28.076 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:28.077 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:04:28.111 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:28.201 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:28.175Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:04:28.201 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:28.175Z] [orders-refresh-success] [object Object]
+2025-10-12 18:04:28.202 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:28.202 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:04:28.209 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:28.227 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:28.227Z] [orders-cache-hit] [object Object]
+2025-10-12 18:04:28.228 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:28.371 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:28.371Z] [orders-cache-hit] [object Object]
+2025-10-12 18:04:28.371 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:04:28.415 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:28.394Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:04:28.415 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:28.394Z] [orders-refresh-stale] [object Object]
+2025-10-12 18:04:28.926 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:28.901Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:04:28.927 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:04:28.901Z] [orders-refresh-success] [object Object]
+2025-10-12 18:04:28.927 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:04:28.948 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:05.418 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:05.418Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:05:05.419 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:05.418Z] [ipc-renderer-main-process-log] [object Object]
+2025-10-12 18:05:05.419 [warn]  [http://localhost:3005/static/js/bundle.js:148912] session update
+2025-10-12 18:05:07.425 [warn]  [http://localhost:3005/static/js/bundle.js:149744] history current index 24
+2025-10-12 18:05:07.426 [warn]  [http://localhost:3005/static/js/bundle.js:149745] history latest index 23
+2025-10-12 18:05:07.426 [warn]  [http://localhost:3005/static/js/bundle.js:149747] history setting new latest index 24
+2025-10-12 18:05:07.426 [warn]  [http://localhost:3005/static/js/bundle.js:149744] history current index 24
+2025-10-12 18:05:07.426 [warn]  [http://localhost:3005/static/js/bundle.js:149745] history latest index 23
+2025-10-12 18:05:07.426 [warn]  [http://localhost:3005/static/js/bundle.js:149747] history setting new latest index 24
+2025-10-12 18:05:07.431 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:07.431Z] [global-state-change] [object Object]
+2025-10-12 18:05:08.697 [warn]  [http://localhost:3005/static/js/bundle.js:149744] history current index 25
+2025-10-12 18:05:08.698 [warn]  [http://localhost:3005/static/js/bundle.js:149745] history latest index 24
+2025-10-12 18:05:08.699 [warn]  [http://localhost:3005/static/js/bundle.js:149747] history setting new latest index 25
+2025-10-12 18:05:08.713 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:08.713Z] [orders-local-cache-hit] [object Object]
+2025-10-12 18:05:08.714 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:08.713Z] [orders-cache-hit] [object Object]
+2025-10-12 18:05:08.714 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:08.714 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data null
+2025-10-12 18:05:08.714 [warn]  [http://localhost:3005/static/js/bundle.js:149744] history current index 25
+2025-10-12 18:05:08.715 [warn]  [http://localhost:3005/static/js/bundle.js:149745] history latest index 24
+2025-10-12 18:05:08.715 [warn]  [http://localhost:3005/static/js/bundle.js:149747] history setting new latest index 25
+2025-10-12 18:05:08.715 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:08.714Z] [orders-cache-hit] [object Object]
+2025-10-12 18:05:08.715 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:08.715 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data null
+2025-10-12 18:05:08.723 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:08.723Z] [orders-refresh-start] [object Object]
+2025-10-12 18:05:08.724 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:08.723Z] [orders-db-fetch] [object Object]
+2025-10-12 18:05:08.728 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:08.729 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:05:08.729 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:08.728Z] [global-state-change] [object Object]
+2025-10-12 18:05:08.762 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:09.580 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:09.543Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:05:09.581 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:09.543Z] [orders-refresh-success] [object Object]
+2025-10-12 18:05:09.581 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:09.581 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:05:09.607 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:10.218 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:10.218Z] [orders-local-cache-hit] [object Object]
+2025-10-12 18:05:10.218 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:10.218Z] [orders-cache-hit] [object Object]
+2025-10-12 18:05:10.219 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:10.245 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:10.244Z] [orders-refresh-start] [object Object]
+2025-10-12 18:05:10.245 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:10.245Z] [orders-db-fetch] [object Object]
+2025-10-12 18:05:10.248 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:10.248 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:05:10.265 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:11.044 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:11.021Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:05:11.046 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:11.021Z] [orders-refresh-success] [object Object]
+2025-10-12 18:05:11.046 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:11.046 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:05:11.067 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:12.021 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:12.021Z] [orders-live-start] [object Object]
+2025-10-12 18:05:12.021 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:12.046 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:12.046Z] [orders-refresh-start] [object Object]
+2025-10-12 18:05:12.047 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:12.046Z] [orders-db-fetch] [object Object]
+2025-10-12 18:05:12.047 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:12.058 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:12.850 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:12.810Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:05:12.851 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:12.811Z] [orders-refresh-success] [object Object]
+2025-10-12 18:05:12.851 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:12.851 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:05:12.857 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:13.734 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:13.734Z] [orders-live-stop] [object Object]
+2025-10-12 18:05:13.743 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:13.743Z] [orders-local-cache-hit] [object Object]
+2025-10-12 18:05:13.743 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:13.743Z] [orders-cache-hit] [object Object]
+2025-10-12 18:05:13.743 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:13.743Z] [orders-live-start] [object Object]
+2025-10-12 18:05:13.743 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:13.770 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:13.769Z] [orders-refresh-start] [object Object]
+2025-10-12 18:05:13.770 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:13.770Z] [orders-db-fetch] [object Object]
+2025-10-12 18:05:13.773 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:13.773 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:05:13.789 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:14.616 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:14.583Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:05:14.616 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:14.583Z] [orders-refresh-success] [object Object]
+2025-10-12 18:05:14.616 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:14.616 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:05:14.641 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:16.981 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:16.981Z] [orders-live-stop] [object Object]
+2025-10-12 18:05:16.990 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:16.989Z] [orders-local-cache-hit] [object Object]
+2025-10-12 18:05:16.990 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:16.990Z] [orders-cache-hit] [object Object]
+2025-10-12 18:05:16.990 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:16.990Z] [orders-live-start] [object Object]
+2025-10-12 18:05:16.990 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:17.018 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:17.018Z] [orders-refresh-start] [object Object]
+2025-10-12 18:05:17.019 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:17.018Z] [orders-db-fetch] [object Object]
+2025-10-12 18:05:17.022 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:17.022 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:05:17.040 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:17.136 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:17.136Z] [orders-live-stop] [object Object]
+2025-10-12 18:05:17.141 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:17.141Z] [orders-local-cache-hit] [object Object]
+2025-10-12 18:05:17.141 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:17.141Z] [orders-cache-hit] [object Object]
+2025-10-12 18:05:17.141 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:17.141Z] [orders-refresh-start] [object Object]
+2025-10-12 18:05:17.141 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:17.141Z] [orders-db-fetch] [object Object]
+2025-10-12 18:05:17.141 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:17.141Z] [orders-live-start] [object Object]
+2025-10-12 18:05:17.141 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:17.165 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:17.165 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:05:17.180 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:17.286 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:17.285Z] [orders-live-stop] [object Object]
+2025-10-12 18:05:17.291 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:17.291Z] [orders-local-cache-hit] [object Object]
+2025-10-12 18:05:17.291 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:17.291Z] [orders-cache-hit] [object Object]
+2025-10-12 18:05:17.291 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:17.291Z] [orders-refresh-start] [object Object]
+2025-10-12 18:05:17.291 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:17.291Z] [orders-db-fetch] [object Object]
+2025-10-12 18:05:17.292 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:17.291Z] [orders-live-start] [object Object]
+2025-10-12 18:05:17.292 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:17.317 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:17.317 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:05:17.333 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:18.145 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:18.121Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:05:18.145 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:18.121Z] [orders-refresh-stale] [object Object]
+2025-10-12 18:05:18.286 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:18.265Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:05:18.287 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:18.265Z] [orders-refresh-stale] [object Object]
+2025-10-12 18:05:18.357 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:18.335Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:05:18.357 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:18.336Z] [orders-refresh-success] [object Object]
+2025-10-12 18:05:18.357 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:18.357 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:05:18.377 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:18.495 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:18.495Z] [orders-live-stop] [object Object]
+2025-10-12 18:05:18.501 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:18.501Z] [orders-local-cache-hit] [object Object]
+2025-10-12 18:05:18.502 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:18.501Z] [orders-cache-hit] [object Object]
+2025-10-12 18:05:18.502 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:18.502Z] [orders-live-start] [object Object]
+2025-10-12 18:05:18.502 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:18.524 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:18.524Z] [orders-refresh-start] [object Object]
+2025-10-12 18:05:18.525 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:18.524Z] [orders-db-fetch] [object Object]
+2025-10-12 18:05:18.528 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:18.528 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:05:18.543 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:18.643 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:18.643Z] [orders-live-stop] [object Object]
+2025-10-12 18:05:18.649 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:18.649Z] [orders-local-cache-hit] [object Object]
+2025-10-12 18:05:18.649 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:18.649Z] [orders-cache-hit] [object Object]
+2025-10-12 18:05:18.649 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:18.649Z] [orders-refresh-start] [object Object]
+2025-10-12 18:05:18.649 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:18.649Z] [orders-db-fetch] [object Object]
+2025-10-12 18:05:18.650 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:18.649Z] [orders-live-start] [object Object]
+2025-10-12 18:05:18.650 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:18.674 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:18.674 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:05:18.689 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:18.803 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:18.803Z] [orders-live-stop] [object Object]
+2025-10-12 18:05:18.809 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:18.809Z] [orders-local-cache-hit] [object Object]
+2025-10-12 18:05:18.809 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:18.809Z] [orders-cache-hit] [object Object]
+2025-10-12 18:05:18.809 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:18.809Z] [orders-refresh-start] [object Object]
+2025-10-12 18:05:18.809 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:18.809Z] [orders-db-fetch] [object Object]
+2025-10-12 18:05:18.810 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:18.809Z] [orders-live-start] [object Object]
+2025-10-12 18:05:18.810 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:18.835 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:18.836 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:05:18.850 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:19.535 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:19.507Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:05:19.535 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:19.507Z] [orders-refresh-stale] [object Object]
+2025-10-12 18:05:19.740 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:19.715Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:05:19.742 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:19.715Z] [orders-refresh-stale] [object Object]
+2025-10-12 18:05:19.828 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:19.804Z] [orders-local-cache-write] [object Object]
+2025-10-12 18:05:19.829 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:19.804Z] [orders-refresh-success] [object Object]
+2025-10-12 18:05:19.829 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:19.829 [warn]  [http://localhost:3005/static/js/bundle.js:161870] table data [object Object]
+2025-10-12 18:05:19.853 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
+2025-10-12 18:05:20.534 [info]  [http://localhost:3005/static/js/bundle.js:153992] [2025-10-12T15:05:20.533Z] [orders-live-stop] [object Object]
+2025-10-12 18:05:20.534 [warn]  [http://localhost:3005/static/js/bundle.js:161867] table state [object Object]
