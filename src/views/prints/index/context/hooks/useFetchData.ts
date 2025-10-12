@@ -3,7 +3,7 @@ import { useDatabase } from "@/lib/supabase/context";
 import { ContextData, ContextState } from "../types";
 import { ContextActions } from "../reducer";
 import { Supabase } from "@/lib/supabase/database";
-import { sharedQueryCache, createCacheKey } from "@/lib/cache/QueryCache";
+import { printsQueryCache, createCacheKey } from "@/lib/cache/QueryCache";
 import { logDebug, logError } from "@/lib/logging";
 import { readPrintsCacheEntry, writePrintsCacheEntry } from "../storage";
 
@@ -28,6 +28,7 @@ export const useData = (
   const setUpdatingActionRef = useRef(setUpdating);
   const setShouldRefreshActionRef = useRef(setShouldRefresh);
   const lastHydratedKeyRef = useRef<string | null>(null);
+  const hydratingKeyRef = useRef<string | null>(null);
   const dataKeyRef = useRef<string | null>(null);
   const dataRef = useRef<ContextData>(null);
   const latestKeyRef = useRef<string | null>(null);
@@ -67,6 +68,24 @@ export const useData = (
     setData(nextData);
   }, []);
 
+  const applyTransitionPlaceholder = useCallback(
+    (key: string) => {
+      const previousData = dataRef.current;
+      if (!previousData) {
+        applyData(key, null);
+        return;
+      }
+
+      if (dataKeyRef.current && dataKeyRef.current !== key) {
+        applyData(key, { ...previousData, results: [] });
+        return;
+      }
+
+      applyData(key, previousData);
+    },
+    [applyData]
+  );
+
   const setUpdatingSafe = useCallback((value: boolean) => {
     if (updatingRef.current === value) return;
     updatingRef.current = value;
@@ -80,7 +99,7 @@ export const useData = (
   }, []);
 
   const handleRealtimeEvent = useCallback(() => {
-    sharedQueryCache.invalidatePrefix("prints:");
+    printsQueryCache.invalidatePrefix("prints:");
     if (updatingRef.current) {
       pendingRealtimeRefresh.current = true;
       logDebug("prints-realtime-queued", { key: cacheKey });
@@ -94,30 +113,56 @@ export const useData = (
   }, [cacheKey, setShouldRefreshSafe]);
 
   useEffect(() => {
-    if (lastHydratedKeyRef.current === cacheKey) return;
-    lastHydratedKeyRef.current = cacheKey;
+    if (
+      lastHydratedKeyRef.current === cacheKey ||
+      hydratingKeyRef.current === cacheKey
+    ) {
+      return;
+    }
 
     let cancelled = false;
+    hydratingKeyRef.current = cacheKey;
 
     void (async () => {
-      const entry = await readPrintsCacheEntry(cacheKey);
-      if (cancelled) return;
-      if (!entry || !entry.data) return;
+      try {
+        const entry = await readPrintsCacheEntry(cacheKey);
+        if (cancelled) return;
 
-      sharedQueryCache.set(cacheKey, entry.data);
-      applyData(cacheKey, entry.data);
-      setShouldRefreshSafe(true);
+        if (entry && entry.data) {
+          printsQueryCache.set(cacheKey, entry.data);
+          applyData(cacheKey, entry.data);
+          setShouldRefreshSafe(true);
+          return;
+        }
+
+        applyTransitionPlaceholder(cacheKey);
+      } finally {
+        if (!cancelled && hydratingKeyRef.current === cacheKey) {
+          hydratingKeyRef.current = null;
+        }
+        if (!cancelled) {
+          lastHydratedKeyRef.current = cacheKey;
+        }
+      }
     })();
 
     return () => {
       cancelled = true;
+      if (hydratingKeyRef.current === cacheKey) {
+        hydratingKeyRef.current = null;
+      }
     };
-  }, [applyData, cacheKey, setShouldRefreshSafe]);
+  }, [
+    applyData,
+    applyTransitionPlaceholder,
+    cacheKey,
+    setShouldRefreshSafe,
+  ]);
 
   useEffect(() => {
     let isMounted = true;
     const requestKey = cacheKey;
-    const cached = sharedQueryCache.get<ContextData>(cacheKey);
+    const cached = printsQueryCache.get<ContextData>(cacheKey);
 
     if (cached) {
       applyData(cacheKey, cached.data);
@@ -128,16 +173,6 @@ export const useData = (
     } else {
       logDebug("prints-cache-miss", { key: cacheKey });
       setUpdatingSafe(true);
-      const previousData = dataRef.current;
-      if (previousData) {
-        if (dataKeyRef.current && dataKeyRef.current !== cacheKey) {
-          applyData(cacheKey, { ...previousData, results: [] });
-        } else {
-          applyData(cacheKey, previousData);
-        }
-      } else {
-        applyData(cacheKey, null);
-      }
     }
 
     if (!cached || cached.stale) {
@@ -147,7 +182,7 @@ export const useData = (
         reason: cached ? "stale" : "miss",
       });
       setUpdatingSafe(true);
-      sharedQueryCache
+      printsQueryCache
         .fetch(cacheKey, () => fetchData(supabase, { filters, pagination }))
         .then((result) => {
           if (!isMounted) return;
@@ -206,12 +241,12 @@ export const useData = (
     if (!shouldRefresh) return;
 
     setUpdatingSafe(true);
-    sharedQueryCache.invalidate(cacheKey);
+    printsQueryCache.invalidate(cacheKey);
     let hadError = false;
     const requestKey = cacheKey;
     logDebug("prints-refresh-start", { key: cacheKey });
-    sharedQueryCache
-      .fetch(cacheKey, () => fetchData(supabase, { filters, pagination }))
+          printsQueryCache
+            .fetch(cacheKey, () => fetchData(supabase, { filters, pagination }))
       .then((result) => {
         void writePrintsCacheEntry(requestKey, result);
         if (latestKeyRef.current !== requestKey) {
