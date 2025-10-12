@@ -46,6 +46,12 @@ export const reducer: React.Reducer<ContextState, ContextReducer> = (
         shouldRefresh: action.payload,
       };
     }
+    case "setLiveModeEnabled": {
+      return {
+        ...state,
+        liveModeEnabled: action.payload,
+      };
+    }
     case "addDraftFilter": {
       return {
         ...state,
@@ -133,6 +139,12 @@ export const createActions = (
     dispatch({
       type: "mutateDraftFilter",
       payload: { id, filter },
+    });
+  },
+  setLiveModeEnabled: (enabled: boolean) => {
+    dispatch({
+      type: "setLiveModeEnabled",
+      payload: enabled,
     });
   },
 });
@@ -230,4 +242,5 @@ export const initialState: ContextState = {
   selectedOrderIds: [],
   loading: true,
   updating: false,
+  liveModeEnabled: true,
 };

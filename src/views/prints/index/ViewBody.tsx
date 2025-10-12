@@ -11,8 +11,9 @@ const ViewBody = () => {
     data,
     state: { updating },
   } = usePrintsDisplayContext();
-
   const isInitialLoading = !data;
+  const hasResults = Boolean(data?.results?.length);
+  const showSpinner = !isInitialLoading && !hasResults && updating;
 
   return (
     <ViewShell header={<ViewHeader />}>
@@ -21,15 +22,21 @@ const ViewBody = () => {
           <LoadingBody />
         ) : (
           <div className="pb-12">
-            {updating ? (
+            {showSpinner ? (
               <LoadingBody />
             ) : (
               <div className="mb-12 grid grid-cols-3 gap-1 overflow-hidden p-1 z-0">
-                {data.results.map((print, idx) => (
-                  <div key={idx}>
-                    <PrintCard print={print} />
+                {hasResults ? (
+                  data.results.map((print) => (
+                    <div key={print.id}>
+                      <PrintCard print={print} />
+                    </div>
+                  ))
+                ) : (
+                  <div className="col-span-3 flex items-center justify-center py-12 text-sm text-neutral-400">
+                    Nu există rezultate pentru această pagină.
                   </div>
-                ))}
+                )}
               </div>
             )}
             <Pagination />

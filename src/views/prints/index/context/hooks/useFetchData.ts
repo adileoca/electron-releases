@@ -3,14 +3,20 @@ import { useDatabase } from "@/lib/supabase/context";
 import { ContextData, ContextState } from "../types";
 import { ContextActions } from "../reducer";
 import { Supabase } from "@/lib/supabase/database";
-import {
-  sharedQueryCache,
-  createCacheKey,
-} from "@/lib/cache/QueryCache";
+import { sharedQueryCache, createCacheKey } from "@/lib/cache/QueryCache";
 import { logDebug, logError } from "@/lib/logging";
+import { readPrintsCacheEntry, writePrintsCacheEntry } from "../storage";
+
+const LIVE_MODE_REFRESH_MS = 20_000;
 
 export const useData = (
-  { filters, pagination, shouldRefresh, updating }: ContextState,
+  {
+    filters,
+    pagination,
+    shouldRefresh,
+    updating,
+    liveModeEnabled,
+  }: ContextState,
   { setUpdating, setShouldRefresh }: ContextActions
 ): ContextData => {
   const { supabase } = useDatabase();
@@ -18,6 +24,30 @@ export const useData = (
   const pendingRealtimeRefresh = useRef(false);
   const updatingRef = useRef(updating);
   const shouldRefreshRef = useRef(shouldRefresh);
+  const liveModeIntervalRef = useRef<number | null>(null);
+  const setUpdatingActionRef = useRef(setUpdating);
+  const setShouldRefreshActionRef = useRef(setShouldRefresh);
+  const lastHydratedKeyRef = useRef<string | null>(null);
+  const dataKeyRef = useRef<string | null>(null);
+  const dataRef = useRef<ContextData>(null);
+  const latestKeyRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    updatingRef.current = updating;
+  }, [updating]);
+
+  useEffect(() => {
+    shouldRefreshRef.current = shouldRefresh;
+  }, [shouldRefresh]);
+
+  useEffect(() => {
+    setUpdatingActionRef.current = setUpdating;
+  }, [setUpdating]);
+
+  useEffect(() => {
+    setShouldRefreshActionRef.current = setShouldRefresh;
+  }, [setShouldRefresh]);
+
   const cacheKey = useMemo(
     () =>
       createCacheKey("prints", {
@@ -26,24 +56,28 @@ export const useData = (
       }),
     [filters, pagination]
   );
+  latestKeyRef.current = cacheKey;
 
-  const setUpdatingSafe = useCallback(
-    (value: boolean) => {
-      if (updatingRef.current === value) return;
-      updatingRef.current = value;
-      setUpdating(value);
-    },
-    [setUpdating]
-  );
+  const applyData = useCallback((key: string, nextData: ContextData) => {
+    const sameKey = dataKeyRef.current === key;
+    const sameData = dataRef.current === nextData;
+    if (sameKey && sameData) return;
+    dataKeyRef.current = key;
+    dataRef.current = nextData;
+    setData(nextData);
+  }, []);
 
-  const setShouldRefreshSafe = useCallback(
-    (value: boolean) => {
-      if (shouldRefreshRef.current === value) return;
-      shouldRefreshRef.current = value;
-      setShouldRefresh(value);
-    },
-    [setShouldRefresh]
-  );
+  const setUpdatingSafe = useCallback((value: boolean) => {
+    if (updatingRef.current === value) return;
+    updatingRef.current = value;
+    setUpdatingActionRef.current(value);
+  }, []);
+
+  const setShouldRefreshSafe = useCallback((value: boolean) => {
+    if (shouldRefreshRef.current === value) return;
+    shouldRefreshRef.current = value;
+    setShouldRefreshActionRef.current(value);
+  }, []);
 
   const handleRealtimeEvent = useCallback(() => {
     sharedQueryCache.invalidatePrefix("prints:");
@@ -60,29 +94,50 @@ export const useData = (
   }, [cacheKey, setShouldRefreshSafe]);
 
   useEffect(() => {
-    updatingRef.current = updating;
-  }, [updating]);
+    if (lastHydratedKeyRef.current === cacheKey) return;
+    lastHydratedKeyRef.current = cacheKey;
 
-  useEffect(() => {
-    shouldRefreshRef.current = shouldRefresh;
-  }, [shouldRefresh]);
+    let cancelled = false;
 
-  //todo: set up subscriptions
+    void (async () => {
+      const entry = await readPrintsCacheEntry(cacheKey);
+      if (cancelled) return;
+      if (!entry || !entry.data) return;
+
+      sharedQueryCache.set(cacheKey, entry.data);
+      applyData(cacheKey, entry.data);
+      setShouldRefreshSafe(true);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [applyData, cacheKey, setShouldRefreshSafe]);
 
   useEffect(() => {
     let isMounted = true;
+    const requestKey = cacheKey;
     const cached = sharedQueryCache.get<ContextData>(cacheKey);
+
     if (cached) {
-      if (data !== cached.data) {
-        setData(cached.data);
-        logDebug("prints-cache-hit", { key: cacheKey, stale: cached.stale });
-      }
+      applyData(cacheKey, cached.data);
+      logDebug("prints-cache-hit", { key: cacheKey, stale: cached.stale });
       if (!cached.stale) {
         setUpdatingSafe(false);
       }
     } else {
       logDebug("prints-cache-miss", { key: cacheKey });
       setUpdatingSafe(true);
+      const previousData = dataRef.current;
+      if (previousData) {
+        if (dataKeyRef.current && dataKeyRef.current !== cacheKey) {
+          applyData(cacheKey, { ...previousData, results: [] });
+        } else {
+          applyData(cacheKey, previousData);
+        }
+      } else {
+        applyData(cacheKey, null);
+      }
     }
 
     if (!cached || cached.stale) {
@@ -96,12 +151,23 @@ export const useData = (
         .fetch(cacheKey, () => fetchData(supabase, { filters, pagination }))
         .then((result) => {
           if (!isMounted) return;
-          setData(result);
+          void writePrintsCacheEntry(requestKey, result);
+          if (latestKeyRef.current !== requestKey) {
+            logDebug("prints-fetch-stale", {
+              requestKey,
+              latestKey: latestKeyRef.current,
+            });
+            return;
+          }
+          applyData(requestKey, result);
           setUpdatingSafe(false);
-          logDebug("prints-fetch-success", { key: cacheKey });
+          logDebug("prints-fetch-success", { key: requestKey });
         })
         .catch((error) => {
-          logError("prints-fetch-error", { key: cacheKey, error });
+          if (latestKeyRef.current !== requestKey) {
+            return;
+          }
+          logError("prints-fetch-error", { key: requestKey, error });
           hadError = true;
           if (isMounted) {
             setUpdatingSafe(false);
@@ -109,6 +175,9 @@ export const useData = (
         })
         .finally(() => {
           if (!isMounted) return;
+          if (latestKeyRef.current !== requestKey) {
+            return;
+          }
           if (pendingRealtimeRefresh.current) {
             if (hadError) {
               pendingRealtimeRefresh.current = false;
@@ -123,7 +192,15 @@ export const useData = (
     return () => {
       isMounted = false;
     };
-  }, [cacheKey, data, filters, pagination, setShouldRefreshSafe, setUpdatingSafe, supabase]);
+  }, [
+    applyData,
+    cacheKey,
+    filters,
+    pagination,
+    setShouldRefreshSafe,
+    setUpdatingSafe,
+    supabase,
+  ]);
 
   useEffect(() => {
     if (!shouldRefresh) return;
@@ -131,22 +208,37 @@ export const useData = (
     setUpdatingSafe(true);
     sharedQueryCache.invalidate(cacheKey);
     let hadError = false;
+    const requestKey = cacheKey;
     logDebug("prints-refresh-start", { key: cacheKey });
     sharedQueryCache
       .fetch(cacheKey, () => fetchData(supabase, { filters, pagination }))
       .then((result) => {
-        setData(result);
+        void writePrintsCacheEntry(requestKey, result);
+        if (latestKeyRef.current !== requestKey) {
+          logDebug("prints-refresh-stale", {
+            requestKey,
+            latestKey: latestKeyRef.current,
+          });
+          return;
+        }
+        applyData(requestKey, result);
         setUpdatingSafe(false);
         setShouldRefreshSafe(false);
-        logDebug("prints-refresh-success", { key: cacheKey });
+        logDebug("prints-refresh-success", { key: requestKey });
       })
       .catch((error) => {
-        logError("prints-refresh-error", { key: cacheKey, error });
+        if (latestKeyRef.current !== requestKey) {
+          return;
+        }
+        logError("prints-refresh-error", { key: requestKey, error });
         hadError = true;
         setUpdatingSafe(false);
         setShouldRefreshSafe(false);
       })
       .finally(() => {
+        if (latestKeyRef.current !== requestKey) {
+          return;
+        }
         if (pendingRealtimeRefresh.current) {
           if (!hadError) {
             pendingRealtimeRefresh.current = false;
@@ -156,7 +248,48 @@ export const useData = (
           }
         }
       });
-  }, [cacheKey, filters, pagination, setShouldRefreshSafe, setUpdatingSafe, shouldRefresh, supabase]);
+  }, [
+    applyData,
+    cacheKey,
+    filters,
+    pagination,
+    setShouldRefreshSafe,
+    setUpdatingSafe,
+    shouldRefresh,
+    supabase,
+  ]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    if (!liveModeEnabled) {
+      if (liveModeIntervalRef.current) {
+        window.clearInterval(liveModeIntervalRef.current);
+        liveModeIntervalRef.current = null;
+        logDebug("prints-live-stop", { key: cacheKey });
+      }
+      return;
+    }
+
+    if (liveModeIntervalRef.current) {
+      window.clearInterval(liveModeIntervalRef.current);
+    }
+
+    logDebug("prints-live-start", { key: cacheKey });
+    setShouldRefreshSafe(true);
+    liveModeIntervalRef.current = window.setInterval(() => {
+      logDebug("prints-live-tick", { key: cacheKey });
+      setShouldRefreshSafe(true);
+    }, LIVE_MODE_REFRESH_MS);
+
+    return () => {
+      if (liveModeIntervalRef.current) {
+        window.clearInterval(liveModeIntervalRef.current);
+        liveModeIntervalRef.current = null;
+        logDebug("prints-live-stop", { key: cacheKey });
+      }
+    };
+  }, [cacheKey, liveModeEnabled, setShouldRefreshSafe]);
 
   useEffect(() => {
     const channel = supabase
@@ -185,76 +318,6 @@ export const useData = (
 
   return data;
 };
-
-// export const fetchData = async (
-//   supabase: Supabase,
-//   {
-//     filters,
-//     pagination,
-//   }: {
-//     filters: ContextState["filters"];
-//     pagination: ContextState["pagination"];
-//   }
-// ) => {
-//   const query = supabase.from("orders").select(
-//     `*,
-//     totals:order_totals(*),
-//     status:order_statuses!inner(*, name),
-//     payment:order_payments(*),
-//     billing_address: addresses!orders_billing_address_id_fkey(*),
-//     shipping_address: addresses!orders_shipping_address_id_fkey(*)`,
-//     { count: "exact" }
-//   );
-//   query.order("created_at", { ascending: false });
-//   // query.eq("order_statuses.name", "feedback");
-
-//   console.log("filters", filters);
-//   Object.values(filters)
-//     .filter(({ enabled }) => enabled)
-//     .forEach((filter) => {
-//       const value = filter.value.replace("#", "");
-//       if (filter.type === "equals") {
-//         query.eq(filter.dataKey, value);
-//       } else if (filter.type === "includes") {
-//         query.ilike(filter.dataKey, `%${value}%`);
-//       } else if (filter.type === "not_equals") {
-//         query.neq(filter.dataKey, value);
-//       }
-//     });
-
-//   if (pagination) {
-//     query.range(
-//       (pagination.currentPage - 1) * pagination.resultsPerPage,
-//       pagination.currentPage * pagination.resultsPerPage - 1
-//     );
-//   }
-
-//   const { data, error, count } = await query;
-
-//   if (error) {
-//     console.error("Error getting orders summaries:", error);
-//     throw new Error(error?.message || "Unknown error occurred");
-//   }
-
-//   return { results: data, count };
-// };
-
-// export const useFetchPrints = () => {
-//   const { supabase } = useDatabase();
-//   const [prints, setPrints] = useState();
-
-//   const fetchPrints = async () => {
-//     const data = await fetchData(supabase);
-//     setPrints(data);
-//   };
-
-//   //todo: set up subscriptions
-//   useEffect(() => {
-//     fetchPrints();
-//   }, []);
-
-//   return prints;
-// };
 
 export const fetchData = async (
   supabase: Supabase,
@@ -287,7 +350,6 @@ export const fetchData = async (
 
   logDebug("prints-db-fetch", { filters, pagination });
 
-  // Apply active filters (mirrors orders view behavior)
   Object.values(filters)
     .filter(({ enabled }) => enabled)
     .forEach((filter) => {
@@ -301,19 +363,18 @@ export const fetchData = async (
       }
     });
 
-  // Pagination (offset/limit via range)
   if (pagination) {
     const from = (pagination.currentPage - 1) * pagination.resultsPerPage;
     const to = pagination.currentPage * pagination.resultsPerPage - 1;
     query.range(from, to);
   }
 
-  const { data, error, count } = await query;
+  const { data: results, error, count } = await query;
 
-  if (error || !data) {
+  if (error || !results) {
     logError("prints-db-error", error);
     throw new Error(error?.message || "Unknown error occurred");
   }
 
-  return { results: data, count };
+  return { results, count };
 };

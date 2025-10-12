@@ -291,5 +291,5 @@ export const initialState: ContextState = {
   selectedOrderIds: [],
   loading: true,
   updating: false,
-  liveModeEnabled: false,
+  liveModeEnabled: true,
 };

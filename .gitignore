@@ -42,3 +42,6 @@ vars.js
 next-env.d.ts
 .env
 .vscode
+
+# logs
+logs/

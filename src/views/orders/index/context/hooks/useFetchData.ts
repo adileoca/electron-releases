@@ -95,12 +95,22 @@ export const useData = (
   useEffect(() => {
     if (lastHydratedKeyRef.current === cacheKey) return;
     lastHydratedKeyRef.current = cacheKey;
-    const entry = readOrdersCacheEntry(cacheKey);
-    if (!entry || !entry.data) return;
 
-    sharedQueryCache.set(cacheKey, entry.data);
-    applyData(cacheKey, entry.data);
-    setShouldRefreshSafe(true);
+    let cancelled = false;
+
+    void (async () => {
+      const entry = await readOrdersCacheEntry(cacheKey);
+      if (cancelled) return;
+      if (!entry || !entry.data) return;
+
+      sharedQueryCache.set(cacheKey, entry.data);
+      applyData(cacheKey, entry.data);
+      setShouldRefreshSafe(true);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [applyData, cacheKey, setShouldRefreshSafe]);
 
   useEffect(() => {
@@ -119,7 +129,11 @@ export const useData = (
       setUpdatingSafe(true);
       const previousData = dataRef.current;
       if (previousData) {
-        applyData(cacheKey, { ...previousData, results: [] });
+        if (dataKeyRef.current && dataKeyRef.current !== cacheKey) {
+          applyData(cacheKey, { ...previousData, results: [] });
+        } else {
+          applyData(cacheKey, previousData);
+        }
       } else {
         applyData(cacheKey, null);
       }
@@ -136,7 +150,7 @@ export const useData = (
         .fetch(cacheKey, () => fetchData(supabase, { filters, pagination }))
         .then((result) => {
           if (!isMounted) return;
-          writeOrdersCacheEntry(requestKey, result);
+          void writeOrdersCacheEntry(requestKey, result);
           if (latestKeyRef.current !== requestKey) {
             logDebug("orders-fetch-stale", {
               requestKey,
@@ -198,7 +212,7 @@ export const useData = (
     sharedQueryCache
       .fetch(cacheKey, () => fetchData(supabase, { filters, pagination }))
       .then((result) => {
-        writeOrdersCacheEntry(requestKey, result);
+        void writeOrdersCacheEntry(requestKey, result);
         if (latestKeyRef.current !== requestKey) {
           logDebug("orders-refresh-stale", {
             requestKey,

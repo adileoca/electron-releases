@@ -11,6 +11,13 @@ const DEFAULT_SIGNED_URL_TTL = 7 * 24 * 60 * 60; // 7 days
 const SIGNED_URL_REFRESH_BUFFER_MS = 60 * 1000; // refresh 1 minute before expiry
 const MISSING_CACHE_TTL = 12 * 60 * 60 * 1000; // 12 hours
 
+type ImageTransformOptions = {
+  width?: number;
+  height?: number;
+  resize?: "cover" | "contain" | "fill";
+  quality?: number;
+};
+
 export type MediaUrlResult = {
   url: string;
   isObjectUrl: boolean;
@@ -35,10 +42,11 @@ class MediaManager {
     options?: { as?: "blob" | "uint8Array" }
   ) {
     await this.ensureCacheIndex();
-    const cacheKey = media.id ?? `${media.bucket_name}:${media.path}`;
+    const cacheBaseKey = media.id ?? `${media.bucket_name}:${media.path}`;
+    const cacheKey = cacheBaseKey;
     const missingExpiresAt = this.missingCache.get(cacheKey);
     const isKnownMissing = !!missingExpiresAt && missingExpiresAt > Date.now();
-    const isIndexed = this.cachedFilenames?.has(cacheKey) ?? false;
+    const isIndexed = this.cachedFilenames?.has(cacheBaseKey) ?? false;
 
     let cacheResult: CacheFetchResult;
     if (!isKnownMissing && isIndexed) {
@@ -91,10 +99,15 @@ class MediaManager {
 
   async getUrl(
     media: { id: string; bucket_name: string; path: string },
-    options?: { expiresIn?: number }
+    options?: { expiresIn?: number; transform?: ImageTransformOptions }
   ): Promise<MediaUrlResult | null> {
     await this.ensureCacheIndex();
-    const cacheKey = media.id ?? `${media.bucket_name}:${media.path}`;
+    const transformKey = options?.transform
+      ? JSON.stringify(options.transform)
+      : "original";
+    const cacheBaseKey =
+      media.id ?? `${media.bucket_name}:${media.path}`;
+    const cacheKey = `${cacheBaseKey}:${transformKey}`;
     const cachedEntry = this.urlCache.get(cacheKey);
 
     if (cachedEntry) {
@@ -110,38 +123,36 @@ class MediaManager {
 
     const missingExpiresAt = this.missingCache.get(cacheKey);
     const isKnownMissing = !!missingExpiresAt && missingExpiresAt > Date.now();
-    const isIndexed = this.cachedFilenames?.has(cacheKey) ?? false;
+    const isIndexed = this.cachedFilenames?.has(cacheBaseKey) ?? false;
 
-    let cachedFile: Uint8Array | null = null;
     let cacheMissReason: "known-missing" | "not-found" | "error" | null = null;
 
-    if (!isKnownMissing && isIndexed) {
+    const canUseLocalCache = !options?.transform;
+    if (!isKnownMissing && isIndexed && canUseLocalCache) {
       const cacheResult = await getCachedFile(media.id!);
-      cachedFile = cacheResult.data;
-      if (!cachedFile) {
-        if (cacheResult.reason === "not-found") {
-          this.missingCache.set(cacheKey, Date.now() + MISSING_CACHE_TTL);
-          cacheMissReason = "not-found";
-        } else if (cacheResult.reason === "error") {
-          cacheMissReason = "error";
-        }
+      const cachedFile = cacheResult.data;
+      if (cachedFile) {
+        const blob = new Blob([cachedFile]);
+        return {
+          url: URL.createObjectURL(blob),
+          isObjectUrl: true,
+        };
       }
-    } else {
+      if (cacheResult.reason === "not-found") {
+        this.missingCache.set(cacheKey, Date.now() + MISSING_CACHE_TTL);
+        cacheMissReason = "not-found";
+      } else if (cacheResult.reason === "error") {
+        cacheMissReason = "error";
+      }
+    } else if (isKnownMissing) {
       cacheMissReason = "known-missing";
-    }
-
-    if (cachedFile) {
-      const blob = new Blob([cachedFile]);
-      return {
-        url: URL.createObjectURL(blob),
-        isObjectUrl: true,
-      };
     }
 
     const signedUrl = await this.db.get.media.signedUrl({
       bucketName: media.bucket_name!,
       path: media.path!,
       expiresIn: options?.expiresIn ?? DEFAULT_SIGNED_URL_TTL,
+      transform: options?.transform,
     });
 
     if (!signedUrl) {
@@ -159,7 +170,10 @@ class MediaManager {
     this.setUrlCache(cacheKey, result, expiresAt);
     this.missingCache.delete(cacheKey);
 
-    if (cacheMissReason && cacheMissReason !== "known-missing") {
+    if (
+      cacheMissReason &&
+      cacheMissReason !== "known-missing"
+    ) {
       logDebug("media-cache-miss", {
         cacheKey,
         reason: cacheMissReason,

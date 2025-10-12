@@ -4,14 +4,18 @@ import clsx from "clsx";
 import ShortToggle from "@/components/ui/ShortToggle";
 import { usePrintsDisplayContext } from "../context";
 import Input from "@/components/ui/Input";
-import { ArrowLeftIcon, ArrowRightIcon, ArrowPathIcon } from "@heroicons/react/20/solid";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  ArrowPathIcon,
+} from "@heroicons/react/20/solid";
 import PaginationPerPageMenu from "@/components/ui/PaginationPerPageMenu";
 
 const Pagination = () => {
   const {
     data,
-    state: { pagination, updating },
-    actions: { setPagination, setShouldRefresh },
+    state: { pagination, updating, liveModeEnabled },
+    actions: { setPagination, setShouldRefresh, setLiveModeEnabled },
   } = usePrintsDisplayContext();
 
   const totalPages = useMemo(() => {
@@ -30,7 +34,7 @@ const Pagination = () => {
       style={{ width: "calc(100% - 200px)" }}
       className="fixed bottom-2 right-2 z-[100] px-px py-px"
     >
-      <div className="flex h-12 items-center justify-between overflow-visible rounded-b-[7px] border-t border-neutral-700 bg-neutral-900/90 px-3 py-2 backdrop-blur-xl">
+      <div className="flex h-12 items-center justify-between overflow-visible rounded-b-[11px] border-t border-neutral-700 bg-neutral-900/90 px-3 py-2 backdrop-blur-xl">
         <div className="flex items-center space-x-5">
           <button
             onClick={() => {
@@ -96,7 +100,10 @@ const Pagination = () => {
         </div>
 
         <div className="flex items-center space-x-5">
-          <ShortToggle />
+          <ShortToggle
+            checked={liveModeEnabled}
+            onChange={(value) => setLiveModeEnabled(value)}
+          />
           <button
             onClick={() => setShouldRefresh(true)}
             disabled={updating}

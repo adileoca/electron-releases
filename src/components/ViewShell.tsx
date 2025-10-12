@@ -26,6 +26,7 @@ const ViewShell: React.FC<{
           " fixed bottom-2 right-2 top-12 overflow-hidden rounded-xl",
           platform === "darwin" &&
             "border border-x-white/20 border-b-white/20 border-t-white/30",
+          // "",
           platform === "win32" && "border border-white/10"
         )}
       >

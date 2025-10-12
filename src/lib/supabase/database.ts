@@ -704,10 +704,20 @@ class QueryManager {
       bucketName: string;
       path: string;
       expiresIn: number;
+      transform?: {
+        width?: number;
+        height?: number;
+        resize?: "cover" | "contain" | "fill";
+        quality?: number;
+      };
     }) => {
+      const options =
+        args.transform && Object.keys(args.transform).length > 0
+          ? { transform: args.transform }
+          : undefined;
       const { data, error } = await this.supabase.storage
         .from(args.bucketName)
-        .createSignedUrl(args.path, args.expiresIn);
+        .createSignedUrl(args.path, args.expiresIn, options);
 
       if (data) {
         return data.signedUrl;

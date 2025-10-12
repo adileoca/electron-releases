@@ -1,22 +1,22 @@
 import { logDebug, logWarn } from "@/lib/logging";
 import { ContextData } from "./types";
 
-const DB_NAME = "adipan-cache";
+const DB_NAME = "adipan-cache-prints";
 const DB_VERSION = 1;
-const STORE_NAME = "orders-cache";
+const STORE_NAME = "prints-cache";
 const STORE_INDEX_TIMESTAMP = "timestamp";
 const INDEXED_DB_MAX_ENTRIES = 200;
 
-const STORAGE_KEY_FALLBACK = "orders:list-cache";
+const STORAGE_KEY_FALLBACK = "prints:list-cache";
 const FALLBACK_MAX_ENTRIES = 20;
 
-type StoredOrdersCacheEntry = {
+type StoredPrintsCacheEntry = {
   key: string;
   data: ContextData;
   timestamp: number;
 };
 
-type StoredOrdersCache = Record<string, StoredOrdersCacheEntry>;
+type StoredPrintsCache = Record<string, StoredPrintsCacheEntry>;
 
 let cachedDb: IDBDatabase | null = null;
 let dbInitPromise: Promise<IDBDatabase | null> | null = null;
@@ -68,15 +68,15 @@ const getIndexedDb = (): Promise<IDBDatabase | null> => {
       };
 
       request.onerror = () => {
-        logWarn("orders-storage-open-error", { error: request.error });
+        logWarn("prints-storage-open-error", { error: request.error });
         resolve(null);
       };
 
       request.onblocked = () => {
-        logWarn("orders-storage-open-blocked");
+        logWarn("prints-storage-open-blocked");
       };
     } catch (error) {
-      logWarn("orders-storage-init-error", { error });
+      logWarn("prints-storage-init-error", { error });
       resolve(null);
     }
   });
@@ -88,15 +88,15 @@ const readFromIndexedDb = async (key: string) => {
   const db = await getIndexedDb();
   if (!db) return undefined;
 
-  return new Promise<StoredOrdersCacheEntry | undefined>((resolve) => {
+  return new Promise<StoredPrintsCacheEntry | undefined>((resolve) => {
     try {
       const transaction = db.transaction(STORE_NAME, "readonly");
       const store = transaction.objectStore(STORE_NAME);
       const request = store.get(key);
       request.onsuccess = () => {
-        const entry = request.result as StoredOrdersCacheEntry | undefined;
+        const entry = request.result as StoredPrintsCacheEntry | undefined;
         if (entry && entry.data) {
-          logDebug("orders-local-cache-hit", {
+          logDebug("prints-local-cache-hit", {
             key,
             ageMs: Date.now() - entry.timestamp,
           });
@@ -104,11 +104,11 @@ const readFromIndexedDb = async (key: string) => {
         resolve(entry);
       };
       request.onerror = () => {
-        logWarn("orders-storage-read-error", { key, error: request.error });
+        logWarn("prints-storage-read-error", { key, error: request.error });
         resolve(undefined);
       };
     } catch (error) {
-      logWarn("orders-storage-read-error", { key, error });
+      logWarn("prints-storage-read-error", { key, error });
       resolve(undefined);
     }
   });
@@ -152,29 +152,29 @@ const deleteOldestIndexedDbEntries = async (
       };
 
       cursorRequest.onerror = () => {
-        logWarn("orders-storage-trim-cursor-error", {
+        logWarn("prints-storage-trim-cursor-error", {
           error: cursorRequest.error,
         });
       };
 
       transaction.oncomplete = () => {
         if (removed > 0) {
-          logDebug("orders-local-cache-trim", { removed });
+          logDebug("prints-local-cache-trim", { removed });
         }
         resolve();
       };
       transaction.onerror = () => {
-        logWarn("orders-storage-trim-tx-error", { error: transaction.error });
+        logWarn("prints-storage-trim-tx-error", { error: transaction.error });
         resolve();
       };
     } catch (error) {
-      logWarn("orders-storage-trim-error", { error });
+      logWarn("prints-storage-trim-error", { error });
       resolve();
     }
   });
 };
 
-const writeToIndexedDb = async (entry: StoredOrdersCacheEntry) => {
+const writeToIndexedDb = async (entry: StoredPrintsCacheEntry) => {
   const db = await getIndexedDb();
   if (!db) return;
 
@@ -185,25 +185,25 @@ const writeToIndexedDb = async (entry: StoredOrdersCacheEntry) => {
       const request = store.put(entry);
 
       request.onerror = () => {
-        logWarn("orders-storage-write-error", {
+        logWarn("prints-storage-write-error", {
           key: entry.key,
           error: request.error,
         });
       };
 
       transaction.oncomplete = () => {
-        logDebug("orders-local-cache-write", { key: entry.key });
+        logDebug("prints-local-cache-write", { key: entry.key });
         resolve();
       };
       transaction.onerror = () => {
-        logWarn("orders-storage-transaction-error", {
+        logWarn("prints-storage-transaction-error", {
           key: entry.key,
           error: transaction.error,
         });
         resolve();
       };
     } catch (error) {
-      logWarn("orders-storage-write-error", { key: entry.key, error });
+      logWarn("prints-storage-write-error", { key: entry.key, error });
       resolve();
     }
   });
@@ -215,7 +215,7 @@ const writeToIndexedDb = async (entry: StoredOrdersCacheEntry) => {
       await deleteOldestIndexedDbEntries(db, excessEntries);
     }
   } catch (error) {
-    logWarn("orders-storage-trim-error", { error });
+    logWarn("prints-storage-trim-error", { error });
   }
 };
 
@@ -224,35 +224,35 @@ const getStorage = (): Storage | null => {
   try {
     return window.localStorage;
   } catch (error) {
-    logWarn("orders-storage-unavailable", { error });
+    logWarn("prints-storage-unavailable", { error });
     return null;
   }
 };
 
-const readCacheFallback = (): StoredOrdersCache => {
+const readCacheFallback = (): StoredPrintsCache => {
   const storage = getStorage();
   if (!storage) return {};
 
   try {
     const raw = storage.getItem(STORAGE_KEY_FALLBACK);
     if (!raw) return {};
-    const parsed = JSON.parse(raw) as StoredOrdersCache;
+    const parsed = JSON.parse(raw) as StoredPrintsCache;
     if (!parsed || typeof parsed !== "object") return {};
     return parsed;
   } catch (error) {
-    logWarn("orders-storage-parse-error", { error });
+    logWarn("prints-storage-parse-error", { error });
     return {};
   }
 };
 
-const writeCacheFallback = (cache: StoredOrdersCache) => {
+const writeCacheFallback = (cache: StoredPrintsCache) => {
   const storage = getStorage();
   if (!storage) return;
 
   try {
     storage.setItem(STORAGE_KEY_FALLBACK, JSON.stringify(cache));
   } catch (error) {
-    logWarn("orders-storage-write-error", { error });
+    logWarn("prints-storage-write-error", { error });
   }
 };
 
@@ -261,14 +261,14 @@ const readFromFallback = (key: string) => {
   const entry = cache[key];
   if (!entry) return undefined;
 
-  logDebug("orders-local-cache-hit", {
+  logDebug("prints-local-cache-hit", {
     key,
     ageMs: Date.now() - entry.timestamp,
   });
   return entry;
 };
 
-const writeToFallback = (entry: StoredOrdersCacheEntry) => {
+const writeToFallback = (entry: StoredPrintsCacheEntry) => {
   const cache = readCacheFallback();
   cache[entry.key] = entry;
 
@@ -276,16 +276,16 @@ const writeToFallback = (entry: StoredOrdersCacheEntry) => {
     (a, b) => b[1].timestamp - a[1].timestamp
   );
   const trimmed = entries.slice(0, FALLBACK_MAX_ENTRIES);
-  const nextCache: StoredOrdersCache = {};
+  const nextCache: StoredPrintsCache = {};
   trimmed.forEach(([entryKey, value]) => {
     nextCache[entryKey] = value;
   });
 
   writeCacheFallback(nextCache);
-  logDebug("orders-local-cache-write", { key: entry.key });
+  logDebug("prints-local-cache-write", { key: entry.key });
 };
 
-export const readOrdersCacheEntry = async (key: string) => {
+export const readPrintsCacheEntry = async (key: string) => {
   const entry = await readFromIndexedDb(key);
   if (entry) return entry;
 
@@ -296,10 +296,13 @@ export const readOrdersCacheEntry = async (key: string) => {
   return fallbackEntry;
 };
 
-export const writeOrdersCacheEntry = async (key: string, data: ContextData) => {
+export const writePrintsCacheEntry = async (
+  key: string,
+  data: ContextData
+) => {
   if (!data) return;
 
-  const entry: StoredOrdersCacheEntry = {
+  const entry: StoredPrintsCacheEntry = {
     key,
     data,
     timestamp: Date.now(),
