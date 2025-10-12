@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { ContextActions, ordersTableColumns } from "../reducer";
+import { ContextActions } from "../reducer";
 import { ContextData, ContextState } from "../types";
 
 import CheckboxInput from "@/components/ui/CheckboxInput";
@@ -11,11 +11,12 @@ export const useParseCols = (
 ) => {
   useEffect(() => {
     if (!data) return;
+    if (!state.cols) return;
 
     const cols: ContextState["cols"] = {
-      ...ordersTableColumns,
+      ...state.cols,
       checkbox: {
-        ...ordersTableColumns.checkbox,
+        ...state.cols.checkbox,
         Component: (
           <CheckboxInput
             checked={
@@ -35,5 +36,5 @@ export const useParseCols = (
     };
 
     actions.setCols(cols);
-  }, [data, state.selectedOrderIds]);
+  }, [data, state.rows.length, state.selectedOrderIds.length]);
 };

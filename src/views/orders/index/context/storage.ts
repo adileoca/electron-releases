@@ -2,10 +2,14 @@ import { logDebug, logWarn } from "@/lib/logging";
 import { ContextData } from "./types";
 
 const DB_NAME = "adipan-cache";
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const STORE_NAME = "orders-cache";
 const STORE_INDEX_TIMESTAMP = "timestamp";
 const INDEXED_DB_MAX_ENTRIES = 200;
+
+const STORE_NAME_COLUMN_WIDTHS = "orders-col-widths";
+const COLUMN_WIDTHS_KEY = "column-widths";
+const COLUMN_WIDTHS_FALLBACK_KEY = "orders:col-widths";
 
 const STORAGE_KEY_FALLBACK = "orders:list-cache";
 const FALLBACK_MAX_ENTRIES = 20;
@@ -17,6 +21,14 @@ type StoredOrdersCacheEntry = {
 };
 
 type StoredOrdersCache = Record<string, StoredOrdersCacheEntry>;
+
+type StoredColumnWidthsEntry = {
+  key: string;
+  widths: Record<string, number>;
+  timestamp: number;
+};
+
+type ColumnWidthsMap = Record<string, number>;
 
 let cachedDb: IDBDatabase | null = null;
 let dbInitPromise: Promise<IDBDatabase | null> | null = null;
@@ -46,6 +58,9 @@ const getIndexedDb = (): Promise<IDBDatabase | null> => {
         if (!db.objectStoreNames.contains(STORE_NAME)) {
           const store = db.createObjectStore(STORE_NAME, { keyPath: "key" });
           store.createIndex(STORE_INDEX_TIMESTAMP, STORE_INDEX_TIMESTAMP);
+        }
+        if (!db.objectStoreNames.contains(STORE_NAME_COLUMN_WIDTHS)) {
+          db.createObjectStore(STORE_NAME_COLUMN_WIDTHS, { keyPath: "key" });
         }
       };
 
@@ -312,4 +327,121 @@ export const writeOrdersCacheEntry = async (key: string, data: ContextData) => {
   }
 
   writeToFallback(entry);
+};
+
+const readColumnWidthsFromIndexedDb = async () => {
+  const db = await getIndexedDb();
+  if (!db) return undefined;
+
+  return new Promise<StoredColumnWidthsEntry | undefined>((resolve) => {
+    try {
+      const transaction = db.transaction(STORE_NAME_COLUMN_WIDTHS, "readonly");
+      const store = transaction.objectStore(STORE_NAME_COLUMN_WIDTHS);
+      const request = store.get(COLUMN_WIDTHS_KEY);
+      request.onsuccess = () => {
+        resolve(request.result as StoredColumnWidthsEntry | undefined);
+      };
+      request.onerror = () => {
+        logWarn("orders-col-widths-read-error", {
+          error: request.error,
+        });
+        resolve(undefined);
+      };
+    } catch (error) {
+      if ((error as DOMException).name === "NotFoundError") {
+        resolve(undefined);
+        return;
+      }
+      logWarn("orders-col-widths-read-error", { error });
+      resolve(undefined);
+    }
+  });
+};
+
+const writeColumnWidthsToIndexedDb = async (entry: StoredColumnWidthsEntry) => {
+  const db = await getIndexedDb();
+  if (!db) return;
+
+  await new Promise<void>((resolve) => {
+    try {
+      const transaction = db.transaction(STORE_NAME_COLUMN_WIDTHS, "readwrite");
+      const store = transaction.objectStore(STORE_NAME_COLUMN_WIDTHS);
+      const request = store.put(entry);
+      request.onerror = () => {
+        logWarn("orders-col-widths-write-error", {
+          error: request.error,
+        });
+      };
+      transaction.oncomplete = () => resolve();
+      transaction.onerror = () => {
+        logWarn("orders-col-widths-tx-error", { error: transaction.error });
+        resolve();
+      };
+    } catch (error) {
+      logWarn("orders-col-widths-write-error", { error });
+      resolve();
+    }
+  });
+};
+
+const readColumnWidthsFallback = (): ColumnWidthsMap => {
+  const storage = getStorage();
+  if (!storage) return {};
+
+  try {
+    const raw = storage.getItem(COLUMN_WIDTHS_FALLBACK_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw) as ColumnWidthsMap;
+    if (!parsed || typeof parsed !== "object") return {};
+    return parsed;
+  } catch (error) {
+    logWarn("orders-col-widths-parse-error", { error });
+    return {};
+  }
+};
+
+const writeColumnWidthsFallback = (widths: ColumnWidthsMap) => {
+  const storage = getStorage();
+  if (!storage) return;
+
+  try {
+    storage.setItem(COLUMN_WIDTHS_FALLBACK_KEY, JSON.stringify(widths));
+  } catch (error) {
+    logWarn("orders-col-widths-write-error", { error });
+  }
+};
+
+export const readOrdersColumnWidths = async (): Promise<ColumnWidthsMap | null> => {
+  const entry = await readColumnWidthsFromIndexedDb();
+  if (entry && entry.widths) {
+    return entry.widths;
+  }
+
+  const fallback = readColumnWidthsFallback();
+  if (Object.keys(fallback).length > 0) {
+    if (supportsIndexedDb()) {
+      void writeColumnWidthsToIndexedDb({
+        key: COLUMN_WIDTHS_KEY,
+        widths: fallback,
+        timestamp: Date.now(),
+      });
+    }
+    return fallback;
+  }
+
+  return null;
+};
+
+export const writeOrdersColumnWidths = async (widths: ColumnWidthsMap) => {
+  const db = await getIndexedDb();
+  const entry: StoredColumnWidthsEntry = {
+    key: COLUMN_WIDTHS_KEY,
+    widths,
+    timestamp: Date.now(),
+  };
+  if (db) {
+    await writeColumnWidthsToIndexedDb(entry);
+    return;
+  }
+  writeColumnWidthsFallback(widths);
 };

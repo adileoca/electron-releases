@@ -137,6 +137,10 @@ export type ContextReducer =
         id: string;
         filter: Partial<FilterType>;
       };
+    }
+  | {
+      type: "hydrateColumnWidths";
+      payload: Record<string, number>;
     };
 
 export type FilterConfig = {

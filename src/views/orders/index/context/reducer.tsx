@@ -100,6 +100,30 @@ export const reducer: React.Reducer<ContextState, ContextReducer> = (
       };
     }
 
+    case "hydrateColumnWidths": {
+      const nextCols = Object.entries(state.cols).reduce(
+        (acc, [key, col]) => {
+          const storedWidth = action.payload[key];
+          if (typeof storedWidth === "number" && storedWidth > 0) {
+            const minWidth = col.minConstraints?.[0] ?? 0;
+            acc[key as keyof ColPropsMap] = {
+              ...col,
+              width: Math.max(minWidth, storedWidth),
+            };
+          } else {
+            acc[key as keyof ColPropsMap] = col;
+          }
+          return acc;
+        },
+        {} as ColPropsMap
+      );
+
+      return {
+        ...state,
+        cols: nextCols,
+      };
+    }
+
     default:
       return state;
   }
@@ -122,7 +146,7 @@ export const createActions = (
         ...state.cols,
         [colId]: {
           ...state.cols[colId],
-          width,
+          width: Math.max(state.cols[colId].minConstraints?.[0] ?? 0, width),
         },
       },
     });

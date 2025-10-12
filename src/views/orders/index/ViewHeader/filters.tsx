@@ -64,6 +64,11 @@ const ViewHeaderFilters = () => {
     addDraftFilter(uuidv4(), Object.values(defaultFilter)[0]);
   }, [defaultFilter]);
 
+  const applyDraftFilters = useCallback(() => {
+    setFilters(draftFilters);
+    setPagination({ currentPage: 1 });
+  }, [draftFilters, setFilters, setPagination]);
+
   return (
     <Popover className="clickable relative">
       <PopoverButton
@@ -104,11 +109,14 @@ const ViewHeaderFilters = () => {
                   </h1>
                 </div>
               )}
-              {Object.keys(draftFilters).map((id) => {
-                return (
-                  <FilterBox filterConfigs={filterConfigs} filterId={id} />
-                );
-              })}
+              {Object.keys(draftFilters).map((id) => (
+                <FilterBox
+                  key={id}
+                  filterConfigs={filterConfigs}
+                  filterId={id}
+                  onApplyFilters={applyDraftFilters}
+                />
+              ))}
             </div>
             <div className="flex items-center justify-between border-t bg-white/5 border-neutral-600  py-2 px-3">
               <div className="flex items-center space-x-3 divide-x divide-white/10">
@@ -143,8 +151,7 @@ const ViewHeaderFilters = () => {
               <div className="flex items-center space-x-2">
                 <Button
                   onClick={() => {
-                    setFilters(draftFilters);
-                    setPagination({ currentPage: 1 });
+                    applyDraftFilters();
                     close();
                   }}
                   className="rounded-md shadow shadow-black/20"
@@ -165,7 +172,8 @@ export default ViewHeaderFilters;
 const FilterBox: React.FC<{
   filterConfigs: FilterConfig[];
   filterId: string;
-}> = ({ filterConfigs, filterId }) => {
+  onApplyFilters?: () => void;
+}> = ({ filterConfigs, filterId, onApplyFilters }) => {
   const {
     state: { draftFilters },
     actions: { mutateDraftFilter, removeDraftFilter },
@@ -246,6 +254,12 @@ const FilterBox: React.FC<{
           <Input
             value={value}
             onChange={(e) => setValue(e.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                onApplyFilters?.();
+              }
+            }}
             className="h-7 w-full rounded-l-none rounded-r-md dark:border-neutral-600 dark:bg-neutral-700"
           />
         </div>

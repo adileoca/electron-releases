@@ -18,6 +18,7 @@
 ## UI Patterns
 
 - Pagination components expect a loading flag (`state.updating`). Leave it `true` while a background refresh is running so the spinner is shown, but toggle with the safe setters to avoid flicker.
+- When multiple views share the same pagination affordances, build small composable pieces (`PaginationRoot`, `PaginationSection`, `PaginationButton`, etc.) inside `src/components/pagination`. Keep the default styling consistent (orders view sets the baseline) and expose props so individual screens can override width, spacing, or button treatments without copy/pasting layout code.
 
 ## Development Flow
 

@@ -10,6 +10,11 @@ import {
   ArrowPathIcon,
 } from "@heroicons/react/20/solid";
 import PaginationPerPageMenu from "@/components/ui/PaginationPerPageMenu";
+import {
+  PaginationRoot,
+  PaginationSection,
+  PaginationButton,
+} from "@/components/pagination";
 
 const Pagination = () => {
   const {
@@ -32,23 +37,18 @@ const Pagination = () => {
   }, [pagination.resultsPerPage]);
 
   return (
-    <div
-      style={{ width: "calc(100% - 200px)" }}
-      className="fixed bottom-2 right-2 px-px py-px"
-    >
-      <div className="flex h-12 items-center justify-between overflow-visible rounded-b-[11px] border-t border-neutral-700 bg-neutral-900/90 px-2.5 backdrop-blur-xl">
-        <div className="flex items-center space-x-5">
-          <button
-            onClick={() => {
-              if (pagination.currentPage > 1) {
-                setPagination({ currentPage: pagination.currentPage - 1 });
-              }
-            }}
-            disabled={pagination.currentPage <= 1}
-            className="rounded-lg border border-neutral-700 p-1 text-neutral-200 transition hover:border-neutral-500 hover:text-neutral-200 disabled:text-neutral-700 disabled:hover:cursor-not-allowed disabled:hover:border-neutral-700"
-          >
-            <ArrowLeftIcon className="size-5 " />
-          </button>
+    <PaginationRoot>
+      <PaginationSection>
+        <PaginationButton
+          onClick={() => {
+            if (pagination.currentPage > 1) {
+              setPagination({ currentPage: pagination.currentPage - 1 });
+            }
+          }}
+          disabled={pagination.currentPage <= 1}
+        >
+          <ArrowLeftIcon className="size-5 " />
+        </PaginationButton>
           <div className="flex items-center space-x-2">
             <span className="text-sm font-semibold text-neutral-200">
               Pagina
@@ -77,17 +77,16 @@ const Pagination = () => {
             </span>
           </div>
 
-          <button
+          <PaginationButton
             onClick={() => {
               if (pagination.currentPage < totalPages) {
                 setPagination({ currentPage: pagination.currentPage + 1 });
               }
             }}
             disabled={pagination.currentPage >= totalPages}
-            className="rounded-lg border border-neutral-700 p-1 text-neutral-200 transition hover:border-neutral-500 hover:text-neutral-200 disabled:text-neutral-700 disabled:hover:cursor-not-allowed disabled:hover:border-neutral-700"
           >
             <ArrowRightIcon className="size-5" />
-          </button>
+          </PaginationButton>
           <PaginationPerPageMenu
             value={pagination.resultsPerPage}
             options={perPageOptions}
@@ -100,28 +99,26 @@ const Pagination = () => {
           <span className="text-sm font-semibold text-neutral-200">
             {data?.count} rezultate
           </span>
-        </div>
-
-        <div className="flex items-center space-x-5">
-          <ShortToggle
-            checked={liveModeEnabled}
-            onChange={(value) => setLiveModeEnabled(value)}
+      </PaginationSection>
+      <PaginationSection>
+        <ShortToggle
+          checked={liveModeEnabled}
+          onChange={(value) => setLiveModeEnabled(value)}
+        />
+        <PaginationButton
+          variant="action"
+          onClick={() => setShouldRefresh(true)}
+          disabled={updating}
+        >
+          <ArrowPathIcon
+            className={clsx(updating ? "animate-spin" : "", "size-5")}
           />
-          <button
-            onClick={() => setShouldRefresh(true)}
-            disabled={updating}
-            className="flex w-[135px] items-center space-x-1.5 rounded-lg border border-neutral-700 p-1 pl-1.5 pr-3 text-neutral-200 transition hover:border-neutral-500 hover:text-neutral-200 disabled:hover:border-neutral-700"
-          >
-            <ArrowPathIcon
-              className={clsx(updating ? "animate-spin" : "", "size-5")}
-            />
-            <span className="flex-1 text-left text-sm font-semibold">
-              {updating ? "Actualizez..." : "Actualizeazǎ"}
-            </span>
-          </button>
-        </div>
-      </div>
-    </div>
+          <span className="flex-1 text-left text-sm font-semibold">
+            {updating ? "Actualizez..." : "Actualizeazǎ"}
+          </span>
+        </PaginationButton>
+      </PaginationSection>
+    </PaginationRoot>
   );
 };
 
