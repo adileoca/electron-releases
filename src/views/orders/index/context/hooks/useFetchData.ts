@@ -28,6 +28,7 @@ export const useData = (
   const setUpdatingActionRef = useRef(setUpdating);
   const setShouldRefreshActionRef = useRef(setShouldRefresh);
   const lastHydratedKeyRef = useRef<string | null>(null);
+  const hydratingKeyRef = useRef<string | null>(null);
   const dataKeyRef = useRef<string | null>(null);
   const dataRef = useRef<ContextData>(null);
   const latestKeyRef = useRef<string | null>(null);
@@ -66,6 +67,24 @@ export const useData = (
     setData(nextData);
   }, []);
 
+  const applyTransitionPlaceholder = useCallback(
+    (key: string) => {
+      const previousData = dataRef.current;
+      if (!previousData) {
+        applyData(key, null);
+        return;
+      }
+
+      if (dataKeyRef.current && dataKeyRef.current !== key) {
+        applyData(key, { ...previousData, results: [] });
+        return;
+      }
+
+      applyData(key, previousData);
+    },
+    [applyData]
+  );
+
   const setUpdatingSafe = useCallback((value: boolean) => {
     if (updatingRef.current === value) return;
     updatingRef.current = value;
@@ -93,25 +112,43 @@ export const useData = (
   // }, [cacheKey, setShouldRefreshSafe]);
 
   useEffect(() => {
-    if (lastHydratedKeyRef.current === cacheKey) return;
-    lastHydratedKeyRef.current = cacheKey;
+    if (lastHydratedKeyRef.current === cacheKey || hydratingKeyRef.current === cacheKey) {
+      return;
+    }
 
     let cancelled = false;
+    hydratingKeyRef.current = cacheKey;
 
     void (async () => {
-      const entry = await readOrdersCacheEntry(cacheKey);
-      if (cancelled) return;
-      if (!entry || !entry.data) return;
+      try {
+        const entry = await readOrdersCacheEntry(cacheKey);
+        if (cancelled) return;
 
-      sharedQueryCache.set(cacheKey, entry.data);
-      applyData(cacheKey, entry.data);
-      setShouldRefreshSafe(true);
+        if (entry && entry.data) {
+          sharedQueryCache.set(cacheKey, entry.data);
+          applyData(cacheKey, entry.data);
+          setShouldRefreshSafe(true);
+          return;
+        }
+
+        applyTransitionPlaceholder(cacheKey);
+      } finally {
+        if (!cancelled && hydratingKeyRef.current === cacheKey) {
+          hydratingKeyRef.current = null;
+        }
+        if (!cancelled) {
+          lastHydratedKeyRef.current = cacheKey;
+        }
+      }
     })();
 
     return () => {
       cancelled = true;
+      if (hydratingKeyRef.current === cacheKey) {
+        hydratingKeyRef.current = null;
+      }
     };
-  }, [applyData, cacheKey, setShouldRefreshSafe]);
+  }, [applyData, applyTransitionPlaceholder, cacheKey, setShouldRefreshSafe]);
 
   useEffect(() => {
     let isMounted = true;
@@ -127,16 +164,6 @@ export const useData = (
     } else {
       logDebug("orders-cache-miss", { key: cacheKey });
       setUpdatingSafe(true);
-      const previousData = dataRef.current;
-      if (previousData) {
-        if (dataKeyRef.current && dataKeyRef.current !== cacheKey) {
-          applyData(cacheKey, { ...previousData, results: [] });
-        } else {
-          applyData(cacheKey, previousData);
-        }
-      } else {
-        applyData(cacheKey, null);
-      }
     }
 
     if (!cached || cached.stale) {
