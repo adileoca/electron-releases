@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, type ReactNode } from "react";
 import clsx from "clsx";
 import { useOrdersTableContext } from "../context";
 import { ColProps } from "../context/types";
@@ -11,7 +11,7 @@ const TableBody = () => {
   return (
     <tbody>
       {rows.map((row, rowIdx) => {
-        let prevKey: string | undefined;
+        let stickyOffset = 0;
         return (
           <tr
             key={rowIdx}
@@ -25,18 +25,13 @@ const TableBody = () => {
               .sort(([a], [b]) => cols[a].position - cols[b].position)
               .map(([key, cell], cellIdx) => {
                 const col = cols[key] as ColProps;
+                const width = col.width;
 
-                let tdStyle: React.CSSProperties = {
-                  maxWidth: `${col.width}px`,
-                };
+                const stickyLeft = col.isSticky ? stickyOffset : undefined;
                 if (col.isSticky) {
-                  tdStyle = {
-                    ...tdStyle,
-                    left: prevKey ? `${cols[prevKey].width}px` : 0,
-                  };
+                  stickyOffset += col.width;
                 }
 
-                prevKey = key;
                 return (
                   <Fragment key={`${rowIdx}-${cellIdx}`}>
                     <TdWrapper
@@ -45,7 +40,10 @@ const TableBody = () => {
                         col.isSticky ? "is-sticky group sticky" : "",
                         " "
                       )}
-                      style={tdStyle}
+                      columnId={key}
+                      width={width}
+                      stickyLeft={stickyLeft}
+                      isSticky={col.isSticky}
                     >
                       {cell.Component ? (
                         cell.Component
@@ -63,12 +61,54 @@ const TableBody = () => {
   );
 };
 
-const TdWrapper = ({ children, className = "", style = {} }) => (
-  <td style={style} className={clsx("p-0", className)}>
-    <div className="duration-50 flex h-12 w-full items-center border-y border-r border-neutral-200 border-t-transparent bg-white px-4 text-neutral-600 transition group-hover:bg-blue-50 group-[.is-sticky]:bg-neutral-900 dark:border-neutral-700 dark:border-t-transparent dark:bg-neutral-900 dark:text-neutral-200 group-hover:dark:bg-neutral-800 ">
-      {children}
-    </div>
-  </td>
-);
+type TdWrapperProps = {
+  children: ReactNode;
+  className?: string;
+  columnId: string;
+  width: number;
+  stickyLeft?: number;
+  isSticky?: boolean;
+};
+
+const TdWrapper = ({
+  children,
+  className = "",
+  columnId,
+  width,
+  stickyLeft,
+  isSticky,
+}: TdWrapperProps) => {
+  const tdStyle: React.CSSProperties = isSticky
+    ? {
+        left: `${stickyLeft ?? 0}px`,
+        width: `${width}px`,
+        minWidth: `${width}px`,
+        maxWidth: `${width}px`,
+      }
+    : {
+        width: `${width}px`,
+        minWidth: `${width}px`,
+        maxWidth: `${width}px`,
+      };
+
+  return (
+    <td
+      data-column-id={columnId}
+      style={tdStyle}
+      className={clsx("p-0 box-border", className)}
+    >
+      <div
+        className="duration-50 flex h-12 w-full items-center border-y border-r border-neutral-200 border-t-transparent bg-white px-4 box-border text-neutral-600 transition group-hover:bg-blue-50 group-[.is-sticky]:bg-neutral-900 dark:border-neutral-700 dark:border-t-transparent dark:bg-neutral-900 dark:text-neutral-200 group-hover:dark:bg-neutral-800 "
+        style={{
+          width: `${width}px`,
+          minWidth: `${width}px`,
+          maxWidth: `${width}px`,
+        }}
+      >
+        {children}
+      </div>
+    </td>
+  );
+};
 
 export default TableBody;

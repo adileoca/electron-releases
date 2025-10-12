@@ -3,14 +3,38 @@
 import { useState } from "react";
 import { Switch, Label, Field } from "@headlessui/react";
 
-const ShortToggle = () => {
-  const [enabled, setEnabled] = useState(false);
+type ShortToggleProps = {
+  checked?: boolean;
+  defaultChecked?: boolean;
+  disabled?: boolean;
+  onChange?: (value: boolean) => void;
+  label?: string;
+};
+
+const ShortToggle: React.FC<ShortToggleProps> = ({
+  checked,
+  defaultChecked = false,
+  disabled,
+  onChange,
+  label = "Live mode",
+}) => {
+  const isControlled = checked !== undefined;
+  const [internalEnabled, setInternalEnabled] = useState(defaultChecked);
+  const enabled = isControlled ? !!checked : internalEnabled;
+
+  const handleChange = (value: boolean) => {
+    if (!isControlled) {
+      setInternalEnabled(value);
+    }
+    onChange?.(value);
+  };
 
   return (
     <Field className="flex items-center">
       <Switch
         checked={enabled}
-        onChange={setEnabled}
+        onChange={handleChange}
+        disabled={disabled}
         className="group relative inline-flex h-5 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full focus:outline-none "
       >
         <span className="sr-only">Use setting</span>
@@ -28,7 +52,7 @@ const ShortToggle = () => {
         />
       </Switch>
       <Label as="span" className="ml-2.5 text-sm">
-        <span className="font-semibold text-neutral-200">Live mode</span>{" "}
+        <span className="font-semibold text-neutral-200">{label}</span>{" "}
       </Label>
     </Field>
   );

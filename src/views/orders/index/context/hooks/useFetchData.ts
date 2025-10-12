@@ -3,14 +3,20 @@ import { useDatabase } from "@/lib/supabase/context";
 import { ContextData, ContextState } from "../types";
 import { ContextActions } from "../reducer";
 import { Supabase } from "@/lib/supabase/database";
-import {
-  sharedQueryCache,
-  createCacheKey,
-} from "@/lib/cache/QueryCache";
+import { sharedQueryCache, createCacheKey } from "@/lib/cache/QueryCache";
 import { logDebug, logError } from "@/lib/logging";
+import { readOrdersCacheEntry, writeOrdersCacheEntry } from "../storage";
+
+const LIVE_MODE_REFRESH_MS = 20_000;
 
 export const useData = (
-  { filters, pagination, shouldRefresh, updating }: ContextState,
+  {
+    filters,
+    pagination,
+    shouldRefresh,
+    updating,
+    liveModeEnabled,
+  }: ContextState,
   { setUpdating, setShouldRefresh }: ContextActions
 ): ContextData => {
   const { supabase } = useDatabase();
@@ -18,6 +24,13 @@ export const useData = (
   const pendingRealtimeRefresh = useRef(false);
   const updatingRef = useRef(updating);
   const shouldRefreshRef = useRef(shouldRefresh);
+  const liveModeIntervalRef = useRef<number | null>(null);
+  const setUpdatingActionRef = useRef(setUpdating);
+  const setShouldRefreshActionRef = useRef(setShouldRefresh);
+  const lastHydratedKeyRef = useRef<string | null>(null);
+  const dataKeyRef = useRef<string | null>(null);
+  const dataRef = useRef<ContextData>(null);
+  const latestKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
     updatingRef.current = updating;
@@ -26,6 +39,14 @@ export const useData = (
   useEffect(() => {
     shouldRefreshRef.current = shouldRefresh;
   }, [shouldRefresh]);
+
+  useEffect(() => {
+    setUpdatingActionRef.current = setUpdating;
+  }, [setUpdating]);
+
+  useEffect(() => {
+    setShouldRefreshActionRef.current = setShouldRefresh;
+  }, [setShouldRefresh]);
   const cacheKey = useMemo(
     () =>
       createCacheKey("orders", {
@@ -34,56 +55,69 @@ export const useData = (
       }),
     [filters, pagination]
   );
+  latestKeyRef.current = cacheKey;
 
-  const setUpdatingSafe = useCallback(
-    (value: boolean) => {
-      if (updatingRef.current === value) return;
-      updatingRef.current = value;
-      setUpdating(value);
-    },
-    [setUpdating]
-  );
+  const applyData = useCallback((key: string, nextData: ContextData) => {
+    const sameKey = dataKeyRef.current === key;
+    const sameData = dataRef.current === nextData;
+    if (sameKey && sameData) return;
+    dataKeyRef.current = key;
+    dataRef.current = nextData;
+    setData(nextData);
+  }, []);
 
-  const setShouldRefreshSafe = useCallback(
-    (value: boolean) => {
-      if (shouldRefreshRef.current === value) return;
-      shouldRefreshRef.current = value;
-      setShouldRefresh(value);
-    },
-    [setShouldRefresh]
-  );
+  const setUpdatingSafe = useCallback((value: boolean) => {
+    if (updatingRef.current === value) return;
+    updatingRef.current = value;
+    setUpdatingActionRef.current(value);
+  }, []);
 
-  const handleRealtimeEvent = useCallback(() => {
-    sharedQueryCache.invalidatePrefix("orders:");
-    if (updatingRef.current) {
-      pendingRealtimeRefresh.current = true;
-      logDebug("orders-realtime-queued", { key: cacheKey });
-      return;
-    }
-    if (shouldRefreshRef.current) {
-      return;
-    }
-    logDebug("orders-realtime-trigger", { key: cacheKey });
+  const setShouldRefreshSafe = useCallback((value: boolean) => {
+    if (shouldRefreshRef.current === value) return;
+    shouldRefreshRef.current = value;
+    setShouldRefreshActionRef.current(value);
+  }, []);
+
+  // const handleRealtimeEvent = useCallback(() => {
+  //   sharedQueryCache.invalidatePrefix("orders:");
+  //   if (updatingRef.current) {
+  //     pendingRealtimeRefresh.current = true;
+  //     logDebug("orders-realtime-queued", { key: cacheKey });
+  //     return;
+  //   }
+  //   if (shouldRefreshRef.current) {
+  //     return;
+  //   }
+  //   logDebug("orders-realtime-trigger", { key: cacheKey });
+  //   setShouldRefreshSafe(true);
+  // }, [cacheKey, setShouldRefreshSafe]);
+
+  useEffect(() => {
+    if (lastHydratedKeyRef.current === cacheKey) return;
+    lastHydratedKeyRef.current = cacheKey;
+    const entry = readOrdersCacheEntry(cacheKey);
+    if (!entry || !entry.data) return;
+
+    sharedQueryCache.set(cacheKey, entry.data);
+    applyData(cacheKey, entry.data);
     setShouldRefreshSafe(true);
-  }, [cacheKey, setShouldRefreshSafe]);
-
-  //todo: set up subscriptions
+  }, [applyData, cacheKey, setShouldRefreshSafe]);
 
   useEffect(() => {
     let isMounted = true;
+    const requestKey = cacheKey;
     const cached = sharedQueryCache.get<ContextData>(cacheKey);
 
     if (cached) {
-      if (data !== cached.data) {
-        setData(cached.data);
-        logDebug("orders-cache-hit", { key: cacheKey, stale: cached.stale });
-      }
+      applyData(cacheKey, cached.data);
+      logDebug("orders-cache-hit", { key: cacheKey, stale: cached.stale });
       if (!cached.stale) {
         setUpdatingSafe(false);
       }
     } else {
       logDebug("orders-cache-miss", { key: cacheKey });
       setUpdatingSafe(true);
+      applyData(cacheKey, null);
     }
 
     if (!cached || cached.stale) {
@@ -97,12 +131,23 @@ export const useData = (
         .fetch(cacheKey, () => fetchData(supabase, { filters, pagination }))
         .then((result) => {
           if (!isMounted) return;
-          setData(result);
+          writeOrdersCacheEntry(requestKey, result);
+          if (latestKeyRef.current !== requestKey) {
+            logDebug("orders-fetch-stale", {
+              requestKey,
+              latestKey: latestKeyRef.current,
+            });
+            return;
+          }
+          applyData(requestKey, result);
           setUpdatingSafe(false);
-          logDebug("orders-fetch-success", { key: cacheKey });
+          logDebug("orders-fetch-success", { key: requestKey });
         })
         .catch((error) => {
-          logError("orders-fetch-error", { key: cacheKey, error });
+          if (latestKeyRef.current !== requestKey) {
+            return;
+          }
+          logError("orders-fetch-error", { key: requestKey, error });
           hadError = true;
           if (isMounted) {
             setUpdatingSafe(false);
@@ -110,6 +155,9 @@ export const useData = (
         })
         .finally(() => {
           if (!isMounted) return;
+          if (latestKeyRef.current !== requestKey) {
+            return;
+          }
           if (pendingRealtimeRefresh.current) {
             if (hadError) {
               pendingRealtimeRefresh.current = false;
@@ -124,7 +172,15 @@ export const useData = (
     return () => {
       isMounted = false;
     };
-  }, [cacheKey, data, filters, pagination, setShouldRefreshSafe, setUpdatingSafe, supabase]);
+  }, [
+    applyData,
+    cacheKey,
+    filters,
+    pagination,
+    setShouldRefreshSafe,
+    setUpdatingSafe,
+    supabase,
+  ]);
 
   useEffect(() => {
     if (!shouldRefresh) return;
@@ -132,22 +188,37 @@ export const useData = (
     setUpdatingSafe(true);
     sharedQueryCache.invalidate(cacheKey);
     let hadError = false;
+    const requestKey = cacheKey;
     logDebug("orders-refresh-start", { key: cacheKey });
     sharedQueryCache
       .fetch(cacheKey, () => fetchData(supabase, { filters, pagination }))
       .then((result) => {
-        setData(result);
+        writeOrdersCacheEntry(requestKey, result);
+        if (latestKeyRef.current !== requestKey) {
+          logDebug("orders-refresh-stale", {
+            requestKey,
+            latestKey: latestKeyRef.current,
+          });
+          return;
+        }
+        applyData(requestKey, result);
         setUpdatingSafe(false);
         setShouldRefreshSafe(false);
-        logDebug("orders-refresh-success", { key: cacheKey });
+        logDebug("orders-refresh-success", { key: requestKey });
       })
       .catch((error) => {
-        logError("orders-refresh-error", { key: cacheKey, error });
+        if (latestKeyRef.current !== requestKey) {
+          return;
+        }
+        logError("orders-refresh-error", { key: requestKey, error });
         hadError = true;
         setUpdatingSafe(false);
         setShouldRefreshSafe(false);
       })
       .finally(() => {
+        if (latestKeyRef.current !== requestKey) {
+          return;
+        }
         if (pendingRealtimeRefresh.current) {
           if (!hadError) {
             pendingRealtimeRefresh.current = false;
@@ -157,32 +228,73 @@ export const useData = (
           }
         }
       });
-  }, [cacheKey, filters, pagination, setShouldRefreshSafe, setUpdatingSafe, shouldRefresh, supabase]);
+  }, [
+    applyData,
+    cacheKey,
+    filters,
+    pagination,
+    setShouldRefreshSafe,
+    setUpdatingSafe,
+    shouldRefresh,
+    supabase,
+  ]);
+
+  // useEffect(() => {
+  //   const channel = supabase
+  //     .channel("orders-list")
+  //     .on(
+  //       "postgres_changes",
+  //       { event: "*", schema: "public", table: "orders" },
+  //       handleRealtimeEvent
+  //     )
+  //     .on(
+  //       "postgres_changes",
+  //       { event: "*", schema: "public", table: "order_statuses" },
+  //       handleRealtimeEvent
+  //     )
+  //     .on(
+  //       "postgres_changes",
+  //       { event: "*", schema: "public", table: "order_totals" },
+  //       handleRealtimeEvent
+  //     )
+  //     .subscribe();
+
+  //   return () => {
+  //     supabase.removeChannel(channel);
+  //   };
+  // }, [handleRealtimeEvent, supabase]);
 
   useEffect(() => {
-    const channel = supabase
-      .channel("orders-list")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "orders" },
-        handleRealtimeEvent
-      )
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "order_statuses" },
-        handleRealtimeEvent
-      )
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "order_totals" },
-        handleRealtimeEvent
-      )
-      .subscribe();
+    if (typeof window === "undefined") return;
+
+    if (!liveModeEnabled) {
+      if (liveModeIntervalRef.current) {
+        window.clearInterval(liveModeIntervalRef.current);
+        liveModeIntervalRef.current = null;
+        logDebug("orders-live-stop", { key: cacheKey });
+      }
+      return;
+    }
+
+    if (liveModeIntervalRef.current) {
+      window.clearInterval(liveModeIntervalRef.current);
+    }
+
+    logDebug("orders-live-start", { key: cacheKey });
+    setShouldRefreshSafe(true);
+    liveModeIntervalRef.current = window.setInterval(() => {
+      logDebug("orders-live-tick", { key: cacheKey });
+      setShouldRefreshSafe(true);
+    }, LIVE_MODE_REFRESH_MS);
 
     return () => {
-      supabase.removeChannel(channel);
+      if (liveModeIntervalRef.current) {
+        window.clearInterval(liveModeIntervalRef.current);
+        liveModeIntervalRef.current = null;
+        logDebug("orders-live-stop", { key: cacheKey });
+      }
     };
-  }, [handleRealtimeEvent, supabase]);
+  }, [cacheKey, liveModeEnabled, setShouldRefreshSafe]);
 
   return data;
 };

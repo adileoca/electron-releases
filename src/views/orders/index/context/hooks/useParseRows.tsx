@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import { formatDate, CurrencyFormatter } from "@/lib/utils/format";
 import { ContextData, RowPropsMap, ContextState } from "../types";
@@ -13,17 +13,44 @@ export const useParseRows = (
   actions: ContextActions
 ) => {
   const navigate = useNavigate();
+  const setRowsRef = useRef(actions.setRows);
+  const setSelectedOrderIdsRef = useRef(actions.setSelectedOrderIds);
 
   useEffect(() => {
-    if (!data) return;
+    setRowsRef.current = actions.setRows;
+    setSelectedOrderIdsRef.current = actions.setSelectedOrderIds;
+  }, [actions.setRows, actions.setSelectedOrderIds]);
 
-    if (state.updating) {
-      actions.setRows([]);
+  const previousDataRef = useRef<ContextData>(null);
+  const previousSelectedRef = useRef<string[]>([]);
+
+  useEffect(() => {
+    if (previousDataRef.current === data && previousSelectedRef.current === state.selectedOrderIds) {
+      return;
+    }
+    previousDataRef.current = data;
+    previousSelectedRef.current = state.selectedOrderIds;
+
+    if (!data || !data.results?.length) {
+      if (state.rows.length > 0) {
+        setRowsRef.current([]);
+      }
       return;
     }
 
     const rows = data.results.reduce((acc, order) => {
       const currency = new CurrencyFormatter(order.totals?.currency!);
+      const addressParts = [
+        order.shipping_address?.line_1,
+        order.shipping_address?.line_2,
+        order.shipping_address?.state,
+        order.shipping_address?.country,
+      ].filter((part) => {
+        if (!part) return false;
+        const trimmed = String(part).trim();
+        return trimmed.length > 0 && trimmed.toLowerCase() !== "null";
+      });
+      const addressText = addressParts.join(", ");
 
       acc.push({
         checkbox: {
@@ -31,7 +58,7 @@ export const useParseRows = (
             <CheckboxInput
               checked={state.selectedOrderIds.includes(order.id)}
               onChange={(checked) =>
-                actions.setSelectedOrderIds(
+                setSelectedOrderIdsRef.current(
                   checked
                     ? [...state.selectedOrderIds, order.id]
                     : state.selectedOrderIds.filter((id) => id !== order.id)
@@ -60,15 +87,8 @@ export const useParseRows = (
           text: currency.format(order.totals?.amount_total!),
         },
         address: {
-          value: order.totals?.amount_total!,
-          text: ` ${order.shipping_address?.line_1},
-                  ${
-                    order.shipping_address?.line_2
-                      ? `${order.shipping_address?.line_2},`
-                      : ""
-                  }
-                  ${order.shipping_address?.state},
-                  ${order.shipping_address?.country}`,
+          value: addressText,
+          text: addressText,
         },
         status: {
           value: order.status!.name!,
@@ -87,8 +107,8 @@ export const useParseRows = (
       return acc;
     }, [] as RowPropsMap[]);
 
-    actions.setRows(rows);
-  }, [data, state.selectedOrderIds, state.updating]);
+    setRowsRef.current(rows);
+  }, [data, state.rows.length, state.selectedOrderIds]);
 };
 
 const getTime = (date: string) => {

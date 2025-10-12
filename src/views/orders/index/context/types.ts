@@ -79,6 +79,7 @@ export type ContextState = {
   loading: boolean;
   updating: boolean;
   shouldRefresh?: boolean;
+  liveModeEnabled: boolean;
   error?: string;
 };
 
@@ -113,6 +114,10 @@ export type ContextReducer =
     }
   | {
       type: "setShouldRefresh";
+      payload: boolean;
+    }
+  | {
+      type: "setLiveModeEnabled";
       payload: boolean;
     }
   | {

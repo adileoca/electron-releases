@@ -39,7 +39,7 @@ const PaginationPerPageMenu = ({
     <Menu as="div" className="relative inline-block text-left">
       <Menu.Button
         className={clsx(
-          "flex items-center space-x-1.5 rounded-md border border-neutral-700 px-3 py-1 text-sm font-semibold text-neutral-200 transition hover:border-neutral-500 hover:text-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60",
+          "flex items-center space-x-1.5 rounded-lg border border-neutral-700 px-3 py-1 text-sm font-semibold text-neutral-200 transition hover:border-neutral-500 hover:text-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60",
           buttonClassName
         )}
       >

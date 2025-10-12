@@ -65,6 +65,12 @@ export const reducer: React.Reducer<ContextState, ContextReducer> = (
         shouldRefresh: action.payload,
       };
     }
+    case "setLiveModeEnabled": {
+      return {
+        ...state,
+        liveModeEnabled: action.payload,
+      };
+    }
     case "addDraftFilter": {
       return {
         ...state,
@@ -163,6 +169,12 @@ export const createActions = (
       payload: shouldRefresh,
     });
   },
+  setLiveModeEnabled: (enabled: boolean) => {
+    dispatch({
+      type: "setLiveModeEnabled",
+      payload: enabled,
+    });
+  },
   addDraftFilter: (id: string, filter: ContextState["filters"][string]) => {
     dispatch({
       type: "addDraftFilter",
@@ -192,8 +204,8 @@ export const ordersTableColumns: ContextState["cols"] = {
   checkbox: {
     position: 0,
     minConstraints: [55, 48],
-    initialWidth: 55,
-    width: 55,
+    initialWidth: 52,
+    width: 52,
     isSticky: true,
     Component: <CheckboxInput checked={false} onChange={() => {}} />,
   },
@@ -279,4 +291,5 @@ export const initialState: ContextState = {
   selectedOrderIds: [],
   loading: true,
   updating: false,
+  liveModeEnabled: false,
 };
