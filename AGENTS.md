@@ -26,4 +26,10 @@
 2. Add debug logs around new data pipelines.
 3. Run `npm run lint` before handing off.
 
+## Photoshop Plugin Automation
+
+- Use `npm run plugin:update -- --bump <patch|minor|major>` to bump the Photoshop plugin, rebuild it, and refresh `assets/plugin/package_PS.ccx`. Works when the app and plugin folders share the same parent; pass `--plugin-dir` if the plugin lives elsewhere. Add `--dry-run` to inspect the changes without writing files.
+- Use `npm run build -- --update-plugin` (or the same flag with `npm run deploy`) to bump and rebuild the Photoshop plugin right before the desktop build. Append `--plugin-bump`, `--plugin-version`, `--plugin-dir`, or `--plugin-dry-run` to control the plugin update step, and `--dry-run` to preview the full release flow.
+- Add `--app-bump <patch|minor|major|prerelease>` (or `--app-version <x.y.z>`) when running `npm run build` / `npm run deploy` to bump the Electron app version before building. Combine with `--app-dry-run` or the top-level `--dry-run` to skip writing to `package.json`.
+
 Feel free to extend this doc with any new conventions introduced by future work.

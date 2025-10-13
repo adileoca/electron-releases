@@ -58,12 +58,13 @@
     "electron": "wait-on http://127.0.0.1:3005 --timeout=300000 && electron .",
     "codegen": "graphql-codegen && node ./src/types/generateFlatTypes.js",
     "start": "cross-env PORT=3005 craco start",
-    "build": "craco build && electron-builder build --mac --windows --publish never",
-    "deploy": "craco build && git remote set-url origin https://github.com/adileoca/electron-releases.git && electron-builder build --windows --mac --publish always && git remote set-url origin https://github.com/adileoca/ceramica-interface.git",
+    "build": "node scripts/runElectronBuild.js build",
+    "deploy": "node scripts/runElectronBuild.js deploy",
     "test": "craco test",
     "eject": "react-scripts eject",
     "dist": "electron-builder --publish=never",
     "lint": "eslint . --ext .ts,.tsx",
+    "plugin:update": "node scripts/updatePhotoshopPlugin.js",
     "db:types": "npx supabase gen types typescript --project-id vrdaoudvtphptybaljqq > src/lib/supabase/database.types.ts"
   },
   "dependencies": {
@@ -130,6 +131,7 @@
     "@types/node": "^20.12.10",
     "@types/react": "^18.2.79",
     "@types/react-resizable": "^3.0.8",
+    "archiver": "^7.0.1",
     "@typescript-eslint/eslint-plugin": "^5.0.0 || ^6.0.0 || ^7.0.0",
     "@typescript-eslint/parser": "^5.0.0 || ^6.0.0 || ^7.0.0",
     "concurrently": "^7.6.0",
@@ -142,6 +144,7 @@
     "eslint": "^8.0.0",
     "prettier": "^2.8.8",
     "prettier-plugin-tailwindcss": "^0.2.8",
+    "semver": "^7.6.3",
     "tailwindcss": ">=3.4.1 <4.0.0",
     "typescript": "^4.9.5",
     "wait-on": "^8.0.3"

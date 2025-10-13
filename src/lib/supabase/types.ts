@@ -1,7 +1,8 @@
 import React from "react";
 import { Session } from "@supabase/supabase-js";
 
-import { DbTables, Supabase } from "./database";
+import Database, { DbTables, Supabase } from "./database";
+import MediaManager from "./MediaManager";
 import { getOrderById, getUserProfile } from "./queries";
 
 export type Order = NonNullable<
@@ -17,4 +18,6 @@ export type SupabaseContextType = {
   setIpcSession: React.Dispatch<
     React.SetStateAction<Session | null | undefined>
   >;
+  db: Database;
+  mediaManager: MediaManager | null;
 };

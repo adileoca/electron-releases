@@ -22,6 +22,10 @@ const SupabaseContext = createContext<SupabaseContextType | undefined>(
   undefined
 );
 
+type InitializedSupabaseContext = SupabaseContextType & {
+  mediaManager: MediaManager;
+};
+
 export const SupabaseProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -30,6 +34,12 @@ export const SupabaseProvider: React.FC<{ children: React.ReactNode }> = ({
   const [session, setSession] = useState<Session | null | undefined>();
   const [lastActivity, setLastActivity] = useState(Date.now());
   const sessionRef = useRef<Session | null | undefined>(null);
+  const db = useMemo(() => new Database(supabase), []);
+  const mediaManager = useMemo(
+    () => (session ? new MediaManager(db, session) : null),
+    [db, session]
+  );
+  const [sessionResolved, setSessionResolved] = useState(false);
 
   useEffect(() => {
     sessionRef.current = session;
@@ -39,6 +49,7 @@ export const SupabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     window.electron.setSession(session);
     setSession(session);
     sessionRef.current = session;
+    setSessionResolved(true);
   };
 
   useEffect(() => {
@@ -134,9 +145,25 @@ export const SupabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     fetchProfile();
   }, [session]);
 
+  const contextValue = useMemo(
+    () => ({
+      supabase,
+      session,
+      userProfile,
+      setIpcSession,
+      db,
+      mediaManager,
+    }),
+    [db, mediaManager, session, setIpcSession, userProfile]
+  );
+
+  if (!sessionResolved) {
+    return null;
+  }
+
   return (
     <SupabaseContext.Provider
-      value={{ supabase, session, userProfile, setIpcSession }}
+      value={contextValue}
     >
       {children}
     </SupabaseContext.Provider>
@@ -144,17 +171,18 @@ export const SupabaseProvider: React.FC<{ children: React.ReactNode }> = ({
 };
 
 // remove useDatabase, move mediaManager to useSupabase
-export const useDatabase = () => {
+export const useDatabase = (): InitializedSupabaseContext => {
   const context = useContext(SupabaseContext);
   if (!context) {
     throw new Error("useDatabase must be used within a SupabaseProvider");
   }
-  const db = useMemo(() => new Database(context.supabase), [context.supabase]);
-  const mediaManager = useMemo(
-    () => new MediaManager(db, context.session as Session),
-    [db, context.session]
-  );
-  return { ...context, db, mediaManager };
+  const { mediaManager } = context;
+
+  if (!mediaManager) {
+    throw new Error("MediaManager is not initialized yet");
+  }
+
+  return { ...context, mediaManager } as InitializedSupabaseContext;
 };
 
 export const useSupabase = () => {
