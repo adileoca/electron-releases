@@ -84,9 +84,11 @@ export class QueryCache {
 }
 
 const DEFAULT_TTL = 30 * 1000; // 30 seconds
+const ORDERS_TTL = Number.POSITIVE_INFINITY;
 const PRINTS_TTL = Number.POSITIVE_INFINITY;
 
 export const sharedQueryCache = new QueryCache(DEFAULT_TTL);
+export const ordersQueryCache = new QueryCache(ORDERS_TTL);
 export const printsQueryCache = new QueryCache(PRINTS_TTL);
 
 export const createCacheKey = (

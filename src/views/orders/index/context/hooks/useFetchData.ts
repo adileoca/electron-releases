@@ -8,7 +8,7 @@ import {
 } from "../types";
 import { ContextActions } from "../reducer";
 import { Supabase, OrderSummaries } from "@/lib/supabase/database";
-import { sharedQueryCache, createCacheKey } from "@/lib/cache/QueryCache";
+import { ordersQueryCache, createCacheKey } from "@/lib/cache/QueryCache";
 import { logDebug, logError } from "@/lib/logging";
 import { readOrdersCacheEntry, writeOrdersCacheEntry } from "../storage";
 
@@ -111,7 +111,7 @@ const composePageDataFromList = async (
 
     let entity = preloadEntities?.get(id);
     if (!entity) {
-      const cachedEntity = sharedQueryCache.get<OrderSummary>(
+      const cachedEntity = ordersQueryCache.get<OrderSummary>(
         getEntityKey(id)
       );
       entity = cachedEntity?.data;
@@ -122,7 +122,7 @@ const composePageDataFromList = async (
         getEntityKey(id)
       );
       if (stored?.data) {
-        sharedQueryCache.set(getEntityKey(id), stored.data);
+        ordersQueryCache.set(getEntityKey(id), stored.data);
         entity = stored.data;
       }
     }
@@ -158,7 +158,7 @@ const ensureListData = async (listKey: string): Promise<{
   source: ListSource;
   stale: boolean;
 }> => {
-  const inMemory = sharedQueryCache.get<OrdersListCacheValue>(listKey);
+  const inMemory = ordersQueryCache.get<OrdersListCacheValue>(listKey);
   if (inMemory?.data) {
     return {
       listData: inMemory.data,
@@ -169,7 +169,7 @@ const ensureListData = async (listKey: string): Promise<{
 
   const stored = await readOrdersCacheEntry<OrdersListCacheValue>(listKey);
   if (stored?.data) {
-    sharedQueryCache.set(listKey, stored.data);
+    ordersQueryCache.set(listKey, stored.data);
     return {
       listData: stored.data,
       source: "storage",
@@ -185,7 +185,7 @@ const ensureListData = async (listKey: string): Promise<{
 };
 
 const persistListData = async (listKey: string, data: OrdersListCacheValue) => {
-  sharedQueryCache.set(listKey, data);
+  ordersQueryCache.set(listKey, data);
   await writeOrdersCacheEntry(listKey, data);
 };
 
@@ -193,7 +193,7 @@ const persistEntities = (orders: OrderSummary[]) => {
   orders.forEach((order) => {
     if (!order?.id) return;
     const entityKey = getEntityKey(order.id);
-    sharedQueryCache.set(entityKey, order);
+    ordersQueryCache.set(entityKey, order);
     void writeOrdersCacheEntry(entityKey, order);
   });
 };
@@ -299,14 +299,14 @@ export const useData = (
         listKey: requestListKey,
       });
 
-      sharedQueryCache
+      ordersQueryCache
         .fetch(requestFetchKey, () =>
           fetchData(supabase, { filters, pagination })
         )
         .then(async (result) => {
           persistEntities(result.results);
           const existingList =
-            sharedQueryCache.get<OrdersListCacheValue>(requestListKey)?.data ??
+            ordersQueryCache.get<OrdersListCacheValue>(requestListKey)?.data ??
             (await readOrdersCacheEntry<OrdersListCacheValue>(requestListKey))?.data;
 
           const mergedList = mergeListWithResult(

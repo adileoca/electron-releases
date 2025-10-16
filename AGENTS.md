@@ -22,9 +22,10 @@
 
 ## Development Flow
 
-1. Tail `logs/electron-dev.log` while testing complex behaviour.
-2. Add debug logs around new data pipelines.
-3. Run `npm run lint` before handing off.
+1. Create a feature branch from the latest `main` named `agent/<name>-<topic>` and keep it rebased as you work.
+2. Tail `logs/electron-dev.log` while testing complex behaviour.
+3. Add debug logs around new data pipelines.
+4. Run `npm run lint` before handing off.
 
 ## Photoshop Plugin Automation
 
