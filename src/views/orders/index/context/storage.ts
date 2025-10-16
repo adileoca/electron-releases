@@ -1,5 +1,4 @@
 import { logDebug, logWarn } from "@/lib/logging";
-import { ContextData } from "./types";
 
 const DB_NAME = "adipan-cache";
 const DB_VERSION = 2;
@@ -14,13 +13,13 @@ const COLUMN_WIDTHS_FALLBACK_KEY = "orders:col-widths";
 const STORAGE_KEY_FALLBACK = "orders:list-cache";
 const FALLBACK_MAX_ENTRIES = 20;
 
-type StoredOrdersCacheEntry = {
+type StoredOrdersCacheEntry<T = unknown> = {
   key: string;
-  data: ContextData;
+  data: T;
   timestamp: number;
 };
 
-type StoredOrdersCache = Record<string, StoredOrdersCacheEntry>;
+type StoredOrdersCache = Record<string, StoredOrdersCacheEntry<unknown>>;
 
 type StoredColumnWidthsEntry = {
   key: string;
@@ -99,17 +98,17 @@ const getIndexedDb = (): Promise<IDBDatabase | null> => {
   return dbInitPromise;
 };
 
-const readFromIndexedDb = async (key: string) => {
+const readFromIndexedDb = async <T = unknown>(key: string) => {
   const db = await getIndexedDb();
   if (!db) return undefined;
 
-  return new Promise<StoredOrdersCacheEntry | undefined>((resolve) => {
+  return new Promise<StoredOrdersCacheEntry<T> | undefined>((resolve) => {
     try {
       const transaction = db.transaction(STORE_NAME, "readonly");
       const store = transaction.objectStore(STORE_NAME);
       const request = store.get(key);
       request.onsuccess = () => {
-        const entry = request.result as StoredOrdersCacheEntry | undefined;
+        const entry = request.result as StoredOrdersCacheEntry<T> | undefined;
         if (entry && entry.data) {
           logDebug("orders-local-cache-hit", {
             key,
@@ -189,7 +188,9 @@ const deleteOldestIndexedDbEntries = async (
   });
 };
 
-const writeToIndexedDb = async (entry: StoredOrdersCacheEntry) => {
+const writeToIndexedDb = async <T = unknown>(
+  entry: StoredOrdersCacheEntry<T>
+) => {
   const db = await getIndexedDb();
   if (!db) return;
 
@@ -271,9 +272,9 @@ const writeCacheFallback = (cache: StoredOrdersCache) => {
   }
 };
 
-const readFromFallback = (key: string) => {
+const readFromFallback = <T = unknown>(key: string) => {
   const cache = readCacheFallback();
-  const entry = cache[key];
+  const entry = cache[key] as StoredOrdersCacheEntry<T> | undefined;
   if (!entry) return undefined;
 
   logDebug("orders-local-cache-hit", {
@@ -283,7 +284,7 @@ const readFromFallback = (key: string) => {
   return entry;
 };
 
-const writeToFallback = (entry: StoredOrdersCacheEntry) => {
+const writeToFallback = <T = unknown>(entry: StoredOrdersCacheEntry<T>) => {
   const cache = readCacheFallback();
   cache[entry.key] = entry;
 
@@ -300,21 +301,24 @@ const writeToFallback = (entry: StoredOrdersCacheEntry) => {
   logDebug("orders-local-cache-write", { key: entry.key });
 };
 
-export const readOrdersCacheEntry = async (key: string) => {
-  const entry = await readFromIndexedDb(key);
+export const readOrdersCacheEntry = async <T = unknown>(key: string) => {
+  const entry = await readFromIndexedDb<T>(key);
   if (entry) return entry;
 
-  const fallbackEntry = readFromFallback(key);
+  const fallbackEntry = readFromFallback<T>(key);
   if (fallbackEntry && supportsIndexedDb()) {
     void writeToIndexedDb(fallbackEntry);
   }
   return fallbackEntry;
 };
 
-export const writeOrdersCacheEntry = async (key: string, data: ContextData) => {
-  if (!data) return;
+export const writeOrdersCacheEntry = async <T = unknown>(
+  key: string,
+  data: T
+) => {
+  if (data === undefined || data === null) return;
 
-  const entry: StoredOrdersCacheEntry = {
+  const entry: StoredOrdersCacheEntry<T> = {
     key,
     data,
     timestamp: Date.now(),

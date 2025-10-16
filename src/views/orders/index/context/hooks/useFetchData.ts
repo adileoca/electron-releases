@@ -1,13 +1,202 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
 import { useDatabase } from "@/lib/supabase/context";
-import { ContextData, ContextState } from "../types";
+import {
+  ContextData,
+  ContextState,
+  OrdersListCacheValue,
+} from "../types";
 import { ContextActions } from "../reducer";
-import { Supabase } from "@/lib/supabase/database";
+import { Supabase, OrderSummaries } from "@/lib/supabase/database";
 import { sharedQueryCache, createCacheKey } from "@/lib/cache/QueryCache";
 import { logDebug, logError } from "@/lib/logging";
 import { readOrdersCacheEntry, writeOrdersCacheEntry } from "../storage";
 
 const LIVE_MODE_REFRESH_MS = 20_000;
+
+type OrderSummary = OrderSummaries extends (infer T)[] ? T : never;
+
+type OrdersFetchResult = Awaited<ReturnType<typeof fetchData>>;
+
+const getListKey = (filters: ContextState["filters"]) =>
+  createCacheKey("orders:list", { filters });
+
+const getEntityKey = (id: string) => createCacheKey("orders:entities", { id });
+
+const getFetchKey = (
+  filters: ContextState["filters"],
+  pagination: ContextState["pagination"]
+) => createCacheKey("orders:fetch", { filters, pagination });
+
+const getViewKey = (
+  filters: ContextState["filters"],
+  pagination: ContextState["pagination"]
+) => createCacheKey("orders:view", { filters, pagination });
+
+const mergeListWithResult = (
+  current: OrdersListCacheValue | undefined,
+  result: OrdersFetchResult,
+  pagination: ContextState["pagination"]
+): OrdersListCacheValue => {
+  const baseIds = current?.ids ?? [];
+  const startIndex = Math.max(
+    (pagination.currentPage - 1) * pagination.resultsPerPage,
+    0
+  );
+  const fetchedIds = result.results
+    .map((order) => order?.id)
+    .filter((id): id is string => Boolean(id));
+  const fetchedSet = new Set(fetchedIds);
+  const filteredExisting = baseIds.filter(
+    (id) => id && !fetchedSet.has(id)
+  );
+
+  let nextIds = filteredExisting.slice();
+  fetchedIds.forEach((id, index) => {
+    const insertIndex = Math.min(startIndex + index, nextIds.length);
+    nextIds.splice(insertIndex, 0, id);
+  });
+
+  const deduped: string[] = [];
+  const seen = new Set<string>();
+  for (const id of nextIds) {
+    if (!id) continue;
+    if (seen.has(id)) continue;
+    seen.add(id);
+    deduped.push(id);
+  }
+
+  const count =
+    typeof result.count === "number"
+      ? result.count
+      : current?.count ?? null;
+
+  const trimmed =
+    typeof count === "number" ? deduped.slice(0, count) : deduped;
+
+  return {
+    ids: trimmed,
+    count,
+    metadata: {
+      sort: "created_at:desc",
+      updatedAt: Date.now(),
+    },
+  };
+};
+
+type ComposeOptions = {
+  allowStorageRead: boolean;
+  pagination: ContextState["pagination"];
+  preloadEntities?: Map<string, OrderSummary>;
+};
+
+const composePageDataFromList = async (
+  listData: OrdersListCacheValue,
+  options: ComposeOptions
+): Promise<{ data: OrdersFetchResult; missingIds: string[] }> => {
+  const { pagination, allowStorageRead, preloadEntities } = options;
+  const startIndex = Math.max(
+    (pagination.currentPage - 1) * pagination.resultsPerPage,
+    0
+  );
+  const endIndex = startIndex + pagination.resultsPerPage;
+  const pageIds = listData.ids.slice(startIndex, endIndex);
+
+  const resolved = new Map<number, OrderSummary>();
+  const missingIds: string[] = [];
+
+  for (let index = 0; index < pageIds.length; index += 1) {
+    const id = pageIds[index];
+    if (!id) continue;
+
+    let entity = preloadEntities?.get(id);
+    if (!entity) {
+      const cachedEntity = sharedQueryCache.get<OrderSummary>(
+        getEntityKey(id)
+      );
+      entity = cachedEntity?.data;
+    }
+
+    if (!entity && allowStorageRead) {
+      const stored = await readOrdersCacheEntry<OrderSummary>(
+        getEntityKey(id)
+      );
+      if (stored?.data) {
+        sharedQueryCache.set(getEntityKey(id), stored.data);
+        entity = stored.data;
+      }
+    }
+
+    if (entity) {
+      resolved.set(index, entity);
+    } else {
+      missingIds.push(id);
+    }
+  }
+
+  const results: OrderSummary[] = [];
+  pageIds.forEach((_, index) => {
+    const entity = resolved.get(index);
+    if (entity) {
+      results.push(entity);
+    }
+  });
+
+  return {
+    data: {
+      results,
+      count: listData.count,
+    },
+    missingIds,
+  };
+};
+
+type ListSource = "memory" | "storage" | null;
+
+const ensureListData = async (listKey: string): Promise<{
+  listData: OrdersListCacheValue | undefined;
+  source: ListSource;
+  stale: boolean;
+}> => {
+  const inMemory = sharedQueryCache.get<OrdersListCacheValue>(listKey);
+  if (inMemory?.data) {
+    return {
+      listData: inMemory.data,
+      source: "memory",
+      stale: inMemory.stale,
+    };
+  }
+
+  const stored = await readOrdersCacheEntry<OrdersListCacheValue>(listKey);
+  if (stored?.data) {
+    sharedQueryCache.set(listKey, stored.data);
+    return {
+      listData: stored.data,
+      source: "storage",
+      stale: false,
+    };
+  }
+
+  return {
+    listData: undefined,
+    source: null,
+    stale: true,
+  };
+};
+
+const persistListData = async (listKey: string, data: OrdersListCacheValue) => {
+  sharedQueryCache.set(listKey, data);
+  await writeOrdersCacheEntry(listKey, data);
+};
+
+const persistEntities = (orders: OrderSummary[]) => {
+  orders.forEach((order) => {
+    if (!order?.id) return;
+    const entityKey = getEntityKey(order.id);
+    sharedQueryCache.set(entityKey, order);
+    void writeOrdersCacheEntry(entityKey, order);
+  });
+};
 
 export const useData = (
   {
@@ -27,8 +216,6 @@ export const useData = (
   const liveModeIntervalRef = useRef<number | null>(null);
   const setUpdatingActionRef = useRef(setUpdating);
   const setShouldRefreshActionRef = useRef(setShouldRefresh);
-  const lastHydratedKeyRef = useRef<string | null>(null);
-  const hydratingKeyRef = useRef<string | null>(null);
   const dataKeyRef = useRef<string | null>(null);
   const dataRef = useRef<ContextData>(null);
   const latestKeyRef = useRef<string | null>(null);
@@ -48,15 +235,18 @@ export const useData = (
   useEffect(() => {
     setShouldRefreshActionRef.current = setShouldRefresh;
   }, [setShouldRefresh]);
-  const cacheKey = useMemo(
-    () =>
-      createCacheKey("orders", {
-        filters,
-        pagination,
-      }),
+
+  const listKey = useMemo(() => getListKey(filters), [filters]);
+  const fetchKey = useMemo(
+    () => getFetchKey(filters, pagination),
     [filters, pagination]
   );
-  latestKeyRef.current = cacheKey;
+  const viewKey = useMemo(
+    () => getViewKey(filters, pagination),
+    [filters, pagination]
+  );
+
+  latestKeyRef.current = viewKey;
 
   const applyData = useCallback((key: string, nextData: ContextData) => {
     const sameKey = dataKeyRef.current === key;
@@ -97,218 +287,178 @@ export const useData = (
     setShouldRefreshActionRef.current(value);
   }, []);
 
-  // const handleRealtimeEvent = useCallback(() => {
-  //   sharedQueryCache.invalidatePrefix("orders:");
-  //   if (updatingRef.current) {
-  //     pendingRealtimeRefresh.current = true;
-  //     logDebug("orders-realtime-queued", { key: cacheKey });
-  //     return;
-  //   }
-  //   if (shouldRefreshRef.current) {
-  //     return;
-  //   }
-  //   logDebug("orders-realtime-trigger", { key: cacheKey });
-  //   setShouldRefreshSafe(true);
-  // }, [cacheKey, setShouldRefreshSafe]);
+  const runFetch = useCallback(
+    (reason: "miss" | "stale" | "refresh" | "hydrate-missing") => {
+      const requestViewKey = viewKey;
+      const requestListKey = listKey;
+      const requestFetchKey = fetchKey;
 
-  useEffect(() => {
-    if (lastHydratedKeyRef.current === cacheKey || hydratingKeyRef.current === cacheKey) {
-      return;
-    }
-
-    let cancelled = false;
-    hydratingKeyRef.current = cacheKey;
-
-    void (async () => {
-      try {
-        const entry = await readOrdersCacheEntry(cacheKey);
-        if (cancelled) return;
-
-        if (entry && entry.data) {
-          sharedQueryCache.set(cacheKey, entry.data);
-          applyData(cacheKey, entry.data);
-          setShouldRefreshSafe(true);
-          return;
-        }
-
-        applyTransitionPlaceholder(cacheKey);
-      } finally {
-        if (!cancelled && hydratingKeyRef.current === cacheKey) {
-          hydratingKeyRef.current = null;
-        }
-        if (!cancelled) {
-          lastHydratedKeyRef.current = cacheKey;
-        }
-      }
-    })();
-
-    return () => {
-      cancelled = true;
-      if (hydratingKeyRef.current === cacheKey) {
-        hydratingKeyRef.current = null;
-      }
-    };
-  }, [applyData, applyTransitionPlaceholder, cacheKey, setShouldRefreshSafe]);
-
-  useEffect(() => {
-    let isMounted = true;
-    const requestKey = cacheKey;
-    const cached = sharedQueryCache.get<ContextData>(cacheKey);
-
-    if (cached) {
-      applyData(cacheKey, cached.data);
-      logDebug("orders-cache-hit", { key: cacheKey, stale: cached.stale });
-      if (!cached.stale) {
-        setUpdatingSafe(false);
-      }
-    } else {
-      logDebug("orders-cache-miss", { key: cacheKey });
-      setUpdatingSafe(true);
-    }
-
-    if (!cached || cached.stale) {
-      let hadError = false;
       logDebug("orders-fetch-start", {
-        key: cacheKey,
-        reason: cached ? "stale" : "miss",
+        reason,
+        fetchKey: requestFetchKey,
+        listKey: requestListKey,
       });
-      setUpdatingSafe(true);
+
       sharedQueryCache
-        .fetch(cacheKey, () => fetchData(supabase, { filters, pagination }))
-        .then((result) => {
-          if (!isMounted) return;
-          void writeOrdersCacheEntry(requestKey, result);
-          if (latestKeyRef.current !== requestKey) {
+        .fetch(requestFetchKey, () =>
+          fetchData(supabase, { filters, pagination })
+        )
+        .then(async (result) => {
+          persistEntities(result.results);
+          const existingList =
+            sharedQueryCache.get<OrdersListCacheValue>(requestListKey)?.data ??
+            (await readOrdersCacheEntry<OrdersListCacheValue>(requestListKey))?.data;
+
+          const mergedList = mergeListWithResult(
+            existingList,
+            result,
+            pagination
+          );
+          await persistListData(requestListKey, mergedList);
+
+          const preload = new Map<string, OrderSummary>();
+          result.results.forEach((order) => {
+            if (!order?.id) return;
+            preload.set(order.id, order);
+          });
+
+          const { data: pageData } = await composePageDataFromList(mergedList, {
+            allowStorageRead: false,
+            pagination,
+            preloadEntities: preload,
+          });
+
+          if (latestKeyRef.current !== requestViewKey) {
             logDebug("orders-fetch-stale", {
-              requestKey,
+              requestKey: requestViewKey,
               latestKey: latestKeyRef.current,
+              reason,
             });
             return;
           }
-          applyData(requestKey, result);
+
+          applyData(requestViewKey, pageData);
           setUpdatingSafe(false);
-          logDebug("orders-fetch-success", { key: requestKey });
+          if (reason === "refresh") {
+            setShouldRefreshSafe(false);
+          }
+          logDebug("orders-fetch-success", {
+            fetchKey: requestFetchKey,
+            reason,
+          });
         })
         .catch((error) => {
-          if (latestKeyRef.current !== requestKey) {
+          if (latestKeyRef.current !== requestViewKey) {
             return;
           }
-          logError("orders-fetch-error", { key: requestKey, error });
-          hadError = true;
-          if (isMounted) {
-            setUpdatingSafe(false);
+          logError("orders-fetch-error", {
+            fetchKey: requestFetchKey,
+            reason,
+            error,
+          });
+          setUpdatingSafe(false);
+          if (reason === "refresh") {
+            setShouldRefreshSafe(false);
           }
         })
         .finally(() => {
-          if (!isMounted) return;
-          if (latestKeyRef.current !== requestKey) {
+          if (latestKeyRef.current !== requestViewKey) {
             return;
           }
           if (pendingRealtimeRefresh.current) {
-            if (hadError) {
-              pendingRealtimeRefresh.current = false;
-              return;
-            }
             pendingRealtimeRefresh.current = false;
             setShouldRefreshSafe(true);
           }
         });
-    }
+    },
+    [
+      applyData,
+      fetchKey,
+      filters,
+      listKey,
+      pagination,
+      setShouldRefreshSafe,
+      setUpdatingSafe,
+      supabase,
+      viewKey,
+    ]
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const hydrate = async () => {
+      const { listData, source, stale } = await ensureListData(listKey);
+      if (cancelled) return;
+
+      if (!listData) {
+        applyTransitionPlaceholder(viewKey);
+        setUpdatingSafe(true);
+        runFetch("miss");
+        return;
+      }
+
+      logDebug("orders-list-hydrate", {
+        listKey,
+        source,
+      });
+
+      const { data: pageData, missingIds } = await composePageDataFromList(
+        listData,
+        {
+          allowStorageRead: true,
+          pagination,
+        }
+      );
+      if (cancelled) return;
+
+      applyData(viewKey, pageData);
+
+      if (missingIds.length > 0) {
+        logDebug("orders-entities-missing", {
+          viewKey,
+          ids: missingIds,
+        });
+        setUpdatingSafe(true);
+        runFetch("hydrate-missing");
+        return;
+      }
+
+      if (stale) {
+        setUpdatingSafe(true);
+        runFetch("stale");
+        return;
+      }
+
+      setUpdatingSafe(false);
+    };
+
+    void hydrate();
 
     return () => {
-      isMounted = false;
+      cancelled = true;
     };
   }, [
     applyData,
-    cacheKey,
-    filters,
+    applyTransitionPlaceholder,
+    listKey,
     pagination,
-    setShouldRefreshSafe,
+    runFetch,
     setUpdatingSafe,
-    supabase,
+    viewKey,
   ]);
 
   useEffect(() => {
     if (!shouldRefresh) return;
 
+    logDebug("orders-refresh-start", {
+      fetchKey,
+      listKey,
+      viewKey,
+    });
     setUpdatingSafe(true);
-    sharedQueryCache.invalidate(cacheKey);
-    let hadError = false;
-    const requestKey = cacheKey;
-    logDebug("orders-refresh-start", { key: cacheKey });
-    sharedQueryCache
-      .fetch(cacheKey, () => fetchData(supabase, { filters, pagination }))
-      .then((result) => {
-        void writeOrdersCacheEntry(requestKey, result);
-        if (latestKeyRef.current !== requestKey) {
-          logDebug("orders-refresh-stale", {
-            requestKey,
-            latestKey: latestKeyRef.current,
-          });
-          return;
-        }
-        applyData(requestKey, result);
-        setUpdatingSafe(false);
-        setShouldRefreshSafe(false);
-        logDebug("orders-refresh-success", { key: requestKey });
-      })
-      .catch((error) => {
-        if (latestKeyRef.current !== requestKey) {
-          return;
-        }
-        logError("orders-refresh-error", { key: requestKey, error });
-        hadError = true;
-        setUpdatingSafe(false);
-        setShouldRefreshSafe(false);
-      })
-      .finally(() => {
-        if (latestKeyRef.current !== requestKey) {
-          return;
-        }
-        if (pendingRealtimeRefresh.current) {
-          if (!hadError) {
-            pendingRealtimeRefresh.current = false;
-            setShouldRefreshSafe(true);
-          } else {
-            pendingRealtimeRefresh.current = false;
-          }
-        }
-      });
-  }, [
-    applyData,
-    cacheKey,
-    filters,
-    pagination,
-    setShouldRefreshSafe,
-    setUpdatingSafe,
-    shouldRefresh,
-    supabase,
-  ]);
-
-  // useEffect(() => {
-  //   const channel = supabase
-  //     .channel("orders-list")
-  //     .on(
-  //       "postgres_changes",
-  //       { event: "*", schema: "public", table: "orders" },
-  //       handleRealtimeEvent
-  //     )
-  //     .on(
-  //       "postgres_changes",
-  //       { event: "*", schema: "public", table: "order_statuses" },
-  //       handleRealtimeEvent
-  //     )
-  //     .on(
-  //       "postgres_changes",
-  //       { event: "*", schema: "public", table: "order_totals" },
-  //       handleRealtimeEvent
-  //     )
-  //     .subscribe();
-
-  //   return () => {
-  //     supabase.removeChannel(channel);
-  //   };
-  // }, [handleRealtimeEvent, supabase]);
+    runFetch("refresh");
+  }, [fetchKey, listKey, runFetch, setUpdatingSafe, shouldRefresh, viewKey]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -317,7 +467,7 @@ export const useData = (
       if (liveModeIntervalRef.current) {
         window.clearInterval(liveModeIntervalRef.current);
         liveModeIntervalRef.current = null;
-        logDebug("orders-live-stop", { key: cacheKey });
+        logDebug("orders-live-stop", { viewKey });
       }
       return;
     }
@@ -326,10 +476,10 @@ export const useData = (
       window.clearInterval(liveModeIntervalRef.current);
     }
 
-    logDebug("orders-live-start", { key: cacheKey });
+    logDebug("orders-live-start", { viewKey });
     setShouldRefreshSafe(true);
     liveModeIntervalRef.current = window.setInterval(() => {
-      logDebug("orders-live-tick", { key: cacheKey });
+      logDebug("orders-live-tick", { viewKey });
       setShouldRefreshSafe(true);
     }, LIVE_MODE_REFRESH_MS);
 
@@ -337,10 +487,10 @@ export const useData = (
       if (liveModeIntervalRef.current) {
         window.clearInterval(liveModeIntervalRef.current);
         liveModeIntervalRef.current = null;
-        logDebug("orders-live-stop", { key: cacheKey });
+        logDebug("orders-live-stop", { viewKey });
       }
     };
-  }, [cacheKey, liveModeEnabled, setShouldRefreshSafe]);
+  }, [liveModeEnabled, setShouldRefreshSafe, viewKey]);
 
   return data;
 };
@@ -354,7 +504,7 @@ export const fetchData = async (
     filters: ContextState["filters"];
     pagination: ContextState["pagination"];
   }
-) => {
+): Promise<{ results: OrderSummary[]; count: number | null }> => {
   const query = supabase.from("orders").select(
     `*,
     totals:order_totals(*),
@@ -365,7 +515,6 @@ export const fetchData = async (
     { count: "exact" }
   );
   query.order("created_at", { ascending: false });
-  // query.eq("order_statuses.name", "feedback");
 
   logDebug("orders-db-fetch", { filters, pagination });
   Object.values(filters)
@@ -395,5 +544,8 @@ export const fetchData = async (
     throw new Error(error?.message || "Unknown error occurred");
   }
 
-  return { results: data, count };
+  return {
+    results: (data ?? []) as OrderSummary[],
+    count: count ?? null,
+  };
 };

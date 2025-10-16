@@ -10,11 +10,12 @@ import TableBody from "./ui/TableBody";
 
 const OrdersTable = () => {
   const {
-    state: { loading, updating, rows },
+    state: { loading, updating, rows, pagination },
   } = useOrdersTableContext();
 
   const hasRows = rows.length > 0;
-  const showSpinnerRow = !hasRows && (loading || updating);
+  const showSpinnerRow =
+    rows.length < pagination.resultsPerPage && (loading || updating);
 
   return (
     <ViewShell header={<ViewHeader />}>

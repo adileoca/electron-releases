@@ -16,6 +16,15 @@ export type ContextType =
 
 export type ContextData = Awaited<ReturnType<typeof fetchData>> | null;
 
+export type OrdersListCacheValue = {
+  ids: string[];
+  count: number | null;
+  metadata: {
+    sort: "created_at:desc";
+    updatedAt: number;
+  };
+};
+
 export type ColProps = {
   position: number;
 
