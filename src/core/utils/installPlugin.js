@@ -5,7 +5,7 @@ const path = require("path");
 const packageJson = require("../../../package.json");
 
 const installPlugin = ({ force, window }) => {
-  if (isDev) return;
+  // if (isDev) return;
 
   const isWindows = process.platform === "win32";
   const scriptExt = isWindows ? "bat" : "sh";
@@ -32,7 +32,7 @@ const installPlugin = ({ force, window }) => {
 
     const execCmd = isWindows
       ? `${installScriptPath} ${pluginPath}`
-      : `bash "${installScriptPath} ${pluginPath}"`;
+      : `bash "${installScriptPath}" "${pluginPath}"`;
 
     exec(execCmd, (error, stdout, stderr) => {
       if (error) {

@@ -45,6 +45,7 @@ const Routes = () => {
   // const initSyncDone = useSyncData();
   useIpcListeners();
 
+
   // if (!initSyncDone) {
   if (false) {
     return (

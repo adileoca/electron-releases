@@ -3,12 +3,11 @@
 const fs = require("fs");
 const fsPromises = require("fs/promises");
 const path = require("path");
-const { spawn } = require("child_process");
-const archiver = require("archiver");
+const { spawn, spawnSync } = require("child_process");
 const semver = require("semver");
+const os = require("os");
 
-const DEFAULT_PLUGIN_DIR_NAME = "photoshop plugin";
-const DEFAULT_BUMP = "patch";
+const DEFAULT_PLUGIN_DIR_NAME = "ps-plugin";
 
 async function main() {
   const options = parseArgs(process.argv.slice(2));
@@ -40,17 +39,49 @@ async function main() {
     );
   }
 
-  const nextVersion = resolveNextVersion(currentVersion, options);
+  const { nextVersion, versionChanged } = resolveNextVersion(
+    currentVersion,
+    options
+  );
+  const requestedVersionUpdate =
+    options.version !== undefined || options.bump !== undefined;
 
-  console.log(`Updating Photoshop plugin from v${currentVersion} to v${nextVersion}`);
-
-  if (options.dryRun) {
-    console.log("--dry-run enabled: no files will be modified or commands executed.");
+  if (versionChanged) {
+    console.log(
+      `Updating Photoshop plugin from v${currentVersion} to v${nextVersion}`
+    );
+  } else if (requestedVersionUpdate) {
+    console.log(
+      `Photoshop plugin already at v${currentVersion}; skipping version update.`
+    );
+  } else {
+    console.log(
+      `Rebuilding Photoshop plugin at v${currentVersion} (no version bump).`
+    );
   }
 
-  await updatePluginManifest(pluginManifestPath, nextVersion, options.dryRun);
-  await updatePluginPackage(pluginPackagePath, pluginPackageLockPath, nextVersion, options.dryRun);
-  await updateAppPackage(appPackagePath, nextVersion, options.dryRun);
+  if (options.dryRun) {
+    console.log(
+      "--dry-run enabled: no files will be modified or commands executed."
+    );
+  }
+
+  if (versionChanged) {
+    await updatePluginManifest(
+      pluginManifestPath,
+      nextVersion,
+      options.dryRun
+    );
+    await updatePluginPackage(
+      pluginPackagePath,
+      pluginPackageLockPath,
+      nextVersion,
+      options.dryRun
+    );
+    await updateAppPackage(appPackagePath, nextVersion, options.dryRun);
+  } else {
+    console.log("Version unchanged; skipping manifest/package version updates.");
+  }
 
   if (options.dryRun) {
     console.log("Skipping build and packaging because --dry-run is set.");
@@ -73,12 +104,26 @@ async function main() {
   await createCcxArchive(pluginDistPath, tempArchivePath);
   await fsPromises.rename(tempArchivePath, ccxDestPath);
 
-  console.log(`Updated ${path.relative(appDir, ccxDestPath)} with version ${nextVersion}.`);
+  if (versionChanged) {
+    console.log(
+      `Updated ${path.relative(
+        appDir,
+        ccxDestPath
+      )} with version ${nextVersion}.`
+    );
+  } else {
+    console.log(
+      `Rebuilt ${path.relative(
+        appDir,
+        ccxDestPath
+      )} at version ${nextVersion}.`
+    );
+  }
 }
 
 function parseArgs(argv) {
   const options = {
-    bump: DEFAULT_BUMP,
+    bump: undefined,
     version: undefined,
     pluginDir: undefined,
     dryRun: false,
@@ -90,7 +135,9 @@ function parseArgs(argv) {
     if (arg === "--bump") {
       const value = argv[++i];
       if (!value) {
-        throw new Error("--bump requires a value (major, minor, patch, prerelease).");
+        throw new Error(
+          "--bump requires a value (major, minor, patch, prerelease)."
+        );
       }
       options.bump = value;
       continue;
@@ -135,22 +182,48 @@ function resolvePluginDir(appDir, pluginDirArg) {
 function resolveNextVersion(currentVersion, options) {
   if (options.version) {
     if (!semver.valid(options.version)) {
-      throw new Error(`--version requires a valid semver value. Received "${options.version}".`);
+      throw new Error(
+        `--version requires a valid semver value. Received "${options.version}".`
+      );
     }
-    return options.version;
+    return {
+      nextVersion: options.version,
+      versionChanged: options.version !== currentVersion,
+    };
   }
 
-  const allowedBumps = new Set(["major", "minor", "patch", "prerelease"]);
-  const bumpType = options.bump || DEFAULT_BUMP;
-  if (!allowedBumps.has(bumpType)) {
-    throw new Error(`--bump must be one of ${Array.from(allowedBumps).join(", ")}. Received "${bumpType}".`);
+  if (options.bump !== undefined) {
+    const allowedBumps = new Set([
+      "major",
+      "minor",
+      "patch",
+      "prerelease",
+    ]);
+    const bumpType = options.bump;
+    if (!allowedBumps.has(bumpType)) {
+      throw new Error(
+        `--bump must be one of ${Array.from(allowedBumps).join(
+          ", "
+        )}. Received "${bumpType}".`
+      );
+    }
+
+    const next = semver.inc(currentVersion, bumpType);
+    if (!next) {
+      throw new Error(
+        `Failed to bump version ${currentVersion} using bump type "${bumpType}".`
+      );
+    }
+    return {
+      nextVersion: next,
+      versionChanged: next !== currentVersion,
+    };
   }
 
-  const next = semver.inc(currentVersion, bumpType);
-  if (!next) {
-    throw new Error(`Failed to bump version ${currentVersion} using bump type "${bumpType}".`);
-  }
-  return next;
+  return {
+    nextVersion: currentVersion,
+    versionChanged: false,
+  };
 }
 
 async function readJson(filePath) {
@@ -175,7 +248,12 @@ async function updatePluginManifest(manifestPath, version, dryRun) {
   await writeJson(manifestPath, manifest);
 }
 
-async function updatePluginPackage(packagePath, packageLockPath, version, dryRun) {
+async function updatePluginPackage(
+  packagePath,
+  packageLockPath,
+  version,
+  dryRun
+) {
   const pkg = await readJson(packagePath);
   pkg.version = version;
 
@@ -195,7 +273,9 @@ async function updatePluginPackage(packagePath, packageLockPath, version, dryRun
     if (!dryRun) {
       await writeJson(packageLockPath, lock);
     } else {
-      console.log(`[dry-run] Would update ${packageLockPath} version fields to ${version}`);
+      console.log(
+        `[dry-run] Would update ${packageLockPath} version fields to ${version}`
+      );
     }
   }
 }
@@ -205,7 +285,9 @@ async function updateAppPackage(packagePath, version, dryRun) {
   pkg.pluginVersion = version;
 
   if (dryRun) {
-    console.log(`[dry-run] Would update ${packagePath} pluginVersion to ${version}`);
+    console.log(
+      `[dry-run] Would update ${packagePath} pluginVersion to ${version}`
+    );
     return;
   }
 
@@ -229,7 +311,11 @@ function runCommand(command, args, options = {}) {
       if (code === 0) {
         resolve();
       } else {
-        reject(new Error(`Command ${command} ${args.join(" ")} exited with code ${code}`));
+        reject(
+          new Error(
+            `Command ${command} ${args.join(" ")} exited with code ${code}`
+          )
+        );
       }
     });
 
@@ -241,7 +327,9 @@ function runCommand(command, args, options = {}) {
 
 async function ensureDistManifestVersion(distManifestPath, version) {
   if (!fs.existsSync(distManifestPath)) {
-    throw new Error(`Missing dist manifest at ${distManifestPath}. The build may have failed.`);
+    throw new Error(
+      `Missing dist manifest at ${distManifestPath}. The build may have failed.`
+    );
   }
 
   const manifest = await readJson(distManifestPath);
@@ -250,22 +338,156 @@ async function ensureDistManifestVersion(distManifestPath, version) {
 }
 
 async function createCcxArchive(sourceDir, destinationFile) {
-  await new Promise((resolve, reject) => {
-    const output = fs.createWriteStream(destinationFile);
-    const archive = archiver("zip", { zlib: { level: 9 } });
+  const uxpCli = resolveUxpCli();
+  if (!uxpCli) {
+    throw new Error(
+      "Unable to find the UXP CLI (`uxp`) in your PATH. Install @adobe/uxp-devtools-cli v1.2.0 or newer and try again."
+    );
+  }
 
-    output.on("close", resolve);
-    output.on("error", reject);
-    archive.on("error", reject);
+  const cliMode = detectUxpCliMode(uxpCli);
 
-    archive.pipe(output);
-    archive.directory(sourceDir, false);
-    archive.finalize();
-  });
+  if (cliMode === "modern") {
+    await packageWithModernUxpCli(uxpCli, sourceDir, destinationFile);
+    return;
+  }
+
+  if (cliMode === "legacy") {
+    await packageWithLegacyUxpCli(uxpCli, sourceDir, destinationFile);
+    return;
+  }
+
+  throw new Error(
+    "Failed to detect a compatible UXP CLI. Update @adobe/uxp-devtools-cli to the latest version."
+  );
+}
+
+function resolveUxpCli() {
+  const command = process.platform === "win32" ? "uxp.cmd" : "uxp";
+  const result = spawnSync(command, ["--version"], { stdio: "ignore" });
+  if (result.status === 0) {
+    return command;
+  }
+  return null;
+}
+
+function detectUxpCliMode(command) {
+  const helpResult = spawnSync(
+    command,
+    ["plugin", "package", "--help"],
+    { encoding: "utf8" }
+  );
+
+  if (helpResult.status !== 0) {
+    return null;
+  }
+
+  const output = helpResult.stdout || "";
+
+  if (output.includes("--manifest") && output.includes("--outputPath")) {
+    return "modern";
+  }
+
+  if (output.includes("--type") || output.includes("--overwrite")) {
+    return "legacy";
+  }
+
+  return null;
+}
+
+async function packageWithModernUxpCli(
+  command,
+  sourceDir,
+  destinationFile
+) {
+  const tempDirPrefix = path.join(os.tmpdir(), "uxp-package-");
+  const tempDir = await fsPromises.mkdtemp(tempDirPrefix);
+  try {
+    console.log("Packaging Photoshop plugin with UXP CLI (modern syntax)...");
+
+    const manifestPath = path.join(sourceDir, "manifest.json");
+    const args = [
+      "plugin",
+      "package",
+      "--manifest",
+      manifestPath,
+      "--outputPath",
+      tempDir,
+    ];
+
+    await runCommand(
+      command,
+      args,
+      { cwd: sourceDir }
+    );
+
+    const ccxFiles = await collectCcxFiles(tempDir);
+    if (ccxFiles.length === 0) {
+      throw new Error(
+        `UXP CLI did not create a .ccx archive inside ${tempDir}. Check the build output above for details.`
+      );
+    }
+
+    const newestFile = await pickMostRecentFile(ccxFiles);
+    await fsPromises.rm(destinationFile, { force: true });
+    await fsPromises.copyFile(newestFile, destinationFile);
+  } finally {
+    await fsPromises.rm(tempDir, { recursive: true, force: true });
+  }
+}
+
+async function packageWithLegacyUxpCli(command, sourceDir, destinationFile) {
+  console.log("Packaging Photoshop plugin with UXP CLI (legacy flags)...");
+  await runCommand(command, [
+    "plugin",
+    "package",
+    sourceDir,
+    destinationFile,
+    "--type=release",
+    "--overwrite",
+  ]);
+}
+
+async function collectCcxFiles(rootDir) {
+  const stack = [rootDir];
+  const files = [];
+
+  while (stack.length > 0) {
+    const current = stack.pop();
+    const entries = await fsPromises.readdir(current, { withFileTypes: true });
+    for (const entry of entries) {
+      const fullPath = path.join(current, entry.name);
+      if (entry.isDirectory()) {
+        stack.push(fullPath);
+      } else if (
+        entry.isFile() &&
+        entry.name.toLowerCase().endsWith(".ccx")
+      ) {
+        files.push(fullPath);
+      }
+    }
+  }
+
+  return files;
+}
+
+async function pickMostRecentFile(filePaths) {
+  let candidate = filePaths[0];
+  let candidateMtime = (await fsPromises.stat(candidate)).mtimeMs;
+
+  for (let i = 1; i < filePaths.length; i += 1) {
+    const filePath = filePaths[i];
+    const stats = await fsPromises.stat(filePath);
+    if (stats.mtimeMs > candidateMtime) {
+      candidate = filePath;
+      candidateMtime = stats.mtimeMs;
+    }
+  }
+
+  return candidate;
 }
 
 main().catch((error) => {
   console.error(error.message);
   process.exitCode = 1;
 });
-

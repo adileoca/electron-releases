@@ -2,12 +2,14 @@
 
 const fsPromises = require("fs/promises");
 const path = require("path");
+const os = require("os");
 const { spawn } = require("child_process");
 const semver = require("semver");
 
 const APP_ROOT = path.resolve(__dirname, "..");
-const ORIGINAL_REMOTE = "https://github.com/adileoca/ceramica-interface.git";
 const RELEASE_REMOTE = "https://github.com/adileoca/electron-releases.git";
+const RELEASE_BRANCH = "main";
+const DIST_DIR = path.join(APP_ROOT, "dist");
 
 async function main() {
   const [mode, ...rest] = process.argv.slice(2);
@@ -50,6 +52,7 @@ function parseOptions(args) {
     appBump: undefined,
     appVersion: undefined,
     appDryRun: false,
+    publishReleaseRepo: false,
   };
 
   for (let i = 0; i < args.length; i += 1) {
@@ -72,6 +75,11 @@ function parseOptions(args) {
 
     if (arg === "--app-dry-run") {
       options.appDryRun = true;
+      continue;
+    }
+
+    if (arg === "--publish-release-repo") {
+      options.publishReleaseRepo = true;
       continue;
     }
 
@@ -153,26 +161,19 @@ async function runBuild(options) {
 async function runDeploy(options) {
   await runCommand(getNpxCommand(), ["craco", "build"], options, "Run craco build");
 
-  let remoteUpdated = false;
-  try {
-    await runCommand("git", ["remote", "set-url", "origin", RELEASE_REMOTE], options, "Point origin to release repository");
-    remoteUpdated = true;
+  const builderArgs = ["electron-builder", "build", "--windows", "--mac"];
+  if (!hasPublishOverride(options.builderArgs)) {
+    builderArgs.push("--publish", "always");
+  }
+  builderArgs.push(...options.builderArgs);
+  await runCommand(getNpxCommand(), builderArgs, options, "Run electron-builder (deploy)");
 
-    const builderArgs = ["electron-builder", "build", "--windows", "--mac"];
-    if (!hasPublishOverride(options.builderArgs)) {
-      builderArgs.push("--publish", "always");
-    }
-    builderArgs.push(...options.builderArgs);
-    await runCommand(getNpxCommand(), builderArgs, options, "Run electron-builder (deploy)");
-  } finally {
-    if (remoteUpdated) {
-      await runCommand(
-        "git",
-        ["remote", "set-url", "origin", ORIGINAL_REMOTE],
-        options,
-        "Restore origin remote"
-      );
-    }
+  if (options.publishReleaseRepo) {
+    await publishReleaseArtifacts(options);
+  } else {
+    console.log(
+      "Skipping release repo publish; pass --publish-release-repo to runElectronBuild.js if you still need the git mirror."
+    );
   }
 }
 
@@ -236,7 +237,7 @@ async function maybeUpdateAppVersion(options) {
   await fsPromises.writeFile(pkgPath, updated, "utf8");
 }
 
-function runCommand(command, args, options, label) {
+function runCommand(command, args, options, label, cwd = APP_ROOT) {
   if (options.dryRun) {
     console.log(`[dry-run] ${label}: ${command} ${args.join(" ")}`);
     return Promise.resolve();
@@ -245,7 +246,7 @@ function runCommand(command, args, options, label) {
   return new Promise((resolve, reject) => {
     const child = spawn(command, args, {
       stdio: "inherit",
-      cwd: APP_ROOT,
+      cwd,
     });
 
     child.on("close", (code) => {
@@ -260,6 +261,131 @@ function runCommand(command, args, options, label) {
       reject(error);
     });
   });
+}
+
+async function publishReleaseArtifacts(options) {
+  const version = await getAppVersion();
+
+  if (!(await pathExists(DIST_DIR))) {
+    throw new Error(`Distribution folder "${DIST_DIR}" not found. Run the build before deploying.`);
+  }
+
+  if (options.dryRun) {
+    console.log(
+      `[dry-run] Would publish contents of ${DIST_DIR} to ${RELEASE_REMOTE} (${RELEASE_BRANCH}) as an orphan commit`
+    );
+    return;
+  }
+
+  const workingRoot = await fsPromises.mkdtemp(path.join(os.tmpdir(), "electron-release-"));
+  const workingDir = path.join(workingRoot, "repo");
+
+  try {
+    await runCommand(
+      "git",
+      ["clone", "--depth", "1", RELEASE_REMOTE, workingDir],
+      options,
+      "Clone release repository"
+    );
+
+    const orphanBranch = `publish-${Date.now()}`;
+    await runCommand(
+      "git",
+      ["checkout", "--orphan", orphanBranch],
+      options,
+      "Create orphan branch for release",
+      workingDir
+    );
+
+    await clearDirectory(workingDir);
+    await copyReleaseArtifacts(DIST_DIR, workingDir, version);
+
+    await runCommand("git", ["add", "."], options, "Stage release artifacts", workingDir);
+
+    const commitMessage = version ? `Release v${version}` : "Release artifacts";
+    await runCommand(
+      "git",
+      ["commit", "-m", commitMessage],
+      options,
+      "Commit release artifacts",
+      workingDir
+    );
+
+    await runCommand(
+      "git",
+      ["push", "--force-with-lease", "origin", `HEAD:${RELEASE_BRANCH}`],
+      options,
+      "Push release artifacts",
+      workingDir
+    );
+  } finally {
+    await fsPromises.rm(workingRoot, { recursive: true, force: true });
+  }
+}
+
+async function getAppVersion() {
+  const pkgPath = path.join(APP_ROOT, "package.json");
+  const pkgRaw = await fsPromises.readFile(pkgPath, "utf8");
+
+  try {
+    const pkg = JSON.parse(pkgRaw);
+    return pkg.version;
+  } catch (error) {
+    throw new Error(`Failed to read app version from package.json: ${error.message}`);
+  }
+}
+
+async function clearDirectory(targetDir) {
+  const entries = await fsPromises.readdir(targetDir);
+  await Promise.all(
+    entries.map(async (entry) => {
+      if (entry === ".git") {
+        return;
+      }
+      await fsPromises.rm(path.join(targetDir, entry), { recursive: true, force: true });
+    })
+  );
+}
+
+async function copyReleaseArtifacts(sourceDir, targetDir, version) {
+  await fsPromises.mkdir(targetDir, { recursive: true });
+
+  const entries = await fsPromises.readdir(sourceDir, { withFileTypes: true });
+
+  const copied = [];
+
+  for (const entry of entries) {
+    if (!entry.isFile()) {
+      // Skip directories (mac/, win-unpacked/, etc.) and other non-file entries to keep repo small.
+      continue;
+    }
+
+    const isYaml = entry.name.endsWith(".yml") || entry.name.endsWith(".yaml");
+    const shouldInclude = isYaml || entry.name.includes(version);
+    if (!shouldInclude) {
+      continue;
+    }
+
+    const sourcePath = path.join(sourceDir, entry.name);
+    const targetPath = path.join(targetDir, entry.name);
+    await fsPromises.copyFile(sourcePath, targetPath);
+    copied.push(entry.name);
+  }
+
+  if (copied.length === 0) {
+    throw new Error(
+      `No release artifacts were copied from ${sourceDir}. Confirm the build generated files for v${version}.`
+    );
+  }
+}
+
+async function pathExists(targetPath) {
+  try {
+    await fsPromises.access(targetPath);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 main().catch((error) => {

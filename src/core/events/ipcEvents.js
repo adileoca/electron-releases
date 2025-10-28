@@ -182,7 +182,7 @@ function setupIpcEvents(broadcast) {
       const encodedSession = `base64-${base64Session}`;
 
       const response = await axios.post(
-        "http://localhost:3000/api/shipment/create",
+        "https://adipan.eu/api/shipment/create",
         { orderId: order_id },
         { headers: { "sb-vrdaoudvtphptybaljqq-auth-token": encodedSession } }
       );
